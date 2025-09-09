@@ -798,7 +798,7 @@ export function DocumentManagement() {
                                     >
                                       <Shield className="h-3 w-3 mr-1" />
                                       Verify
-                                    </Button>
+                                  </Button>
                                 </div>
                               </div>
                             )}
@@ -823,7 +823,7 @@ export function DocumentManagement() {
                                     >
                                       <Shield className="h-3 w-3 mr-1" />
                                       Verify
-                                    </Button>
+                                  </Button>
                                 </div>
                               </div>
                             )}
@@ -848,7 +848,7 @@ export function DocumentManagement() {
                                     >
                                       <Shield className="h-3 w-3 mr-1" />
                                       Verify
-                                    </Button>
+                                  </Button>
                                 </div>
                               </div>
                             )}
@@ -1114,7 +1114,7 @@ export function DocumentManagement() {
                        >
                          <Trash2 className="h-4 w-4 mr-1" />
                          Delete
-                       </Button>
+                    </Button>
                      </div>
                   </div>
                 )}
@@ -1142,7 +1142,7 @@ export function DocumentManagement() {
                        >
                          <Trash2 className="h-4 w-4 mr-1" />
                          Delete
-                       </Button>
+                    </Button>
                      </div>
                   </div>
                 )}
@@ -1170,7 +1170,7 @@ export function DocumentManagement() {
                        >
                          <Trash2 className="h-4 w-4 mr-1" />
                          Delete
-                       </Button>
+                    </Button>
                      </div>
                   </div>
                 )}
