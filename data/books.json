@@ -1,0 +1,21 @@
+[
+  {
+    "title": "Davel Library — Mpumalanga 2320",
+    "author": "Aaron K.",
+    "description": "A Community Guide & Storybook",
+    "isbn": "0987636787112",
+    "isElectronic": true,
+    "isDigital": true,
+    "visibility": "PUBLIC",
+    "totalCopies": 9,
+    "availableCopies": 9,
+    "category": "learn",
+    "publishedYear": 2025,
+    "coverImage": "/uploads/gallery/gallery_1756125853149.png",
+    "deweyDecimal": "870",
+
+    "digitalFileUrl": "/uploads/ebooks/digital_1756127945707_8737e24a75fcb5f94ef48474623ab391.pdf",
+    "id": "1756125894433",
+    "createdAt": "2025-08-25T12:44:54.433Z"
+  }
+]

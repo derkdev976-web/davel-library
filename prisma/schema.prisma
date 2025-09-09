@@ -1,0 +1,413 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = "file:./dev.db"
+}
+
+model Account {
+  id                String  @id @default(cuid())
+  userId            String
+  type              String
+  provider          String
+  providerAccountId String
+  refresh_token     String?
+  access_token      String?
+  expires_at        Int?
+  token_type        String?
+  scope             String?
+  id_token          String?
+  session_state     String?
+  user              User    @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([provider, providerAccountId])
+}
+
+model Session {
+  id           String   @id @default(cuid())
+  sessionToken String   @unique
+  userId       String
+  expires      DateTime
+  user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model VerificationToken {
+  identifier String
+  token      String   @unique
+  expires    DateTime
+
+  @@unique([identifier, token])
+}
+
+model User {
+  id                    String                 @id @default(cuid())
+  name                  String?
+  email                 String                 @unique
+  emailVerified         DateTime?
+  image                 String?
+  phone                 String?
+  password              String?
+  role                  String                 @default("GUEST")
+  isActive              Boolean                @default(true)
+  isTemporaryAdmin      Boolean                @default(false)
+  tempAdminExpires      DateTime?
+  lastLogin             DateTime?
+  createdAt             DateTime               @default(now())
+  updatedAt             DateTime               @updatedAt
+  accounts              Account[]
+  reservations          BookReservation[]
+  bookReviews           BookReview[]
+  receivedMessages      ChatMessage[]          @relation("ReceivedMessages")
+  sentMessages          ChatMessage[]          @relation("SentMessages")
+  contentAccess         ContentAccess[]
+  documentRequests      DocumentRequest[]
+  documentNotifications DocumentNotification[]
+  eventAttendees        EventAttendee[]
+  membershipApplication MembershipApplication?
+  readingProgress       ReadingProgress[]
+  sessions              Session[]
+  supportRequests       SupportRequest[]
+  profile               UserProfile?
+  userVisits            UserVisit[]
+
+  @@map("users")
+}
+
+model UserProfile {
+  id                  String    @id @default(cuid())
+  userId              String    @unique
+  firstName           String
+  lastName            String
+  dateOfBirth         DateTime?
+  gender              String?
+  street              String?
+  city                String?
+  state               String?
+  zipCode             String?
+  country             String?
+  hasDisability       Boolean   @default(false)
+  disabilityDetails   String?
+  preferredGenres     String
+  readingFrequency    String?
+  profilePicture      String?
+  bio                 String?
+  createdAt           DateTime  @default(now())
+  updatedAt           DateTime  @updatedAt
+  additionalDocuments String?
+  idDocument          String?
+  proofOfAddress      String?
+  // Document verification fields
+  idDocumentVerified     Boolean   @default(false)
+  proofOfAddressVerified Boolean   @default(false)
+  additionalDocsVerified Boolean   @default(false)
+  idDocumentVerifiedAt   DateTime?
+  proofOfAddressVerifiedAt DateTime?
+  additionalDocsVerifiedAt DateTime?
+  idDocumentVerifiedBy    String?
+  proofOfAddressVerifiedBy String?
+  additionalDocsVerifiedBy String?
+  idDocumentNotes         String?
+  proofOfAddressNotes     String?
+  additionalDocsNotes     String?
+  user                User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model UserVisit {
+  id        String   @id @default(cuid())
+  userId    String
+  page      String
+  duration  Int?
+  userAgent String?
+  ipAddress String?
+  visitedAt DateTime @default(now())
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId, visitedAt])
+  @@index([page, visitedAt])
+}
+
+model MembershipApplication {
+  id                  String    @id @default(cuid())
+  userId              String?   @unique
+  firstName           String
+  lastName            String
+  dateOfBirth         DateTime
+  gender              String
+  email               String    @unique
+  phone               String
+  alternatePhone      String?
+  street              String
+  city                String
+  state               String
+  zipCode             String
+  country             String
+  hasDisability       Boolean   @default(false)
+  disabilityDetails   String?
+  preferredGenres     String
+  readingFrequency    String
+  subscribeNewsletter Boolean   @default(false)
+  idDocument          String?
+  proofOfAddress      String?
+  additionalDocuments String?
+  status              String    @default("PENDING")
+  reviewedBy          String?
+  reviewedAt          DateTime?
+  reviewNotes         String?
+  createdAt           DateTime  @default(now())
+  updatedAt           DateTime  @updatedAt
+  user                User?     @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model Book {
+  id                  String            @id @default(cuid())
+  title               String
+  author              String
+  isbn                String?           @unique
+  genre               String
+  deweyDecimal        String
+  isElectronic        Boolean           @default(false)
+  summary             String?
+  coverImage          String?
+  totalCopies         Int               @default(1)
+  availableCopies     Int               @default(1)
+  isDigital           Boolean           @default(false)
+  digitalFile         String?
+  isLocked            Boolean           @default(true)
+  maxReservations     Int               @default(10)
+  currentReservations Int               @default(0)
+  publishedYear       Int?
+  publisher           String?
+  language            String            @default("English")
+  pages               Int?
+  isActive            Boolean           @default(true)
+  visibility          String            @default("PUBLIC")
+  createdAt           DateTime          @default(now())
+  updatedAt           DateTime          @updatedAt
+  reservations        BookReservation[]
+  reviews             BookReview[]
+  readingProgress     ReadingProgress[]
+
+  @@index([title, author])
+  @@index([visibility, isActive])
+  @@index([isDigital, isLocked])
+}
+
+model BookReservation {
+  id           String    @id @default(cuid())
+  userId       String
+  bookId       String
+  status       String    @default("PENDING")
+  reservedAt   DateTime  @default(now())
+  dueDate      DateTime?
+  returnedAt   DateTime?
+  renewalCount Int       @default(0)
+  notes        String?
+  approvedBy   String?
+  approvedAt   DateTime?
+  book         Book      @relation(fields: [bookId], references: [id], onDelete: Cascade)
+  user         User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId, status])
+  @@index([bookId, status])
+}
+
+model BookReview {
+  id        String   @id @default(cuid())
+  bookId    String
+  userId    String
+  rating    Int
+  review    String?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  book      Book     @relation(fields: [bookId], references: [id], onDelete: Cascade)
+
+  @@unique([bookId, userId])
+}
+
+model ChatMessage {
+  id          String   @id @default(cuid())
+  senderId    String
+  recipientId String
+  content     String
+  isSystem    Boolean  @default(false)
+  isRead      Boolean  @default(false)
+  messageType String   @default("TEXT")
+  createdAt   DateTime @default(now())
+  recipient   User     @relation("ReceivedMessages", fields: [recipientId], references: [id], onDelete: Cascade)
+  sender      User     @relation("SentMessages", fields: [senderId], references: [id], onDelete: Cascade)
+
+  @@index([createdAt])
+  @@index([senderId, recipientId])
+  @@index([recipientId, isRead])
+}
+
+model NewsEvent {
+  id               String          @id @default(cuid())
+  title            String
+  content          String
+  type             String
+  image            String?
+  isPublished      Boolean         @default(false)
+  publishedAt      DateTime?
+  eventDate        DateTime?
+  location         String?
+  maxAttendees     Int?
+  currentAttendees Int             @default(0)
+  visibility       String          @default("PUBLIC")
+  createdAt        DateTime        @default(now())
+  updatedAt        DateTime        @updatedAt
+  attendees        EventAttendee[]
+
+  @@index([type, publishedAt])
+  @@index([visibility, isPublished])
+}
+
+model EventAttendee {
+  id        String    @id @default(cuid())
+  eventId   String
+  userId    String
+  status    String    @default("REGISTERED")
+  createdAt DateTime  @default(now())
+  user      User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  event     NewsEvent @relation(fields: [eventId], references: [id], onDelete: Cascade)
+
+  @@unique([eventId, userId])
+}
+
+model GalleryImage {
+  id          String   @id @default(cuid())
+  title       String
+  description String?
+  imageUrl    String
+  category    String?
+  isPublished Boolean  @default(true)
+  visibility  String   @default("PUBLIC")
+  uploadedBy  String
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  @@index([category, createdAt])
+  @@index([visibility, isPublished])
+}
+
+model ContentAccess {
+  id          String    @id @default(cuid())
+  userId      String
+  contentType String
+  contentId   String
+  canView     Boolean   @default(true)
+  canEdit     Boolean   @default(false)
+  canDelete   Boolean   @default(false)
+  grantedBy   String?
+  grantedAt   DateTime  @default(now())
+  expiresAt   DateTime?
+  user        User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, contentType, contentId])
+  @@index([contentType, contentId])
+}
+
+model SupportRequest {
+  id          String    @id @default(cuid())
+  userId      String
+  title       String
+  description String
+  category    String
+  priority    String    @default("MEDIUM")
+  status      String    @default("OPEN")
+  assignedTo  String?
+  resolvedAt  DateTime?
+  resolution  String?
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+  user        User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([status, priority])
+  @@index([userId, status])
+}
+
+model HomePageContent {
+  id        String   @id @default(cuid())
+  section   String   @unique
+  title     String?
+  content   String
+  image     String?
+  isActive  Boolean  @default(true)
+  order     Int      @default(0)
+  updatedBy String
+  updatedAt DateTime @updatedAt
+
+  @@index([section, isActive])
+}
+
+model EmailVerification {
+  id        String   @id @default(cuid())
+  email     String
+  token     String   @unique
+  type      String
+  expiresAt DateTime
+  createdAt DateTime @default(now())
+
+  @@index([email, token])
+  @@index([expiresAt])
+}
+
+model DocumentRequest {
+  id            String    @id @default(cuid())
+  userId        String
+  requestedBy   String
+  documentType  String
+  requestReason String
+  dueDate       DateTime?
+  status        String    @default("PENDING")
+  type          String    @default("MEMBER")
+  adminNotes    String?
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+  reviewedAt    DateTime?
+  reviewedBy    String?
+  user          User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId, status])
+  @@index([status, type])
+  @@index([dueDate])
+}
+
+model DocumentNotification {
+  id             String   @id @default(cuid())
+  userId         String
+  documentType   String
+  action         String   // "DELETED", "REJECTED", "APPROVED", etc.
+  reason         String
+  requiredAction String
+  adminId        String
+  status         String   @default("ACTIVE") // "ACTIVE", "READ", "ARCHIVED"
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+  user           User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId, status])
+  @@index([action, createdAt])
+}
+
+model ReadingProgress {
+  id          String   @id @default(cuid())
+  userId      String
+  bookId      String
+  currentPage Int      @default(0)
+  totalPages  Int      @default(0)
+  readingTime Int      @default(0) // in seconds
+  bookmarks   String   @default("[]") // JSON array of page numbers
+  lastReadAt  DateTime @default(now())
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  book        Book     @relation(fields: [bookId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, bookId])
+  @@index([userId, lastReadAt])
+  @@index([bookId])
+}

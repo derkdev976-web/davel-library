@@ -1,0 +1,10 @@
+{
+  "id": "mahogany-brown",
+  "name": "Mahogany Brown",
+  "primary": "#8B4513",
+  "secondary": "#800020",
+  "accent": "#CD853F",
+  "background": "#2D1810",
+  "text": "#F5F5DC",
+  "preview": "bg-gradient-to-br from-[#8B4513] to-[#800020]"
+}
