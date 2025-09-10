@@ -61,11 +61,7 @@ export function FeeManagement() {
     isActive: true
   })
 
-  useEffect(() => {
-    fetchFeeData()
-  }, [])
-
-  const fetchFeeData = async () => {
+  const fetchFeeData = useCallback(async () => {
     try {
       setLoading(true)
       // Fetch fee structures and transactions
@@ -93,7 +89,11 @@ export function FeeManagement() {
     } finally {
       setLoading(false)
     }
-  }
+  }, [toast])
+
+  useEffect(() => {
+    fetchFeeData()
+  }, [fetchFeeData])
 
   const handleAddFee = async () => {
     try {

@@ -41,21 +41,7 @@ export function MemberContactDirectory() {
   const [loading, setLoading] = useState(true)
   const { toast } = useToast()
 
-  useEffect(() => {
-    fetchMembers()
-  }, [])
-
-  useEffect(() => {
-    const filtered = members.filter(member =>
-      member.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      member.email.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      member.profile?.city?.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      member.profile?.state?.toLowerCase().includes(searchTerm.toLowerCase())
-    )
-    setFilteredMembers(filtered)
-  }, [members, searchTerm])
-
-  const fetchMembers = async () => {
+  const fetchMembers = useCallback(async () => {
     try {
       setLoading(true)
       const response = await fetch("/api/admin/users")
@@ -97,7 +83,21 @@ export function MemberContactDirectory() {
     } finally {
       setLoading(false)
     }
-  }
+  }, [toast])
+
+  useEffect(() => {
+    fetchMembers()
+  }, [fetchMembers])
+
+  useEffect(() => {
+    const filtered = members.filter(member =>
+      member.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      member.email.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      member.profile?.city?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      member.profile?.state?.toLowerCase().includes(searchTerm.toLowerCase())
+    )
+    setFilteredMembers(filtered)
+  }, [members, searchTerm])
 
   const formatDate = (dateString: string) => {
     return new Date(dateString).toLocaleDateString("en-ZA", {

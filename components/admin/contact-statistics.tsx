@@ -24,10 +24,6 @@ export function ContactStatistics() {
   const [stats, setStats] = useState<ContactStats | null>(null)
   const [loading, setLoading] = useState(true)
 
-  useEffect(() => {
-    fetchContactStats()
-  }, [fetchContactStats])
-
   const fetchContactStats = useCallback(async () => {
     try {
       setLoading(true)
@@ -76,6 +72,10 @@ export function ContactStatistics() {
       setLoading(false)
     }
   }, [])
+
+  useEffect(() => {
+    fetchContactStats()
+  }, [fetchContactStats])
 
   const getTopCities = (members: any[]) => {
     const cityCount: Record<string, number> = {}

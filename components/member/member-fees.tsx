@@ -42,11 +42,7 @@ export function MemberFees() {
   const [loading, setLoading] = useState(true)
   const { toast } = useToast()
 
-  useEffect(() => {
-    fetchMemberFees()
-  }, [])
-
-  const fetchMemberFees = async () => {
+  const fetchMemberFees = useCallback(async () => {
     try {
       setLoading(true)
       const response = await fetch("/api/user/fees")
@@ -67,7 +63,11 @@ export function MemberFees() {
     } finally {
       setLoading(false)
     }
-  }
+  }, [toast])
+
+  useEffect(() => {
+    fetchMemberFees()
+  }, [fetchMemberFees])
 
   const getStatusBadge = (status: string) => {
     const variants: Record<string, "default" | "secondary" | "destructive" | "outline"> = {

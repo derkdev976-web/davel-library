@@ -54,15 +54,7 @@ export function FeeHistory() {
   const [typeFilter, setTypeFilter] = useState("all")
   const [dateFilter, setDateFilter] = useState("all")
 
-  useEffect(() => {
-    fetchFeeHistory()
-  }, [])
-
-  useEffect(() => {
-    applyFilters()
-  }, [transactions, searchTerm, statusFilter, typeFilter, dateFilter])
-
-  const fetchFeeHistory = async () => {
+  const fetchFeeHistory = useCallback(async () => {
     try {
       setLoading(true)
       const response = await fetch("/api/admin/fees/transactions")
@@ -101,9 +93,9 @@ export function FeeHistory() {
       averageFee: data.length > 0 ? totalFees / data.length : 0,
       collectionRate: totalFees > 0 ? (totalCollected / totalFees) * 100 : 0
     })
-  }
+  }, [])
 
-  const applyFilters = () => {
+  const applyFilters = useCallback(() => {
     let filtered = transactions
 
     // Search filter
@@ -152,7 +144,15 @@ export function FeeHistory() {
     }
 
     setFilteredTransactions(filtered)
-  }
+  }, [transactions, searchTerm, statusFilter, typeFilter, dateFilter])
+
+  useEffect(() => {
+    fetchFeeHistory()
+  }, [fetchFeeHistory])
+
+  useEffect(() => {
+    applyFilters()
+  }, [applyFilters])
 
   const getStatusBadge = (status: string) => {
     const variants: Record<string, "default" | "secondary" | "destructive" | "outline"> = {
