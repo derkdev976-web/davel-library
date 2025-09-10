@@ -2,8 +2,14 @@ import { NextRequest, NextResponse } from "next/server"
 import { getServerSession } from "next-auth"
 import { authOptions } from "@/lib/auth"
 import { prisma } from "@/lib/prisma"
-import { writeFile } from "fs/promises"
-import path from "path"
+import { v2 as cloudinary } from 'cloudinary'
+
+// Configure Cloudinary
+cloudinary.config({
+  cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
+  api_key: process.env.CLOUDINARY_API_KEY,
+  api_secret: process.env.CLOUDINARY_API_SECRET,
+})
 
 export async function POST(request: NextRequest) {
   try {
@@ -44,15 +50,30 @@ export async function POST(request: NextRequest) {
       )
     }
 
-    // Generate unique filename
-    const timestamp = Date.now()
-    const fileExtension = path.extname(file.name)
-    const fileName = `profile-${session.user.id}-${timestamp}${fileExtension}`
-    const uploadPath = `/uploads/profile-pictures/${fileName}`
+    // Convert file to buffer
+    const bytes = await file.arrayBuffer()
+    const buffer = Buffer.from(bytes)
 
-    // Ensure directory exists
-    const uploadDir = path.join(process.cwd(), "public", "uploads", "profile-pictures")
-    await writeFile(path.join(uploadDir, fileName), Buffer.from(await file.arrayBuffer()))
+    // Upload to Cloudinary
+    const result = await new Promise((resolve, reject) => {
+      cloudinary.uploader.upload_stream(
+        {
+          folder: 'davel-library/profile-pictures',
+          public_id: `profile-${session.user.id}-${Date.now()}`,
+          resource_type: 'auto',
+          transformation: [
+            { width: 300, height: 300, crop: 'fill', gravity: 'face' }
+          ]
+        },
+        (error, result) => {
+          if (error) reject(error)
+          else resolve(result)
+        }
+      ).end(buffer)
+    })
+
+    const cloudinaryResult = result as any
+    const uploadPath = cloudinaryResult.secure_url
 
     // Update user profile with new picture path
     const updatedProfile = await prisma.userProfile.upsert({

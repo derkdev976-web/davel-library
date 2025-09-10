@@ -43,6 +43,7 @@
     "@types/three": "^0.159.0",
     "bcryptjs": "^2.4.3",
     "class-variance-authority": "^0.7.0",
+    "cloudinary": "^2.7.0",
     "clsx": "^2.0.0",
     "eslint": "^8",
     "eslint-config-next": "14.0.4",
