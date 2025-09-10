@@ -75,7 +75,7 @@ export function FeeHistory() {
     } finally {
       setLoading(false)
     }
-  }
+  }, [])
 
   const calculateSummary = (data: FeeTransaction[]) => {
     const totalFees = data.reduce((sum, t) => sum + t.amount, 0)
