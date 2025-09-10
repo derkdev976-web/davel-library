@@ -436,6 +436,53 @@ export function BackgroundCustomizer() {
               className="mt-2"
             />
           </div>
+          {/* Preview */}
+          <div>
+            <Label className="text-sm font-medium text-gray-700 dark:text-gray-300">Preview</Label>
+            <div className="mt-2 h-32 rounded-lg border-2 border-dashed border-gray-300 dark:border-gray-600 relative overflow-hidden"
+                 style={{
+                   background: settings.type === 'gradient' 
+                     ? `linear-gradient(135deg, ${settings.primaryColor} 0%, ${settings.secondaryColor} 100%)`
+                     : settings.type === 'solid'
+                     ? settings.primaryColor
+                     : settings.imageUrl
+                     ? `url('${settings.imageUrl}') ${settings.repeat} ${settings.position} / ${settings.size}`
+                     : '#f3f4f6',
+                   opacity: settings.opacity
+                 }}>
+              <div className="absolute inset-0 flex items-center justify-center">
+                <span className="text-sm text-gray-500 dark:text-gray-400">Background Preview</span>
+              </div>
+            </div>
+          </div>
+
+          {/* Actions */}
+          <div className="flex flex-wrap gap-3">
+            <Button onClick={saveSettings} disabled={loading} className="flex-1">
+              <Save className="h-4 w-4 mr-2" />
+              Save Settings
+            </Button>
+            <Button variant="outline" onClick={resetSettings}>
+              <RotateCcw className="h-4 w-4 mr-2" />
+              Reset
+            </Button>
+            <Button 
+              variant={previewMode ? "default" : "outline"} 
+              onClick={() => setPreviewMode(!previewMode)}
+            >
+              <Eye className="h-4 w-4 mr-2" />
+              {previewMode ? 'Exit Preview' : 'Preview'}
+            </Button>
+          </div>
+
+          {previewMode && (
+            <div className="p-4 bg-blue-50 dark:bg-blue-900/20 rounded-lg">
+              <p className="text-sm text-blue-800 dark:text-blue-200">
+                <strong>Preview Mode:</strong> Background changes are applied in real-time. 
+                Click &quot;Save Settings&quot; to make them permanent.
+              </p>
+            </div>
+          )}
         </CardContent>
       </Card>
 
@@ -604,56 +651,6 @@ export function BackgroundCustomizer() {
               />
             </div>
           </div>
-        </CardContent>
-      </Card>
-
-          {/* Preview */}
-          <div>
-            <Label className="text-sm font-medium text-gray-700 dark:text-gray-300">Preview</Label>
-            <div className="mt-2 h-32 rounded-lg border-2 border-dashed border-gray-300 dark:border-gray-600 relative overflow-hidden"
-                 style={{
-                   background: settings.type === 'gradient' 
-                     ? `linear-gradient(135deg, ${settings.primaryColor} 0%, ${settings.secondaryColor} 100%)`
-                     : settings.type === 'solid'
-                     ? settings.primaryColor
-                     : settings.imageUrl
-                     ? `url('${settings.imageUrl}') ${settings.repeat} ${settings.position} / ${settings.size}`
-                     : '#f3f4f6',
-                   opacity: settings.opacity
-                 }}>
-              <div className="absolute inset-0 flex items-center justify-center">
-                <span className="text-sm text-gray-500 dark:text-gray-400">Background Preview</span>
-              </div>
-            </div>
-          </div>
-
-          {/* Actions */}
-          <div className="flex flex-wrap gap-3">
-            <Button onClick={saveSettings} disabled={loading} className="flex-1">
-              <Save className="h-4 w-4 mr-2" />
-              Save Settings
-            </Button>
-            <Button variant="outline" onClick={resetSettings}>
-              <RotateCcw className="h-4 w-4 mr-2" />
-              Reset
-            </Button>
-            <Button 
-              variant={previewMode ? "default" : "outline"} 
-              onClick={() => setPreviewMode(!previewMode)}
-            >
-              <Eye className="h-4 w-4 mr-2" />
-              {previewMode ? 'Exit Preview' : 'Preview'}
-            </Button>
-          </div>
-
-          {previewMode && (
-            <div className="p-4 bg-blue-50 dark:bg-blue-900/20 rounded-lg">
-              <p className="text-sm text-blue-800 dark:text-blue-200">
-                <strong>Preview Mode:</strong> Background changes are applied in real-time. 
-                Click &quot;Save Settings&quot; to make them permanent.
-              </p>
-            </div>
-          )}
         </CardContent>
       </Card>
     </div>
