@@ -38,11 +38,11 @@ function CountUp({ end, duration = 2000 }: { end: number; duration?: number }) {
 
 export function StatsSection() {
   return (
-    <section className="py-20 px-4 gradient-bg dark:bg-gradient-to-br dark:from-gray-900 dark:via-gray-800 dark:to-gray-900">
+    <section className="py-20 px-4 bg-gradient-to-br from-amber-50 to-orange-100 dark:bg-gradient-to-br dark:from-gray-900 dark:via-gray-800 dark:to-gray-900">
       <div className="max-w-7xl mx-auto">
         <div className="text-center mb-16">
-          <h2 className="text-3xl md:text-4xl font-bold text-white dark:text-gray-100 mb-4">Our Impact in Numbers</h2>
-          <p className="text-lg text-white/80 dark:text-gray-300 max-w-2xl mx-auto">
+          <h2 className="text-3xl md:text-4xl font-bold text-gray-900 dark:text-gray-100 mb-4">Our Impact in Numbers</h2>
+          <p className="text-lg text-gray-700 dark:text-gray-300 max-w-2xl mx-auto">
             Join thousands of readers who have made Davel Library their literary home
           </p>
         </div>
@@ -57,12 +57,12 @@ export function StatsSection() {
               viewport={{ once: true }}
               className="text-center"
             >
-              <div className="glass-card p-8 bg-white/10 dark:bg-gray-800/20 backdrop-blur-md border border-white/20 dark:border-gray-700/20">
-                <div className="text-4xl md:text-5xl font-bold text-white dark:text-gray-100 mb-2">
+              <div className="glass-card p-8 bg-white/80 dark:bg-gray-800/20 backdrop-blur-md border border-white/40 dark:border-gray-700/20">
+                <div className="text-4xl md:text-5xl font-bold text-gray-900 dark:text-gray-100 mb-2">
                   <CountUp end={stat.value} />
                   {stat.suffix}
                 </div>
-                <div className="text-lg text-white/80 dark:text-gray-300">{stat.label}</div>
+                <div className="text-lg text-gray-700 dark:text-gray-300">{stat.label}</div>
               </div>
             </motion.div>
           ))}

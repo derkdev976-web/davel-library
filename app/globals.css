@@ -58,37 +58,37 @@
 }
 
 :root {
-  /* shadcn theme tokens - Enhanced for professional look */
-  --background: 220 13% 9%;
-  --foreground: 220 9% 96%;
-  --card: 220 13% 11%;
-  --card-foreground: 220 9% 96%;
-  --popover: 220 13% 11%;
-  --popover-foreground: 220 9% 96%;
-  --primary: 262 83% 58%; /* Deep royal purple */
-  --primary-foreground: 220 9% 96%;
-  --secondary: 220 13% 15%;
-  --secondary-foreground: 220 9% 96%;
-  --muted: 220 13% 15%;
-  --muted-foreground: 220 9% 60%;
-  --accent: 262 83% 58%;
-  --accent-foreground: 220 9% 96%;
+  /* Light mode theme tokens */
+  --background: 0 0% 100%;
+  --foreground: 222.2 84% 4.9%;
+  --card: 0 0% 100%;
+  --card-foreground: 222.2 84% 4.9%;
+  --popover: 0 0% 100%;
+  --popover-foreground: 222.2 84% 4.9%;
+  --primary: 262 83% 58%;
+  --primary-foreground: 210 40% 98%;
+  --secondary: 210 40% 96%;
+  --secondary-foreground: 222.2 84% 4.9%;
+  --muted: 210 40% 96%;
+  --muted-foreground: 215.4 16.3% 46.9%;
+  --accent: 210 40% 96%;
+  --accent-foreground: 222.2 84% 4.9%;
   --destructive: 0 84.2% 60.2%;
-  --destructive-foreground: 220 9% 96%;
-  --border: 220 13% 15%;
-  --input: 220 13% 15%;
+  --destructive-foreground: 210 40% 98%;
+  --border: 214.3 31.8% 91.4%;
+  --input: 214.3 31.8% 91.4%;
   --ring: 262 83% 58%;
   --radius: 0.75rem;
   
-  /* Custom theme colors - Majestic professional palette */
+  /* Custom theme colors - Light mode palette */
   --primary-color: #8B4513; /* Saddle Brown */
   --secondary-color: #800020; /* Maroon */
   --accent-color: #CD853F; /* Peru */
-  --background-color: #2D1810; /* Dark Brown */
-  --text-color: #F5F5DC; /* Beige */
-  --surface-color: #3D2414; /* Darker Brown */
-  --border-color: #5D3A1A; /* Medium Brown */
-  --muted-color: #8B7355; /* Tan */
+  --background-color: #ffffff; /* White */
+  --text-color: #1f2937; /* Dark Gray */
+  --surface-color: #f9fafb; /* Light Gray */
+  --border-color: #e5e7eb; /* Light Border */
+  --muted-color: #6b7280; /* Medium Gray */
   
   --saddle-brown: #8b4513;
   --sienna: #a0522d;
@@ -120,6 +120,17 @@
     --border: 220 13% 15%;
     --input: 220 13% 15%;
     --ring: 262 83% 58%;
+    
+    /* Dark mode custom colors */
+    --background-color: #2D1810; /* Dark Brown */
+    --text-color: #F5F5DC; /* Beige */
+    --surface-color: #3D2414; /* Darker Brown */
+    --border-color: #5D3A1A; /* Medium Brown */
+    --muted-color: #8B7355; /* Tan */
+  }
+  
+  body {
+    background: linear-gradient(135deg, var(--background-color) 0%, #1e293b 100%);
   }
 }
 
@@ -143,6 +154,17 @@
   --border: 220 13% 15%;
   --input: 220 13% 15%;
   --ring: 262 83% 58%;
+  
+  /* Dark mode custom colors */
+  --background-color: #2D1810; /* Dark Brown */
+  --text-color: #F5F5DC; /* Beige */
+  --surface-color: #3D2414; /* Darker Brown */
+  --border-color: #5D3A1A; /* Medium Brown */
+  --muted-color: #8B7355; /* Tan */
+}
+
+.dark body {
+  background: linear-gradient(135deg, var(--background-color) 0%, #1e293b 100%);
 }
 
 @layer base {
@@ -154,7 +176,7 @@
     @apply bg-background text-foreground;
     font-feature-settings: "rlig" 1, "calt" 1;
     scroll-behavior: smooth;
-    background: linear-gradient(135deg, var(--background-color) 0%, #1e293b 100%);
+    background: linear-gradient(135deg, var(--background-color) 0%, #f8fafc 100%);
     color: var(--text-color);
     min-height: 100vh;
   }
