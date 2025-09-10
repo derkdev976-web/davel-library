@@ -55,11 +55,23 @@ class EmailService {
         text: content.text || this.stripHtml(content.html),
       }
 
-      await this.transporter.sendMail(mailOptions)
-      console.log(`Email sent successfully to ${content.to}`)
+      const result = await this.transporter.sendMail(mailOptions)
+      console.log(`Email sent successfully to ${content.to}`, result.messageId)
       return true
     } catch (error) {
       console.error('Error sending email:', error)
+      
+      // Provide more detailed error information
+      if (error instanceof Error) {
+        if (error.message.includes('authentication')) {
+          console.error('Authentication failed. Check your email credentials.')
+        } else if (error.message.includes('connection')) {
+          console.error('Connection failed. Check your SMTP server settings.')
+        } else if (error.message.includes('timeout')) {
+          console.error('Connection timeout. Check your network and SMTP server.')
+        }
+      }
+      
       return false
     }
   }

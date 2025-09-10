@@ -1,6 +1,6 @@
 "use client"
 
-import { useState } from "react"
+import { useState, useEffect } from "react"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
@@ -12,13 +12,30 @@ import { Mail, Send, CheckCircle, XCircle, AlertCircle } from "lucide-react"
 export function EmailTest() {
   const [isLoading, setIsLoading] = useState(false)
   const [testResult, setTestResult] = useState<any>(null)
+  const [configStatus, setConfigStatus] = useState<any>(null)
   const { toast } = useToast()
 
   const [formData, setFormData] = useState({
     to: "",
     subject: "Davel Library - Email Configuration Test",
-    message: "This is a test email to verify that your email configuration is working correctly. If you receive this email, your email system is properly configured!"
+    message: "This is a test email to verify that your email configuration is working correctly. If you receive this email, your email system is properly configured!"                                                                        
   })
+
+  useEffect(() => {
+    const checkConfigStatus = async () => {
+      try {
+        const response = await fetch('/api/email-status')
+        if (response.ok) {
+          const data = await response.json()
+          setConfigStatus(data)
+        }
+      } catch (error) {
+        console.error('Error checking email config status:', error)
+      }
+    }
+
+    checkConfigStatus()
+  }, [])
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
@@ -65,6 +82,64 @@ export function EmailTest() {
 
   return (
     <div className="space-y-6">
+      {configStatus && (
+        <Card>
+          <CardHeader>
+            <CardTitle className="flex items-center space-x-2">
+              <AlertCircle className="h-5 w-5" />
+              <span>Email Configuration Status</span>
+            </CardTitle>
+          </CardHeader>
+          <CardContent>
+            {configStatus.configured ? (
+              <div className="bg-green-50 border border-green-200 rounded-lg p-4">
+                <div className="flex items-center space-x-2 text-green-800">
+                  <CheckCircle className="h-5 w-5" />
+                  <span className="font-semibold">Email Configuration Complete</span>
+                </div>
+                <p className="text-green-700 mt-2">All required environment variables are set.</p>
+                <div className="mt-3 space-y-1 text-sm">
+                  <p><strong>SMTP Host:</strong> {configStatus.config.host}</p>
+                  <p><strong>SMTP Port:</strong> {configStatus.config.port}</p>
+                  <p><strong>From Address:</strong> {configStatus.config.from}</p>
+                  <p><strong>User:</strong> {configStatus.config.user}</p>
+                  <p><strong>Password:</strong> {configStatus.config.hasPassword ? 'Set' : 'Not set'}</p>
+                </div>
+              </div>
+            ) : (
+              <div className="bg-red-50 border border-red-200 rounded-lg p-4">
+                <div className="flex items-center space-x-2 text-red-800">
+                  <XCircle className="h-5 w-5" />
+                  <span className="font-semibold">Email Configuration Incomplete</span>
+                </div>
+                <p className="text-red-700 mt-2">Missing environment variables:</p>
+                <ul className="list-disc list-inside text-red-700 mt-2 space-y-1">
+                  {configStatus.missing.map((config: string) => (
+                    <li key={config}>{config}</li>
+                  ))}
+                </ul>
+                <div className="mt-4 p-3 bg-blue-50 border border-blue-200 rounded">
+                  <h4 className="font-semibold text-blue-800 mb-2">Quick Setup Guide:</h4>
+                  <div className="text-sm text-blue-700 space-y-2">
+                    <p><strong>For Gmail:</strong></p>
+                    <ul className="list-disc list-inside ml-4 space-y-1">
+                      <li>Enable 2-Factor Authentication</li>
+                      <li>Generate an App Password</li>
+                      <li>Use: smtp.gmail.com:587</li>
+                    </ul>
+                    <p><strong>For Outlook:</strong></p>
+                    <ul className="list-disc list-inside ml-4 space-y-1">
+                      <li>Use: smtp-mail.outlook.com:587</li>
+                      <li>Use your regular email and password</li>
+                    </ul>
+                  </div>
+                </div>
+              </div>
+            )}
+          </CardContent>
+        </Card>
+      )}
+
       <Card>
         <CardHeader>
           <CardTitle className="flex items-center space-x-2">
