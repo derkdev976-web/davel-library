@@ -85,6 +85,13 @@
   --text-secondary: 51 65 85; /* slate-600 - medium contrast */
   --text-muted: 100 116 139; /* slate-500 - lighter but still readable */
   
+  /* Background customization variables */
+  --app-background: linear-gradient(135deg, var(--background-color) 0%, #f8fafc 100%);
+  --card-background: rgba(255, 255, 255, 0.9);
+  --flashcard-background: rgba(255, 255, 255, 0.95);
+  --glass-background: rgba(255, 255, 255, 0.1);
+  --glass-border: rgba(255, 255, 255, 0.2);
+  
   /* Custom theme colors - Light mode palette */
   --primary-color: #8B4513; /* Saddle Brown */
   --secondary-color: #800020; /* Maroon */
@@ -132,10 +139,17 @@
     --surface-color: #3D2414; /* Darker Brown */
     --border-color: #5D3A1A; /* Medium Brown */
     --muted-color: #8B7355; /* Tan */
+    
+    /* Dark mode background customization */
+    --app-background: linear-gradient(135deg, var(--background-color) 0%, #1e293b 100%);
+    --card-background: rgba(45, 24, 16, 0.9);
+    --flashcard-background: rgba(45, 24, 16, 0.95);
+    --glass-background: rgba(45, 24, 16, 0.1);
+    --glass-border: rgba(245, 245, 220, 0.2);
   }
   
   body {
-    background: linear-gradient(135deg, var(--background-color) 0%, #1e293b 100%);
+    background: var(--app-background);
   }
 }
 
@@ -169,7 +183,7 @@
 }
 
 .dark body {
-  background: linear-gradient(135deg, var(--background-color) 0%, #1e293b 100%);
+  background: var(--app-background);
 }
 
 @layer base {
@@ -181,7 +195,7 @@
     @apply bg-background text-foreground;
     font-feature-settings: "rlig" 1, "calt" 1;
     scroll-behavior: smooth;
-    background: var(--background-gradient, linear-gradient(135deg, var(--background-color) 0%, #f8fafc 100%));
+    background: var(--app-background);
     color: hsl(var(--text-primary));
     min-height: 100vh;
   }
@@ -218,6 +232,57 @@
 
   .text-gray-400 {
     color: hsl(var(--text-muted)) !important;
+  }
+
+  /* Background customization classes */
+  .app-background {
+    background: var(--app-background) !important;
+  }
+
+  .card-background {
+    background: var(--card-background) !important;
+    backdrop-filter: blur(10px);
+    border: 1px solid var(--glass-border);
+  }
+
+  .flashcard-background {
+    background: var(--flashcard-background) !important;
+    backdrop-filter: blur(15px);
+    border: 1px solid var(--glass-border);
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+  }
+
+  .glass-background {
+    background: var(--glass-background) !important;
+    backdrop-filter: blur(20px);
+    border: 1px solid var(--glass-border);
+  }
+
+  /* Apply to all main containers */
+  main, .main-container, .page-container {
+    background: var(--app-background) !important;
+  }
+
+  /* Apply to all cards */
+  .card, [class*="card-"], .bg-white, .bg-gray-50, .bg-gray-100 {
+    background: var(--card-background) !important;
+    backdrop-filter: blur(10px);
+    border: 1px solid var(--glass-border);
+  }
+
+  /* Apply to flash cards specifically */
+  .flashcard, [class*="flashcard"], .study-card, .quiz-card {
+    background: var(--flashcard-background) !important;
+    backdrop-filter: blur(15px);
+    border: 1px solid var(--glass-border);
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+  }
+
+  /* Apply to glass elements */
+  .glass, [class*="glass"], .backdrop-blur {
+    background: var(--glass-background) !important;
+    backdrop-filter: blur(20px);
+    border: 1px solid var(--glass-border);
   }
 
   html {

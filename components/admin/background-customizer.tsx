@@ -69,20 +69,41 @@ export function BackgroundCustomizer() {
     if (settings.type === 'gradient') {
       const gradient = `linear-gradient(135deg, ${settings.primaryColor} 0%, ${settings.secondaryColor} 100%)`
       root.style.setProperty('--background-gradient', gradient)
+      root.style.setProperty('--app-background', gradient)
+      root.style.setProperty('--card-background', `rgba(255, 255, 255, ${settings.opacity * 0.9})`)
+      root.style.setProperty('--flashcard-background', `rgba(255, 255, 255, ${settings.opacity * 0.95})`)
       body.style.background = gradient
     } else if (settings.type === 'solid') {
       root.style.setProperty('--background-solid', settings.primaryColor)
+      root.style.setProperty('--app-background', settings.primaryColor)
+      root.style.setProperty('--card-background', `rgba(255, 255, 255, ${settings.opacity * 0.9})`)
+      root.style.setProperty('--flashcard-background', `rgba(255, 255, 255, ${settings.opacity * 0.95})`)
       body.style.background = settings.primaryColor
     } else if (settings.type === 'image' && settings.imageUrl) {
       const imageStyle = `
         url('${settings.imageUrl}') ${settings.repeat} ${settings.position} / ${settings.size}
       `
       root.style.setProperty('--background-image', imageStyle)
+      root.style.setProperty('--app-background', imageStyle)
+      root.style.setProperty('--card-background', `rgba(255, 255, 255, ${settings.opacity * 0.9})`)
+      root.style.setProperty('--flashcard-background', `rgba(255, 255, 255, ${settings.opacity * 0.95})`)
       body.style.background = imageStyle
     }
 
-    // Apply opacity
+    // Apply opacity to all background elements
     root.style.setProperty('--background-opacity', settings.opacity.toString())
+    
+    // Apply to all main containers
+    const mainContainers = document.querySelectorAll('main, .main-container, .page-container')
+    mainContainers.forEach(container => {
+      if (settings.type === 'gradient') {
+        (container as HTMLElement).style.background = `linear-gradient(135deg, ${settings.primaryColor} 0%, ${settings.secondaryColor} 100%)`
+      } else if (settings.type === 'solid') {
+        (container as HTMLElement).style.background = settings.primaryColor
+      } else if (settings.type === 'image' && settings.imageUrl) {
+        (container as HTMLElement).style.background = `url('${settings.imageUrl}') ${settings.repeat} ${settings.position} / ${settings.size}`
+      }
+    })
   }, [settings])
 
   const saveSettings = async () => {
