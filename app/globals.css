@@ -84,6 +84,7 @@
   --text-primary: 15 23 42; /* slate-800 - darker for better contrast */
   --text-secondary: 51 65 85; /* slate-600 - medium contrast */
   --text-muted: 100 116 139; /* slate-500 - lighter but still readable */
+  --text-light: 71 85 105; /* slate-600 - readable light text */
   
   /* Background customization variables */
   --app-background: linear-gradient(135deg, var(--background-color) 0%, #f8fafc 100%);
@@ -136,6 +137,12 @@
     /* Dark mode custom colors */
     --background-color: #2D1810; /* Dark Brown */
     --text-color: #F5F5DC; /* Beige */
+    
+    /* Enhanced text contrast for dark mode */
+    --text-primary: 220 9% 96%; /* Very light for dark backgrounds */
+    --text-secondary: 220 9% 80%; /* Light but not too bright */
+    --text-muted: 220 9% 60%; /* Medium contrast */
+    --text-light: 220 9% 70%; /* Readable light text */
     --surface-color: #3D2414; /* Darker Brown */
     --border-color: #5D3A1A; /* Medium Brown */
     --muted-color: #8B7355; /* Tan */
@@ -298,6 +305,59 @@
   .bg-gradient-to-br, .bg-gradient-to-r, .bg-gradient-to-l, 
   .bg-gradient-to-t, .bg-gradient-to-b {
     background: var(--app-background) !important;
+  }
+
+  /* Fix text visibility - Force readable text colors */
+  .text-gray-300, .text-gray-400, .text-gray-500, .text-slate-300, .text-slate-400, .text-slate-500,
+  .text-zinc-300, .text-zinc-400, .text-zinc-500, .text-neutral-300, .text-neutral-400, .text-neutral-500,
+  .text-stone-300, .text-stone-400, .text-stone-500 {
+    color: hsl(var(--text-secondary)) !important;
+  }
+
+  /* Fix very light text that's unreadable */
+  .text-yellow-200, .text-yellow-300, .text-orange-200, .text-orange-300,
+  .text-pink-200, .text-pink-300, .text-purple-200, .text-purple-300,
+  .text-blue-200, .text-blue-300, .text-indigo-200, .text-indigo-300 {
+    color: hsl(var(--text-secondary)) !important;
+  }
+
+  /* Ensure headings are always readable */
+  h1, h2, h3, h4, h5, h6 {
+    color: hsl(var(--text-primary)) !important;
+  }
+
+  /* Fix paragraph and body text */
+  p, span, div, li, td, th {
+    color: hsl(var(--text-secondary)) !important;
+  }
+
+  /* Fix card text specifically */
+  .card p, .card span, .card div, .card li,
+  [class*="card"] p, [class*="card"] span, [class*="card"] div, [class*="card"] li {
+    color: hsl(var(--text-secondary)) !important;
+  }
+
+  /* Fix muted text to be more readable */
+  .text-muted-foreground, .text-gray-600, .text-slate-600 {
+    color: hsl(var(--text-muted)) !important;
+  }
+
+  /* Dark mode text fixes */
+  .dark .text-gray-300, .dark .text-gray-400, .dark .text-gray-500,
+  .dark .text-slate-300, .dark .text-slate-400, .dark .text-slate-500 {
+    color: hsl(var(--text-secondary)) !important;
+  }
+
+  .dark .text-yellow-200, .dark .text-yellow-300, .dark .text-orange-200, .dark .text-orange-300 {
+    color: hsl(var(--text-secondary)) !important;
+  }
+
+  .dark h1, .dark h2, .dark h3, .dark h4, .dark h5, .dark h6 {
+    color: hsl(var(--text-primary)) !important;
+  }
+
+  .dark p, .dark span, .dark div, .dark li, .dark td, .dark th {
+    color: hsl(var(--text-secondary)) !important;
   }
 
   html {
