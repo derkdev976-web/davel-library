@@ -43,10 +43,6 @@ export function BroadcastEmail() {
   const [sendResult, setSendResult] = useState<any>(null)
   const { toast } = useToast()
 
-  useEffect(() => {
-    fetchMembers()
-  }, [fetchMembers])
-
   const fetchMembers = useCallback(async () => {
     try {
       setIsLoading(true)
@@ -64,6 +60,10 @@ export function BroadcastEmail() {
       setIsLoading(false)
     }
   }, [toast])
+
+  useEffect(() => {
+    fetchMembers()
+  }, [fetchMembers])
 
   const handleMemberSelect = (memberId: string, checked: boolean) => {
     if (checked) {
