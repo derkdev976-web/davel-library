@@ -80,6 +80,11 @@
   --ring: 262 83% 58%;
   --radius: 0.75rem;
   
+  /* Enhanced text contrast for light mode */
+  --text-primary: 15 23 42; /* slate-800 - darker for better contrast */
+  --text-secondary: 51 65 85; /* slate-600 - medium contrast */
+  --text-muted: 100 116 139; /* slate-500 - lighter but still readable */
+  
   /* Custom theme colors - Light mode palette */
   --primary-color: #8B4513; /* Saddle Brown */
   --secondary-color: #800020; /* Maroon */
@@ -176,9 +181,43 @@
     @apply bg-background text-foreground;
     font-feature-settings: "rlig" 1, "calt" 1;
     scroll-behavior: smooth;
-    background: linear-gradient(135deg, var(--background-color) 0%, #f8fafc 100%);
-    color: var(--text-color);
+    background: var(--background-gradient, linear-gradient(135deg, var(--background-color) 0%, #f8fafc 100%));
+    color: hsl(var(--text-primary));
     min-height: 100vh;
+  }
+
+  /* Enhanced text contrast classes */
+  .text-primary {
+    color: hsl(var(--text-primary));
+  }
+
+  .text-secondary {
+    color: hsl(var(--text-secondary));
+  }
+
+  .text-muted {
+    color: hsl(var(--text-muted));
+  }
+
+  /* Ensure all text elements have good contrast */
+  h1, h2, h3, h4, h5, h6 {
+    color: hsl(var(--text-primary));
+  }
+
+  p, span, div {
+    color: hsl(var(--text-secondary));
+  }
+
+  .text-gray-600 {
+    color: hsl(var(--text-secondary)) !important;
+  }
+
+  .text-gray-500 {
+    color: hsl(var(--text-muted)) !important;
+  }
+
+  .text-gray-400 {
+    color: hsl(var(--text-muted)) !important;
   }
 
   html {

@@ -19,6 +19,7 @@ import { UserProfile } from './user-profile'
 import { ContentManager } from "@/components/admin/content-manager"
 import { HomepageManager } from "@/components/admin/homepage-manager"
 import { ColorCustomizer } from "@/components/admin/color-customizer"
+import { BackgroundCustomizer } from "@/components/admin/background-customizer"
 import { BookManager } from "@/components/admin/book-manager"
 import { ReservationManager } from "@/components/admin/reservation-manager"
 import { ApplicationsManager } from "@/components/admin/applications-manager"
@@ -31,6 +32,7 @@ import { ContactStatistics } from "@/components/admin/contact-statistics"
 import { FeeManagement } from "@/components/admin/fee-management"
 import { FeeHistory } from "@/components/admin/fee-history"
 import { EmailTest } from "@/components/admin/email-test"
+import { NotificationSystem } from "@/components/notifications/notification-system"
 import { MemberProfilePicture } from "@/components/ui/public-profile-picture"
 
 import { 
@@ -38,7 +40,7 @@ import {
   Plus, Edit, Trash, Eye, Clock, Star, MessageSquare, Settings,
   UserCheck, UserX, Shield, Download, Upload, BarChart3, Activity,
   Palette, BookText, ClipboardList, CalendarDays, Mail, FileText,
-  Phone, MapPin, CreditCard, DollarSign, UserCircle
+  Phone, MapPin, CreditCard, DollarSign, UserCircle, Bell
 } from "lucide-react"
 
 interface Stats {
@@ -390,6 +392,10 @@ export function EnhancedAdminDashboard() {
               <Mail className="h-4 w-4" />
               <span className="hidden md:inline">Email</span>
             </TabsTrigger>
+            <TabsTrigger value="notifications" className="flex items-center space-x-2">
+              <Bell className="h-4 w-4" />
+              <span className="hidden md:inline">Notifications</span>
+            </TabsTrigger>
             <TabsTrigger value="documents" className="flex items-center space-x-2">
               <FileText className="h-4 w-4" />
               <span className="hidden md:inline">Documents</span>
@@ -562,19 +568,33 @@ export function EnhancedAdminDashboard() {
             </Card>
           </TabsContent>
 
+          <TabsContent value="notifications" className="space-y-6">
+            <NotificationSystem />
+          </TabsContent>
+
           <TabsContent value="homepage" className="space-y-6">
             <HomepageManager />
           </TabsContent>
 
           <TabsContent value="themes" className="space-y-6">
-            <Card className="bg-white dark:bg-gray-800 border-gray-200 dark:border-gray-700">
-              <CardHeader>
-                <CardTitle className="text-xl font-semibold text-gray-900 dark:text-gray-100">Theme Customization</CardTitle>
-              </CardHeader>
-              <CardContent>
-                <ColorCustomizer />
-              </CardContent>
-            </Card>
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+              <Card className="bg-white dark:bg-gray-800 border-gray-200 dark:border-gray-700">
+                <CardHeader>
+                  <CardTitle className="text-xl font-semibold text-gray-900 dark:text-gray-100">Color Theme</CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <ColorCustomizer />
+                </CardContent>
+              </Card>
+              <Card className="bg-white dark:bg-gray-800 border-gray-200 dark:border-gray-700">
+                <CardHeader>
+                  <CardTitle className="text-xl font-semibold text-gray-900 dark:text-gray-100">Background Customization</CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <BackgroundCustomizer />
+                </CardContent>
+              </Card>
+            </div>
           </TabsContent>
 
           <TabsContent value="ebooks" className="space-y-6">
