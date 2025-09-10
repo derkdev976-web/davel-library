@@ -24,7 +24,7 @@ export async function POST(request: NextRequest) {
       recipients = await prisma.user.findMany({
         where: { 
           role: "MEMBER",
-          status: "ACTIVE"
+          isActive: true
         },
         select: {
           id: true,
@@ -121,7 +121,7 @@ export async function GET(request: NextRequest) {
     const members = await prisma.user.findMany({
       where: { 
         role: "MEMBER",
-        status: "ACTIVE"
+        isActive: true
       },
       select: {
         id: true,
