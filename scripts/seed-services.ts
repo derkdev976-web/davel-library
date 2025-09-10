@@ -46,11 +46,14 @@ async function main() {
   ]
 
   for (const space of studySpaces) {
-    await prisma.studySpace.upsert({
-      where: { name: space.name },
-      update: space,
-      create: space
-    })
+    try {
+      await prisma.studySpace.create({
+        data: space
+      })
+    } catch (error) {
+      // Skip if already exists
+      console.log(`Study space "${space.name}" already exists, skipping...`)
+    }
   }
 
   // Create sample print services
@@ -98,11 +101,14 @@ async function main() {
   ]
 
   for (const service of printServices) {
-    await prisma.printService.upsert({
-      where: { name: service.name },
-      update: service,
-      create: service
-    })
+    try {
+      await prisma.printService.create({
+        data: service
+      })
+    } catch (error) {
+      // Skip if already exists
+      console.log(`Print service "${service.name}" already exists, skipping...`)
+    }
   }
 
   console.log('Services data seeded successfully!')
