@@ -1,9 +1,7 @@
 import { NextRequest, NextResponse } from "next/server"
 import { getServerSession } from "next-auth"
 import { authOptions } from "@/lib/auth"
-import { writeFile, mkdir } from "fs/promises"
-import { join } from "path"
-import { existsSync } from "fs"
+import { v2 as cloudinary } from 'cloudinary'
 import crypto from "crypto"
 
 // Helper function to format file size
@@ -85,6 +83,13 @@ const EXTENSION_TO_MIME = {
   '.webm': 'video/webm'
 }
 
+// Configure Cloudinary
+cloudinary.config({
+  cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
+  api_key: process.env.CLOUDINARY_API_KEY,
+  api_secret: process.env.CLOUDINARY_API_SECRET,
+})
+
 export async function POST(request: NextRequest) {
   try {
     const session = await getServerSession(authOptions)
@@ -123,26 +128,38 @@ export async function POST(request: NextRequest) {
       }, { status: 400 })
     }
 
-    // Create uploads directory if it doesn't exist
-    const uploadsDir = join(process.cwd(), "public", "uploads", config.folder)
-    
-    if (!existsSync(uploadsDir)) {
-      await mkdir(uploadsDir, { recursive: true })
-    }
+    // Convert file to buffer
+    const bytes = await file.arrayBuffer()
+    const buffer = Buffer.from(bytes)
 
     // Generate unique filename
     const uniqueId = crypto.randomBytes(16).toString('hex')
     const timestamp = Date.now()
     const fileName = `${type}_${timestamp}_${uniqueId}${fileExtension}`
-    const filePath = join(uploadsDir, fileName)
 
-    // Save file
-    const bytes = await file.arrayBuffer()
-    const buffer = Buffer.from(bytes)
-    await writeFile(filePath, buffer)
+    // Upload to Cloudinary
+    const result = await new Promise((resolve, reject) => {
+      cloudinary.uploader.upload_stream(
+        {
+          folder: `davel-library/${config.folder}`,
+          public_id: fileName.replace(fileExtension, ''),
+          resource_type: 'auto',
+          // Add image transformations for images
+          ...(config.allowedTypes.some(t => t.startsWith('image/')) && {
+            transformation: [
+              { width: 1200, height: 1200, crop: 'limit', quality: 'auto' }
+            ]
+          })
+        },
+        (error, result) => {
+          if (error) reject(error)
+          else resolve(result)
+        }
+      ).end(buffer)
+    })
 
-    // Return success response
-    const fileUrl = `/uploads/${config.folder}/${fileName}`
+    const cloudinaryResult = result as any
+    const fileUrl = cloudinaryResult.secure_url
     
     return NextResponse.json({
       message: "File uploaded successfully",
