@@ -293,16 +293,43 @@ export function EnhancedMemberDashboard() {
           </div>
 
           <Tabs value={selectedTab} onValueChange={setSelectedTab} className="space-y-6">
-            <TabsList className="grid w-full grid-cols-9">
-              <TabsTrigger value="overview">Overview</TabsTrigger>
-              <TabsTrigger value="profile">Profile</TabsTrigger>
-              <TabsTrigger value="books">My Books</TabsTrigger>
-              <TabsTrigger value="ebooks">Ebooks</TabsTrigger>
-              <TabsTrigger value="fees">Fees</TabsTrigger>
-              <TabsTrigger value="chat">Chat</TabsTrigger>
-              <TabsTrigger value="support">Support</TabsTrigger>
-              <TabsTrigger value="documents">Documents</TabsTrigger>
-              <TabsTrigger value="history">History</TabsTrigger>
+            <TabsList className="grid w-full grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-9 gap-1 p-1 bg-white/50 dark:bg-gray-800/50 backdrop-blur-sm rounded-xl shadow-lg">
+              <TabsTrigger value="overview" className="text-xs sm:text-sm">
+                <span className="hidden sm:inline">Overview</span>
+                <span className="sm:hidden">Home</span>
+              </TabsTrigger>
+              <TabsTrigger value="profile" className="text-xs sm:text-sm">
+                <span className="hidden sm:inline">Profile</span>
+                <span className="sm:hidden">Profile</span>
+              </TabsTrigger>
+              <TabsTrigger value="books" className="text-xs sm:text-sm">
+                <span className="hidden sm:inline">My Books</span>
+                <span className="sm:hidden">Books</span>
+              </TabsTrigger>
+              <TabsTrigger value="ebooks" className="text-xs sm:text-sm">
+                <span className="hidden sm:inline">Ebooks</span>
+                <span className="sm:hidden">Ebooks</span>
+              </TabsTrigger>
+              <TabsTrigger value="fees" className="text-xs sm:text-sm">
+                <span className="hidden sm:inline">Fees</span>
+                <span className="sm:hidden">Fees</span>
+              </TabsTrigger>
+              <TabsTrigger value="chat" className="text-xs sm:text-sm">
+                <span className="hidden sm:inline">Chat</span>
+                <span className="sm:hidden">Chat</span>
+              </TabsTrigger>
+              <TabsTrigger value="support" className="text-xs sm:text-sm">
+                <span className="hidden sm:inline">Support</span>
+                <span className="sm:hidden">Help</span>
+              </TabsTrigger>
+              <TabsTrigger value="documents" className="text-xs sm:text-sm">
+                <span className="hidden sm:inline">Documents</span>
+                <span className="sm:hidden">Docs</span>
+              </TabsTrigger>
+              <TabsTrigger value="history" className="text-xs sm:text-sm">
+                <span className="hidden sm:inline">History</span>
+                <span className="sm:hidden">History</span>
+              </TabsTrigger>
             </TabsList>
 
             <TabsContent value="overview" className="space-y-6">

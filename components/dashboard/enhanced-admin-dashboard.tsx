@@ -30,6 +30,7 @@ import { MemberContactDirectory } from "@/components/admin/member-contact-direct
 import { ContactStatistics } from "@/components/admin/contact-statistics"
 import { FeeManagement } from "@/components/admin/fee-management"
 import { FeeHistory } from "@/components/admin/fee-history"
+import { EmailTest } from "@/components/admin/email-test"
 import { MemberProfilePicture } from "@/components/ui/public-profile-picture"
 
 import { 
@@ -753,6 +754,7 @@ export function EnhancedAdminDashboard() {
           </TabsContent>
 
           <TabsContent value="email" className="space-y-6">
+            <EmailTest />
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
               <EmailBroadcaster userRole={session?.user?.role as "ADMIN" | "LIBRARIAN"} />
               
