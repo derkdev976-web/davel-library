@@ -349,30 +349,30 @@ export function EnhancedLibrarianDashboard() {
         </div>
 
         <Tabs value={selectedTab} onValueChange={setSelectedTab} className="space-y-6">
-          <TabsList className="grid w-full grid-cols-4 md:grid-cols-7 lg:grid-cols-8 xl:grid-cols-10 gap-2 p-1 bg-white/50 dark:bg-gray-800/50 backdrop-blur-sm rounded-xl shadow-lg">
+          <TabsList className="grid w-full grid-cols-2 md:grid-cols-4 lg:grid-cols-6 xl:grid-cols-8 gap-2 p-1 bg-white/50 dark:bg-gray-800/50 backdrop-blur-sm rounded-xl shadow-lg">                                                        
             <TabsTrigger value="overview" className="flex items-center space-x-2">
               <BarChart3 className="h-4 w-4" />
               <span className="hidden md:inline">Overview</span>
             </TabsTrigger>
-            <TabsTrigger value="printing" className="flex items-center space-x-2">
-              <Printer className="h-4 w-4" />
-              <span className="hidden md:inline">Printing</span>
+            <TabsTrigger value="digital-library" className="flex items-center space-x-2">
+              <BookText className="h-4 w-4" />
+              <span className="hidden md:inline">Digital Library</span>
             </TabsTrigger>
-            <TabsTrigger value="restoration" className="flex items-center space-x-2">
-              <BookMarked className="h-4 w-4" />
-              <span className="hidden md:inline">Restoration</span>
-            </TabsTrigger>
-            <TabsTrigger value="meetings" className="flex items-center space-x-2">
-              <Video className="h-4 w-4" />
-              <span className="hidden md:inline">Meetings</span>
-            </TabsTrigger>
-            <TabsTrigger value="classes" className="flex items-center space-x-2">
-              <GraduationCap className="h-4 w-4" />
-              <span className="hidden md:inline">Classes</span>
-            </TabsTrigger>
-            <TabsTrigger value="reservations" className="flex items-center space-x-2">
+            <TabsTrigger value="book-reservations" className="flex items-center space-x-2">
               <ClipboardList className="h-4 w-4" />
               <span className="hidden md:inline">Reservations</span>
+            </TabsTrigger>
+            <TabsTrigger value="research-assistance" className="flex items-center space-x-2">
+              <GraduationCap className="h-4 w-4" />
+              <span className="hidden md:inline">Research</span>
+            </TabsTrigger>
+            <TabsTrigger value="study-spaces" className="flex items-center space-x-2">
+              <Monitor className="h-4 w-4" />
+              <span className="hidden md:inline">Study Spaces</span>
+            </TabsTrigger>
+            <TabsTrigger value="printing-services" className="flex items-center space-x-2">
+              <Printer className="h-4 w-4" />
+              <span className="hidden md:inline">Printing</span>
             </TabsTrigger>
             <TabsTrigger value="applications" className="flex items-center space-x-2">
               <UserCheck className="h-4 w-4" />
@@ -400,7 +400,7 @@ export function EnhancedLibrarianDashboard() {
 
               <Card className="bg-gradient-to-br from-green-500 to-green-600 text-white">
                 <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                  <CardTitle className="text-sm font-medium">Active Reservations</CardTitle>
+                  <CardTitle className="text-sm font-medium">Book Reservations</CardTitle>
                   <BookOpen className="h-4 w-4" />
                 </CardHeader>
                 <CardContent>
@@ -411,7 +411,7 @@ export function EnhancedLibrarianDashboard() {
 
               <Card className="bg-gradient-to-br from-orange-500 to-orange-600 text-white">
                 <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                  <CardTitle className="text-sm font-medium">Printing Requests</CardTitle>
+                  <CardTitle className="text-sm font-medium">Printing Services</CardTitle>
                   <Printer className="h-4 w-4" />
                 </CardHeader>
                 <CardContent>
@@ -422,12 +422,48 @@ export function EnhancedLibrarianDashboard() {
 
               <Card className="bg-gradient-to-br from-purple-500 to-purple-600 text-white">
                 <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                  <CardTitle className="text-sm font-medium">Afternoon Classes</CardTitle>
+                  <CardTitle className="text-sm font-medium">Research Requests</CardTitle>
                   <GraduationCap className="h-4 w-4" />
                 </CardHeader>
                 <CardContent>
                   <div className="text-2xl font-bold">{stats.afternoonClasses}</div>
-                  <p className="text-xs opacity-90">Active classes</p>
+                  <p className="text-xs opacity-90">Active requests</p>
+                </CardContent>
+              </Card>
+            </div>
+
+            {/* Service Status Grid */}
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+              <Card className="bg-gradient-to-br from-indigo-500 to-indigo-600 text-white">
+                <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+                  <CardTitle className="text-sm font-medium">Digital Library</CardTitle>
+                  <BookText className="h-4 w-4" />
+                </CardHeader>
+                <CardContent>
+                  <div className="text-2xl font-bold">{stats.totalBooks}</div>
+                  <p className="text-xs opacity-90">Digital resources</p>
+                </CardContent>
+              </Card>
+
+              <Card className="bg-gradient-to-br from-teal-500 to-teal-600 text-white">
+                <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+                  <CardTitle className="text-sm font-medium">Study Spaces</CardTitle>
+                  <Monitor className="h-4 w-4" />
+                </CardHeader>
+                <CardContent>
+                  <div className="text-2xl font-bold">{stats.onlineMeetings}</div>
+                  <p className="text-xs opacity-90">Available spaces</p>
+                </CardContent>
+              </Card>
+
+              <Card className="bg-gradient-to-br from-pink-500 to-pink-600 text-white">
+                <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+                  <CardTitle className="text-sm font-medium">Chat Messages</CardTitle>
+                  <MessageSquare className="h-4 w-4" />
+                </CardHeader>
+                <CardContent>
+                  <div className="text-2xl font-bold">{stats.chatMessages}</div>
+                  <p className="text-xs opacity-90">Today&apos;s messages</p>
                 </CardContent>
               </Card>
             </div>
@@ -436,40 +472,48 @@ export function EnhancedLibrarianDashboard() {
             <Card className="bg-white dark:bg-gray-800 border-gray-200 dark:border-gray-700">
               <CardHeader>
                 <CardTitle className="text-xl font-semibold text-gray-900 dark:text-gray-100">Quick Actions</CardTitle>
-                <p className="text-sm text-gray-600">Common librarian tasks and services</p>
+                <p className="text-sm text-gray-600">Access all library services and management tools</p>
               </CardHeader>
               <CardContent>
-                <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-                  <Button 
-                    onClick={() => setIsAddPrintingDialogOpen(true)}
-                    className="h-24 flex flex-col items-center justify-center space-y-3 bg-gradient-to-br from-blue-500 to-blue-600 hover:from-blue-600 hover:to-blue-700 text-white shadow-lg hover:shadow-xl transition-all duration-300"
+                <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4">
+                  <Button
+                    onClick={() => setSelectedTab("digital-library")}
+                    className="h-24 flex flex-col items-center justify-center space-y-3 bg-gradient-to-br from-indigo-500 to-indigo-600 hover:from-indigo-600 hover:to-indigo-700 text-white shadow-lg hover:shadow-xl transition-all duration-300"   
                   >
-                    <Printer className="h-6 w-6" />
-                    <span className="text-sm font-medium">New Print Job</span>
+                    <BookText className="h-6 w-6" />
+                    <span className="text-sm font-medium">Digital Library</span>
                   </Button>
-                  
-                  <Button 
-                    onClick={() => setIsAddRestorationDialogOpen(true)}
-                    className="h-24 flex flex-col items-center justify-center space-y-3 bg-gradient-to-br from-amber-500 to-amber-600 hover:from-amber-600 hover:to-amber-700 text-white shadow-lg hover:shadow-xl transition-all duration-300"
+
+                  <Button
+                    onClick={() => setSelectedTab("book-reservations")}
+                    className="h-24 flex flex-col items-center justify-center space-y-3 bg-gradient-to-br from-green-500 to-green-600 hover:from-green-600 hover:to-green-700 text-white shadow-lg hover:shadow-xl transition-all duration-300"                                                                                                                      
                   >
-                    <BookMarked className="h-6 w-6" />
-                    <span className="text-sm font-medium">Book Restoration</span>
+                    <ClipboardList className="h-6 w-6" />
+                    <span className="text-sm font-medium">Reservations</span>
                   </Button>
-                  
-                  <Button 
-                    onClick={() => setIsAddMeetingDialogOpen(true)}
-                    className="h-24 flex flex-col items-center justify-center space-y-3 bg-gradient-to-br from-green-500 to-green-600 hover:from-green-600 hover:to-green-700 text-white shadow-lg hover:shadow-xl transition-all duration-300"
-                  >
-                    <Video className="h-6 w-6" />
-                    <span className="text-sm font-medium">Online Meeting</span>
-                  </Button>
-                  
-                  <Button 
-                    onClick={() => setIsAddClassDialogOpen(true)}
-                    className="h-24 flex flex-col items-center justify-center space-y-3 bg-gradient-to-br from-purple-500 to-purple-600 hover:from-purple-600 hover:to-purple-700 text-white shadow-lg hover:shadow-xl transition-all duration-300"
+
+                  <Button
+                    onClick={() => setSelectedTab("research-assistance")}
+                    className="h-24 flex flex-col items-center justify-center space-y-3 bg-gradient-to-br from-purple-500 to-purple-600 hover:from-purple-600 hover:to-purple-700 text-white shadow-lg hover:shadow-xl transition-all duration-300"                                                                                                                      
                   >
                     <GraduationCap className="h-6 w-6" />
-                    <span className="text-sm font-medium">New Class</span>
+                    <span className="text-sm font-medium">Research</span>
+                  </Button>
+
+                  <Button
+                    onClick={() => setSelectedTab("study-spaces")}
+                    className="h-24 flex flex-col items-center justify-center space-y-3 bg-gradient-to-br from-teal-500 to-teal-600 hover:from-teal-600 hover:to-teal-700 text-white shadow-lg hover:shadow-xl transition-all duration-300"                                                                                                                  
+                  >
+                    <Monitor className="h-6 w-6" />
+                    <span className="text-sm font-medium">Study Spaces</span>
+                  </Button>
+
+                  <Button
+                    onClick={() => setSelectedTab("printing-services")}
+                    className="h-24 flex flex-col items-center justify-center space-y-3 bg-gradient-to-br from-orange-500 to-orange-600 hover:from-orange-600 hover:to-orange-700 text-white shadow-lg hover:shadow-xl transition-all duration-300"                                                                                                                  
+                  >
+                    <Printer className="h-6 w-6" />
+                    <span className="text-sm font-medium">Printing</span>
                   </Button>
                 </div>
               </CardContent>
@@ -529,93 +573,155 @@ export function EnhancedLibrarianDashboard() {
             </div>
           </TabsContent>
 
-          <TabsContent value="printing" className="space-y-6">
-            <Card className="bg-white dark:bg-gray-800 border-gray-200 dark:border-gray-700">
-              <CardHeader className="flex flex-row items-center justify-between">
-                <div>
-                  <CardTitle className="text-xl font-semibold text-gray-900 dark:text-gray-100">Printing Requests</CardTitle>
-                  <p className="text-sm text-gray-600">Manage document printing requests from members</p>
-                </div>
-                <Button onClick={() => setIsAddPrintingDialogOpen(true)} className="bg-blue-600 hover:bg-blue-700">
-                  <Plus className="h-4 w-4 mr-2" />
-                  New Request
-                </Button>
-              </CardHeader>
-              <CardContent className="max-h-96 overflow-y-auto">
-                <PrintingRequestsTable 
-                  requests={printingRequests}
-                  onStatusUpdate={handlePrintingRequestStatus}
-                />
-              </CardContent>
-            </Card>
-          </TabsContent>
 
-          <TabsContent value="restoration" className="space-y-6">
-            <Card className="bg-white dark:bg-gray-800 border-gray-200 dark:border-gray-700">
-              <CardHeader className="flex flex-row items-center justify-between">
-                <div>
-                  <CardTitle className="text-xl font-semibold text-gray-900 dark:text-gray-100">Book Restoration</CardTitle>
-                  <p className="text-sm text-gray-600">Manage book restoration and repair requests</p>
-                </div>
-                <Button onClick={() => setIsAddRestorationDialogOpen(true)} className="bg-amber-600 hover:bg-amber-700">
-                  <Plus className="h-4 w-4 mr-2" />
-                  New Request
-                </Button>
-              </CardHeader>
-              <CardContent className="max-h-96 overflow-y-auto">
-                <RestorationRequestsTable 
-                  requests={restorationRequests}
-                  onStatusUpdate={handleRestorationRequestStatus}
-                />
-              </CardContent>
-            </Card>
-          </TabsContent>
-
-          <TabsContent value="meetings" className="space-y-6">
-            <Card className="bg-white dark:bg-gray-800 border-gray-200 dark:border-gray-700">
-              <CardHeader className="flex flex-row items-center justify-between">
-                <div>
-                  <CardTitle className="text-xl font-semibold text-gray-900 dark:text-gray-100">Online Meetings</CardTitle>
-                  <p className="text-sm text-gray-600">Schedule and manage virtual meetings and study groups</p>
-                </div>
-                <Button onClick={() => setIsAddMeetingDialogOpen(true)} className="bg-green-600 hover:bg-green-700">
-                  <Plus className="h-4 w-4 mr-2" />
-                  New Meeting
-                </Button>
-              </CardHeader>
-              <CardContent className="max-h-96 overflow-y-auto">
-                <OnlineMeetingsTable meetings={onlineMeetings} />
-              </CardContent>
-            </Card>
-          </TabsContent>
-
-          <TabsContent value="classes" className="space-y-6">
-            <Card className="bg-white dark:bg-gray-800 border-gray-200 dark:border-gray-700">
-              <CardHeader className="flex flex-row items-center justify-between">
-                <div>
-                  <CardTitle className="text-xl font-semibold text-gray-900 dark:text-gray-100">Afternoon Classes</CardTitle>
-                  <p className="text-sm text-gray-600">Manage educational classes and workshops</p>
-                </div>
-                <Button onClick={() => setIsAddClassDialogOpen(true)} className="bg-purple-600 hover:bg-purple-700">
-                  <Plus className="h-4 w-4 mr-2" />
-                  New Class
-                </Button>
-              </CardHeader>
-              <CardContent className="max-h-96 overflow-y-auto">
-                <AfternoonClassesTable classes={afternoonClasses} />
-              </CardContent>
-            </Card>
-          </TabsContent>
-
-          {/* Add other tabs for reservations, applications, chat, etc. */}
-          <TabsContent value="reservations" className="space-y-6">
+          <TabsContent value="digital-library" className="space-y-6">
             <Card className="bg-white dark:bg-gray-800 border-gray-200 dark:border-gray-700">
               <CardHeader>
-                <CardTitle className="text-xl font-semibold text-gray-900 dark:text-gray-100">Book Reservations</CardTitle>
+                <CardTitle className="text-xl font-semibold text-gray-900 dark:text-gray-100">Digital Library Management</CardTitle>                                                                                                                   
+                <p className="text-sm text-gray-600">Manage digital books, ebooks, and online resources</p>
+              </CardHeader>
+              <CardContent>
+                <div className="space-y-4">
+                  <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                    <Button className="h-20 flex flex-col items-center justify-center space-y-2 bg-gradient-to-br from-blue-500 to-blue-600 hover:from-blue-600 hover:to-blue-700 text-white">
+                      <BookText className="h-6 w-6" />
+                      <span className="text-sm font-medium">Upload Ebooks</span>
+                    </Button>
+                    <Button className="h-20 flex flex-col items-center justify-center space-y-2 bg-gradient-to-br from-green-500 to-green-600 hover:from-green-600 hover:to-green-700 text-white">
+                      <Download className="h-6 w-6" />
+                      <span className="text-sm font-medium">Manage Downloads</span>
+                    </Button>
+                    <Button className="h-20 flex flex-col items-center justify-center space-y-2 bg-gradient-to-br from-purple-500 to-purple-600 hover:from-purple-600 hover:to-purple-700 text-white">
+                      <FileText className="h-6 w-6" />
+                      <span className="text-sm font-medium">Digital Resources</span>
+                    </Button>
+                  </div>
+                  <div className="text-center">
+                    <Button asChild className="bg-[#8B4513] hover:bg-[#A0522D] text-white">
+                      <a href="/digital-library" target="_blank">
+                        <BookText className="h-4 w-4 mr-2" />
+                        Open Digital Library
+                      </a>
+                    </Button>
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
+          </TabsContent>
+
+          <TabsContent value="book-reservations" className="space-y-6">
+            <Card className="bg-white dark:bg-gray-800 border-gray-200 dark:border-gray-700">
+              <CardHeader>
+                <CardTitle className="text-xl font-semibold text-gray-900 dark:text-gray-100">Book Reservations</CardTitle>                                                                                                                   
                 <p className="text-sm text-gray-600">Manage book reservations and checkouts</p>
               </CardHeader>
               <CardContent>
                 <ReservationManager />
+              </CardContent>
+            </Card>
+          </TabsContent>
+
+          <TabsContent value="research-assistance" className="space-y-6">
+            <Card className="bg-white dark:bg-gray-800 border-gray-200 dark:border-gray-700">
+              <CardHeader>
+                <CardTitle className="text-xl font-semibold text-gray-900 dark:text-gray-100">Research Assistance</CardTitle>                                                                                                                   
+                <p className="text-sm text-gray-600">Manage research requests and provide academic support</p>
+              </CardHeader>
+              <CardContent>
+                <div className="space-y-4">
+                  <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                    <Button className="h-20 flex flex-col items-center justify-center space-y-2 bg-gradient-to-br from-blue-500 to-blue-600 hover:from-blue-600 hover:to-blue-700 text-white">
+                      <GraduationCap className="h-6 w-6" />
+                      <span className="text-sm font-medium">Research Requests</span>
+                    </Button>
+                    <Button className="h-20 flex flex-col items-center justify-center space-y-2 bg-gradient-to-br from-green-500 to-green-600 hover:from-green-600 hover:to-green-700 text-white">
+                      <BookOpen className="h-6 w-6" />
+                      <span className="text-sm font-medium">Academic Resources</span>
+                    </Button>
+                    <Button className="h-20 flex flex-col items-center justify-center space-y-2 bg-gradient-to-br from-purple-500 to-purple-600 hover:from-purple-600 hover:to-purple-700 text-white">
+                      <Users2 className="h-6 w-6" />
+                      <span className="text-sm font-medium">Research Sessions</span>
+                    </Button>
+                  </div>
+                  <div className="text-center">
+                    <Button asChild className="bg-[#8B4513] hover:bg-[#A0522D] text-white">
+                      <a href="/research-assistance" target="_blank">
+                        <GraduationCap className="h-4 w-4 mr-2" />
+                        Open Research Assistance
+                      </a>
+                    </Button>
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
+          </TabsContent>
+
+          <TabsContent value="study-spaces" className="space-y-6">
+            <Card className="bg-white dark:bg-gray-800 border-gray-200 dark:border-gray-700">
+              <CardHeader>
+                <CardTitle className="text-xl font-semibold text-gray-900 dark:text-gray-100">Study Spaces Management</CardTitle>                                                                                                                   
+                <p className="text-sm text-gray-600">Manage study room bookings and space availability</p>
+              </CardHeader>
+              <CardContent>
+                <div className="space-y-4">
+                  <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                    <Button className="h-20 flex flex-col items-center justify-center space-y-2 bg-gradient-to-br from-blue-500 to-blue-600 hover:from-blue-600 hover:to-blue-700 text-white">
+                      <Monitor className="h-6 w-6" />
+                      <span className="text-sm font-medium">Room Bookings</span>
+                    </Button>
+                    <Button className="h-20 flex flex-col items-center justify-center space-y-2 bg-gradient-to-br from-green-500 to-green-600 hover:from-green-600 hover:to-green-700 text-white">
+                      <Calendar className="h-6 w-6" />
+                      <span className="text-sm font-medium">Schedule</span>
+                    </Button>
+                    <Button className="h-20 flex flex-col items-center justify-center space-y-2 bg-gradient-to-br from-purple-500 to-purple-600 hover:from-purple-600 hover:to-purple-700 text-white">
+                      <MapPin className="h-6 w-6" />
+                      <span className="text-sm font-medium">Space Status</span>
+                    </Button>
+                  </div>
+                  <div className="text-center">
+                    <Button asChild className="bg-[#8B4513] hover:bg-[#A0522D] text-white">
+                      <a href="/study-spaces" target="_blank">
+                        <Monitor className="h-4 w-4 mr-2" />
+                        Open Study Spaces
+                      </a>
+                    </Button>
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
+          </TabsContent>
+
+          <TabsContent value="printing-services" className="space-y-6">
+            <Card className="bg-white dark:bg-gray-800 border-gray-200 dark:border-gray-700">
+              <CardHeader>
+                <CardTitle className="text-xl font-semibold text-gray-900 dark:text-gray-100">Printing Services</CardTitle>                                                                                                                   
+                <p className="text-sm text-gray-600">Manage printing requests and document services</p>
+              </CardHeader>
+              <CardContent>
+                <div className="space-y-4">
+                  <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                    <Button className="h-20 flex flex-col items-center justify-center space-y-2 bg-gradient-to-br from-blue-500 to-blue-600 hover:from-blue-600 hover:to-blue-700 text-white">
+                      <Printer className="h-6 w-6" />
+                      <span className="text-sm font-medium">Print Jobs</span>
+                    </Button>
+                    <Button className="h-20 flex flex-col items-center justify-center space-y-2 bg-gradient-to-br from-green-500 to-green-600 hover:from-green-600 hover:to-green-700 text-white">
+                      <FileText className="h-6 w-6" />
+                      <span className="text-sm font-medium">Document Services</span>
+                    </Button>
+                    <Button className="h-20 flex flex-col items-center justify-center space-y-2 bg-gradient-to-br from-purple-500 to-purple-600 hover:from-purple-600 hover:to-purple-700 text-white">
+                      <Clock3 className="h-6 w-6" />
+                      <span className="text-sm font-medium">Queue Status</span>
+                    </Button>
+                  </div>
+                  <div className="text-center">
+                    <Button asChild className="bg-[#8B4513] hover:bg-[#A0522D] text-white">
+                      <a href="/printing-services" target="_blank">
+                        <Printer className="h-4 w-4 mr-2" />
+                        Open Printing Services
+                      </a>
+                    </Button>
+                  </div>
+                </div>
               </CardContent>
             </Card>
           </TabsContent>
