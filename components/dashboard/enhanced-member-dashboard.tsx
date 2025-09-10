@@ -867,11 +867,10 @@ function ProfileForm({ profile, isEditing, onSave }: any) {
               console.error('Error uploading file:', error)
             }
           }}
+          onFileRemove={() => setFormData({ ...formData, profilePicture: "" })}
+          previewUrl={formData.profilePicture || null}
           type="profile"
         />
-        {formData.profilePicture && (
-          <Image src={formData.profilePicture} alt="Profile" width={96} height={96} className="object-cover rounded mt-2" />
-        )}
       </div>
 
       <DialogFooter>

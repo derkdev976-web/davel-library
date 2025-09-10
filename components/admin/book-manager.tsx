@@ -661,13 +661,9 @@ export function BookManager() {
                 onFileRemove={() => {
                   setFormData({ ...formData, coverImage: "" })
                 }}
+                previewUrl={formData.coverImage || null}
                 type="gallery"
               />
-              {formData.coverImage && (
-                <div className="mt-2">
-                  <Image src={formData.coverImage} alt="Book cover preview" width={128} height={128} className="object-cover rounded-lg border" />
-                </div>
-              )}
             </div>
 
 

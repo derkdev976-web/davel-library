@@ -520,23 +520,10 @@ export function ContentManager() {
                     console.error('Error uploading file:', error)
                   }
                 }}
+                onFileRemove={() => setFormData({ ...formData, imageUrl: "/images/catalog/placeholder.svg" })}
+                previewUrl={formData.imageUrl && formData.imageUrl !== "/images/catalog/placeholder.svg" ? formData.imageUrl : null}
                 type={formData.type === "EVENT" ? "news" : formData.type.toLowerCase() as "news" | "gallery"}
               />
-              
-              {formData.imageUrl && (
-                <div className="mt-4">
-                  <Label>Preview</Label>
-                  <div className="mt-2">
-                    <Image 
-                      src={formData.imageUrl} 
-                      alt="Content preview"
-                      width={128}
-                      height={128}
-                      className="object-cover rounded-lg border"
-                    />
-                  </div>
-                </div>
-              )}
             </div>
             
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">

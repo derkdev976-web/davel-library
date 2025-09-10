@@ -184,31 +184,45 @@ export function FileUpload({
           </div>
         )}
 
-        {type === "gallery" && (
-          <div className="space-y-2">
-            <Upload className="mx-auto h-12 w-12 text-gray-400" />
-            <div>
-              <p className="text-sm text-gray-600">
-                {isDragActive ? "Drop your image/video here" : "Click to upload or drag and drop"}
-              </p>
-              <p className="text-xs text-gray-500 mt-1">
-                {config.description}
-              </p>
-            </div>
-          </div>
-        )}
-
-        {type === "news" && (
-          <div className="space-y-2">
-            <Upload className="mx-auto h-12 w-12 text-gray-400" />
-            <div>
-              <p className="text-sm text-gray-600">
-                {isDragActive ? "Drop your image here" : "Click to upload or drag and drop"}
-              </p>
-              <p className="text-xs text-gray-500 mt-1">
-                {config.description}
-              </p>
-            </div>
+        {(type === "gallery" || type === "news") && (
+          <div className="space-y-4">
+            {previewUrl ? (
+              <div className="relative inline-block">
+                <Image
+                  src={previewUrl}
+                  alt="Upload preview"
+                  width={128}
+                  height={128}
+                  className="w-32 h-32 rounded-lg object-cover mx-auto border-4 border-white shadow-lg"
+                />
+                {onFileRemove && (
+                  <Button
+                    type="button"
+                    variant="destructive"
+                    size="sm"
+                    className="absolute -top-2 -right-2 h-6 w-6 rounded-full p-0"
+                    onClick={(e) => {
+                      e.stopPropagation()
+                      onFileRemove()
+                    }}
+                  >
+                    <X className="h-3 w-3" />
+                  </Button>
+                )}
+              </div>
+            ) : (
+              <div className="space-y-2">
+                <Upload className="mx-auto h-12 w-12 text-gray-400" />
+                <div>
+                  <p className="text-sm text-gray-600">
+                    {isDragActive ? "Drop your image here" : "Click to upload or drag and drop"}
+                  </p>
+                  <p className="text-xs text-gray-500 mt-1">
+                    {config.description}
+                  </p>
+                </div>
+              </div>
+            )}
           </div>
         )}
 
