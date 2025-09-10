@@ -8,11 +8,16 @@ export async function GET(req: NextRequest) {
   const skip = (page - 1) * limit
   const search = searchParams.get("search") || ""
   const genre = searchParams.get("genre") || ""
+  const digital = searchParams.get("digital") === "true"
   
   try {
     // Build where clause for filtering
     const where: any = {
       visibility: "PUBLIC" // Only show public books in catalog
+    }
+    
+    if (digital) {
+      where.isDigital = true
     }
     
     if (search) {
