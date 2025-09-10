@@ -1,6 +1,6 @@
 "use client"
 
-import { useState, useEffect } from "react"
+import { useState, useEffect, useCallback } from "react"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
 import { 
@@ -26,9 +26,9 @@ export function ContactStatistics() {
 
   useEffect(() => {
     fetchContactStats()
-  }, [])
+  }, [fetchContactStats])
 
-  const fetchContactStats = async () => {
+  const fetchContactStats = useCallback(async () => {
     try {
       setLoading(true)
       const response = await fetch("/api/admin/users")
@@ -75,7 +75,7 @@ export function ContactStatistics() {
     } finally {
       setLoading(false)
     }
-  }
+  }, [])
 
   const getTopCities = (members: any[]) => {
     const cityCount: Record<string, number> = {}

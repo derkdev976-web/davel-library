@@ -1,6 +1,6 @@
 "use client"
 
-import { useState, useEffect } from "react"
+import { useState, useEffect, useCallback } from "react"
 import { useSession } from "next-auth/react"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
@@ -98,7 +98,7 @@ export function MobileAdminDashboardV2() {
     }
   ]
 
-  const fetchDashboardData = async () => {
+  const fetchDashboardData = useCallback(async () => {
     try {
       setLoading(true)
       const response = await fetch("/api/admin/dashboard")
@@ -112,13 +112,13 @@ export function MobileAdminDashboardV2() {
     } finally {
       setLoading(false)
     }
-  }
+  }, [toast])
 
   useEffect(() => {
     if (session?.user?.role === "ADMIN") {
       fetchDashboardData()
     }
-  }, [session])
+  }, [session, fetchDashboardData])
 
   if (status === "loading" || loading) {
     return (
@@ -322,7 +322,7 @@ export function MobileAdminDashboardV2() {
             <div className="flex items-center justify-between">
               <div>
                 <h1 className="text-2xl md:text-3xl font-bold text-gray-900 dark:text-gray-100">Admin Dashboard</h1>
-                <p className="text-gray-600 dark:text-gray-300 mt-1">Manage your library's operations</p>
+                <p className="text-gray-600 dark:text-gray-300 mt-1">Manage your library&apos;s operations</p>
               </div>
               <Button
                 variant="outline"

@@ -1,6 +1,6 @@
 "use client"
 
-import { useState, useEffect } from "react"
+import { useState, useEffect, useCallback } from "react"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
@@ -62,7 +62,7 @@ export function BackgroundCustomizer() {
     }
   }, [])
 
-  const applyBackground = () => {
+  const applyBackground = useCallback(() => {
     const root = document.documentElement
     const body = document.body
 
@@ -83,7 +83,7 @@ export function BackgroundCustomizer() {
 
     // Apply opacity
     root.style.setProperty('--background-opacity', settings.opacity.toString())
-  }
+  }, [settings])
 
   const saveSettings = async () => {
     setLoading(true)
@@ -141,7 +141,7 @@ export function BackgroundCustomizer() {
     if (previewMode) {
       applyBackground()
     }
-  }, [settings, previewMode])
+  }, [settings, previewMode, applyBackground])
 
   return (
     <div className="space-y-6">
@@ -267,6 +267,7 @@ export function BackgroundCustomizer() {
                   />
                   {settings.imageUrl && (
                     <div className="mt-2">
+                      {/* eslint-disable-next-line @next/next/no-img-element */}
                       <img
                         src={settings.imageUrl}
                         alt="Background preview"
@@ -369,7 +370,7 @@ export function BackgroundCustomizer() {
             <div className="p-4 bg-blue-50 dark:bg-blue-900/20 rounded-lg">
               <p className="text-sm text-blue-800 dark:text-blue-200">
                 <strong>Preview Mode:</strong> Background changes are applied in real-time. 
-                Click "Save Settings" to make them permanent.
+                Click &quot;Save Settings&quot; to make them permanent.
               </p>
             </div>
           )}

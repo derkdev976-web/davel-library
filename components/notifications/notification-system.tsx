@@ -175,7 +175,7 @@ export function NotificationSystem() {
           <div className="text-center py-8 text-gray-500 dark:text-gray-400">
             <Bell className="h-12 w-12 mx-auto mb-4 opacity-50" />
             <p>No notifications yet</p>
-            <p className="text-sm">You'll see important updates here</p>
+            <p className="text-sm">You&apos;ll see important updates here</p>
           </div>
         ) : (
           <div className="space-y-3">
