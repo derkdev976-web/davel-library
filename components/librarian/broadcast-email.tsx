@@ -1,6 +1,6 @@
 "use client"
 
-import { useState, useEffect } from "react"
+import { useState, useEffect, useCallback } from "react"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
@@ -45,9 +45,9 @@ export function BroadcastEmail() {
 
   useEffect(() => {
     fetchMembers()
-  }, [])
+  }, [fetchMembers])
 
-  const fetchMembers = async () => {
+  const fetchMembers = useCallback(async () => {
     try {
       setIsLoading(true)
       const response = await fetch('/api/broadcast-email')
@@ -63,7 +63,7 @@ export function BroadcastEmail() {
     } finally {
       setIsLoading(false)
     }
-  }
+  }, [toast])
 
   const handleMemberSelect = (memberId: string, checked: boolean) => {
     if (checked) {

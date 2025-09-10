@@ -68,9 +68,9 @@ export default function UploadTestPage() {
   }
 
   const getFileIcon = (file: File) => {
-    if (file.type.startsWith('image/')) return <Image className="h-4 w-4" />
-    if (file.type.startsWith('video/')) return <Video className="h-4 w-4" />
-    return <FileText className="h-4 w-4" />
+    if (file.type.startsWith('image/')) return <Image className="h-4 w-4" alt="Image file" />
+    if (file.type.startsWith('video/')) return <Video className="h-4 w-4" alt="Video file" />
+    return <FileText className="h-4 w-4" alt="Document file" />
   }
 
   const formatFileSize = (bytes: number) => {

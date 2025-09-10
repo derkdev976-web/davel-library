@@ -12,9 +12,9 @@ import { Textarea } from "@/components/ui/textarea"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from "@/components/ui/dialog"
 import { useToast } from "@/hooks/use-toast"
-import { 
-  Users, BookOpen, Calendar, AlertCircle, CheckCircle, XCircle, 
-  Plus, Edit, Trash, Eye, Clock, Star, MessageSquare, Settings,
+import {
+  Users, BookOpen, Calendar, AlertCircle, CheckCircle, XCircle,
+  Plus, Edit, Trash, Trash2, Eye, Clock, Star, MessageSquare, Settings,
   UserCheck, UserX, Shield, Download, Upload, BarChart3, Activity,
   Palette, BookText, ClipboardList, CalendarDays, Mail, Printer,
   Video, BookMarked, GraduationCap, Scissors, FileText, Users2,
