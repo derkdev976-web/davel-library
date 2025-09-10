@@ -331,9 +331,27 @@
     color: hsl(var(--text-secondary)) !important;
   }
 
-  /* Fix card text specifically */
+  /* Fix card text specifically - AGGRESSIVE FIXES */
   .card p, .card span, .card div, .card li,
-  [class*="card"] p, [class*="card"] span, [class*="card"] div, [class*="card"] li {
+  [class*="card"] p, [class*="card"] span, [class*="card"] div, [class*="card"] li,
+  .card h1, .card h2, .card h3, .card h4, .card h5, .card h6,
+  [class*="card"] h1, [class*="card"] h2, [class*="card"] h3, [class*="card"] h4, [class*="card"] h5, [class*="card"] h6 {
+    color: hsl(var(--text-secondary)) !important;
+  }
+
+  /* Fix ALL text in content areas */
+  .content p, .content span, .content div, .content li,
+  .main-content p, .main-content span, .main-content div, .main-content li,
+  .dashboard p, .dashboard span, .dashboard div, .dashboard li,
+  .admin p, .admin span, .admin div, .admin li {
+    color: hsl(var(--text-secondary)) !important;
+  }
+
+  /* Fix user list and application text */
+  .user-list p, .user-list span, .user-list div,
+  .application p, .application span, .application div,
+  .member p, .member span, .member div,
+  .gallery p, .gallery span, .gallery div {
     color: hsl(var(--text-secondary)) !important;
   }
 
@@ -357,6 +375,76 @@
   }
 
   .dark p, .dark span, .dark div, .dark li, .dark td, .dark th {
+    color: hsl(var(--text-secondary)) !important;
+  }
+
+  /* ULTRA-AGGRESSIVE TEXT FIXES - Force ALL text to be readable */
+  * {
+    color: hsl(var(--text-secondary)) !important;
+  }
+
+  /* Override for headings */
+  h1, h2, h3, h4, h5, h6, .text-xl, .text-2xl, .text-3xl, .text-4xl, .text-5xl, .text-6xl {
+    color: hsl(var(--text-primary)) !important;
+  }
+
+  /* Fix footer text */
+  footer, footer *, .footer, .footer * {
+    color: hsl(var(--text-secondary)) !important;
+  }
+
+  /* Fix navigation text */
+  nav, nav *, .nav, .nav * {
+    color: hsl(var(--text-secondary)) !important;
+  }
+
+  /* Fix all button text */
+  button, .btn, [role="button"] {
+    color: hsl(var(--text-secondary)) !important;
+  }
+
+  /* Fix all link text */
+  a, .link {
+    color: hsl(var(--text-secondary)) !important;
+  }
+
+  /* Fix all form text */
+  input, textarea, select, label {
+    color: hsl(var(--text-secondary)) !important;
+  }
+
+  /* Fix all table text */
+  table, table *, .table, .table * {
+    color: hsl(var(--text-secondary)) !important;
+  }
+
+  /* Fix all list text */
+  ul, ol, li, .list, .list * {
+    color: hsl(var(--text-secondary)) !important;
+  }
+
+  /* Fix all section text */
+  section, section *, .section, .section * {
+    color: hsl(var(--text-secondary)) !important;
+  }
+
+  /* Fix all article text */
+  article, article *, .article, .article * {
+    color: hsl(var(--text-secondary)) !important;
+  }
+
+  /* Fix all aside text */
+  aside, aside *, .aside, .aside * {
+    color: hsl(var(--text-secondary)) !important;
+  }
+
+  /* Fix all header text */
+  header, header *, .header, .header * {
+    color: hsl(var(--text-secondary)) !important;
+  }
+
+  /* Fix all main text */
+  main, main *, .main, .main * {
     color: hsl(var(--text-secondary)) !important;
   }
 
