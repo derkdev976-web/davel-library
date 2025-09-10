@@ -99,12 +99,12 @@ export default function UploadTestPage() {
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
             {/* Upload Form */}
             <Card className="card-background">
-              <CardHeader>
+        <CardHeader>
                 <CardTitle className="flex items-center gap-2">
                   <Upload className="h-5 w-5" />
                   Upload Test
                 </CardTitle>
-              </CardHeader>
+        </CardHeader>
               <CardContent className="space-y-6">
                 {/* Upload Type Selection */}
                 <div>
@@ -133,9 +133,9 @@ export default function UploadTestPage() {
                 </div>
 
                 {/* File Selection */}
-                <div>
+              <div>
                   <Label>Select File</Label>
-                  <Input
+                <Input
                     type="file"
                     onChange={handleFileSelect}
                     className="mt-2"
@@ -147,8 +147,8 @@ export default function UploadTestPage() {
                       uploadType === 'print' ? '.pdf,.docx,.doc,.txt,.rtf,.odt,.pptx,.ppt,.xlsx,.xls,.jpg,.jpeg,.png,.gif,.webp' :
                       '*'
                     }
-                  />
-                </div>
+                />
+              </div>
 
                 {/* File Info */}
                 {selectedFile && (
@@ -203,13 +203,13 @@ export default function UploadTestPage() {
                     </div>
 
                     <div className="space-y-2">
-                      <div>
+              <div>
                         <Label className="text-sm font-medium">File URL:</Label>
                         <div className="p-2 bg-gray-100 dark:bg-gray-700 rounded text-sm break-all">
                           {uploadResult.url}
-                        </div>
-                      </div>
-                      
+              </div>
+            </div>
+
                       <div className="grid grid-cols-2 gap-4 text-sm">
                         <div>
                           <Label className="font-medium">Original Name:</Label>
@@ -223,7 +223,7 @@ export default function UploadTestPage() {
                           <Label className="font-medium">File Type:</Label>
                           <div>{uploadResult.type}</div>
                         </div>
-                        <div>
+            <div>
                           <Label className="font-medium">Uploaded At:</Label>
                           <div>{new Date(uploadResult.uploadedAt).toLocaleString()}</div>
                         </div>
@@ -235,7 +235,7 @@ export default function UploadTestPage() {
                         <Label className="text-sm font-medium">Preview:</Label>
                         <div className="mt-2">
                           {uploadResult.type.startsWith('image/') ? (
-                            {/* eslint-disable-next-line @next/next/no-img-element */}
+                            // eslint-disable-next-line @next/next/no-img-element
                             <img
                               src={uploadResult.url}
                               alt="Upload preview"
@@ -246,12 +246,12 @@ export default function UploadTestPage() {
                               <FileText className="h-8 w-8 mx-auto mb-2 text-gray-400" />
                               <div className="text-sm text-gray-600 dark:text-gray-400">
                                 {uploadResult.originalName}
-                              </div>
-                            </div>
-                          )}
-                        </div>
-                      </div>
-                    )}
+                  </div>
+                </div>
+              )}
+            </div>
+                </div>
+              )}
                   </div>
                 ) : (
                   <div className="text-center py-8 text-gray-500 dark:text-gray-400">
@@ -262,7 +262,7 @@ export default function UploadTestPage() {
                 )}
               </CardContent>
             </Card>
-          </div>
+            </div>
 
           {/* Instructions */}
           <Card className="card-background mt-8">
@@ -280,7 +280,7 @@ export default function UploadTestPage() {
                   <li>Click &quot;Upload File&quot; to test the upload</li>
                   <li>Check the result panel for success/failure details</li>
                 </ol>
-              </div>
+            </div>
               
               <div>
                 <h4 className="font-semibold text-gray-900 dark:text-gray-100 mb-2">
@@ -306,9 +306,9 @@ export default function UploadTestPage() {
                     <strong>Spreadsheets:</strong> XLSX, XLS (Print only)
                   </div>
                 </div>
-              </div>
-            </CardContent>
-          </Card>
+          </div>
+        </CardContent>
+      </Card>
         </div>
       </main>
     </div>
