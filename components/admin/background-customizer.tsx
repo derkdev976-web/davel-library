@@ -221,13 +221,22 @@ export function BackgroundCustomizer() {
   const saveSettings = async () => {
     setLoading(true)
     try {
-      // Save to localStorage
-      localStorage.setItem('background-settings', JSON.stringify(settings))
-      
-      // Apply immediately
-      applyBackground()
-      
-      toast({ title: "Background settings saved successfully!" })
+      // Save to global theme API
+      const response = await fetch('/api/theme', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(settings)
+      })
+
+      if (response.ok) {
+        // Apply immediately
+        applyBackground()
+        toast({ title: "Background settings saved globally for all users!" })
+      } else {
+        throw new Error('Failed to save theme')
+      }
     } catch (error) {
       console.error("Error saving background settings:", error)
       toast({ title: "Failed to save settings", variant: "destructive" })

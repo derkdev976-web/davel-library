@@ -24,11 +24,12 @@ interface BackgroundSettings {
 export function BackgroundProvider({ children }: { children: React.ReactNode }) {
   useEffect(() => {
     // Load saved background settings and apply them
-    const applySavedBackground = () => {
+    const applySavedBackground = async () => {
       try {
-        const savedSettings = localStorage.getItem('background-settings')
-        if (savedSettings) {
-          const settings: BackgroundSettings = JSON.parse(savedSettings)
+        // Fetch global theme from API
+        const response = await fetch('/api/theme')
+        if (response.ok) {
+          const { theme: settings } = await response.json()
           const root = document.documentElement
           const body = document.body
 
