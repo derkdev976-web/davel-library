@@ -12,7 +12,7 @@ export default function UserDashboardPage() {
 
   if (status === "loading") {
     return (
-      <div className="min-h-screen bg-gray-50 dark:bg-gray-900 flex items-center justify-center">
+      <div className="min-h-screen app-background flex items-center justify-center">
         <Card className="p-8">
           <CardContent className="flex items-center gap-4">
             <Loader2 className="h-6 w-6 animate-spin" />
@@ -25,7 +25,7 @@ export default function UserDashboardPage() {
 
   if (!session) {
     return (
-      <div className="min-h-screen bg-gray-50 dark:bg-gray-900">
+      <div className="min-h-screen app-background">
         <Header />
         <main className="pt-20 pb-12">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -40,7 +40,7 @@ export default function UserDashboardPage() {
   const userRole = session.user?.role || "GUEST"
 
   return (
-    <div className="min-h-screen bg-gray-50 dark:bg-gray-900">
+    <div className="min-h-screen app-background">
       <Header />
       <main className="pt-20 pb-12">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">

@@ -4,6 +4,7 @@ import "./globals.css"
 import { AuthProvider } from "@/components/providers/auth-provider"
 import { ThemeProvider } from "@/components/providers/theme-provider"
 import { GlobalThemeProvider } from "@/components/providers/global-theme-provider"
+import { BackgroundProvider } from "@/components/providers/background-provider"
 import { Toaster } from "@/components/ui/toaster"
 import Script from "next/script"
 
@@ -97,14 +98,16 @@ export default function RootLayout({
         <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32.png" />
         <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16.png" />
       </head>
-      <body className="font-sans antialiased bg-background text-foreground min-h-screen-safe safe-area-inset" style={{ fontFamily: '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif' }}>
+      <body className="font-sans antialiased app-background text-foreground min-h-screen-safe safe-area-inset" style={{ fontFamily: '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif' }}>
         <GlobalThemeProvider>
-          <ThemeProvider attribute="class" defaultTheme="light" enableSystem disableTransitionOnChange>
-            <AuthProvider>
-              {children}
-              <Toaster />
-            </AuthProvider>
-          </ThemeProvider>
+          <BackgroundProvider>
+            <ThemeProvider attribute="class" defaultTheme="light" enableSystem disableTransitionOnChange>
+              <AuthProvider>
+                {children}
+                <Toaster />
+              </AuthProvider>
+            </ThemeProvider>
+          </BackgroundProvider>
         </GlobalThemeProvider>
       </body>
     </html>

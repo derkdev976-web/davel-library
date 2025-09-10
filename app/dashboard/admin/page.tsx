@@ -11,7 +11,7 @@ export default function AdminDashboardPage() {
   // Show loading state while checking authentication
   if (status === "loading") {
     return (
-      <div className="min-h-screen bg-gray-50 dark:bg-gray-900 flex items-center justify-center">
+      <div className="min-h-screen app-background flex items-center justify-center">
         <Card className="p-8">
           <CardContent className="flex items-center gap-4">
             <Loader2 className="h-6 w-6 animate-spin" />
@@ -25,7 +25,7 @@ export default function AdminDashboardPage() {
   // Show error if not authenticated
   if (!session) {
     return (
-      <div className="min-h-screen bg-gray-50 dark:bg-gray-900 flex items-center justify-center">
+      <div className="min-h-screen app-background flex items-center justify-center">
         <Card className="p-8">
           <CardContent className="text-center">
             <h2 className="text-xl font-semibold mb-4">Access Denied</h2>
@@ -45,7 +45,7 @@ export default function AdminDashboardPage() {
   // Show error if not admin
   if (session.user?.role !== "ADMIN") {
     return (
-      <div className="min-h-screen bg-gray-50 dark:bg-gray-900 flex items-center justify-center">
+      <div className="min-h-screen app-background flex items-center justify-center">
         <Card className="p-8">
           <CardContent className="text-center">
             <h2 className="text-xl font-semibold mb-4">Access Denied</h2>

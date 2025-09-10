@@ -258,13 +258,17 @@
     border: 1px solid var(--glass-border);
   }
 
-  /* Apply to all main containers */
-  main, .main-container, .page-container {
+  /* Apply to all main containers and pages */
+  html, body, main, .main-container, .page-container, 
+  [class*="page"], [class*="container"], [class*="wrapper"] {
     background: var(--app-background) !important;
   }
 
-  /* Apply to all cards */
-  .card, [class*="card-"], .bg-white, .bg-gray-50, .bg-gray-100 {
+  /* Apply to all cards and content containers */
+  .card, [class*="card-"], .bg-white, .bg-gray-50, .bg-gray-100, 
+  .bg-slate-50, .bg-zinc-50, .bg-neutral-50, .bg-stone-50,
+  [class*="bg-white"], [class*="bg-gray"], [class*="bg-slate"],
+  [class*="bg-zinc"], [class*="bg-neutral"], [class*="bg-stone"] {
     background: var(--card-background) !important;
     backdrop-filter: blur(10px);
     border: 1px solid var(--glass-border);
@@ -283,6 +287,17 @@
     background: var(--glass-background) !important;
     backdrop-filter: blur(20px);
     border: 1px solid var(--glass-border);
+  }
+
+  /* Apply to all sections and divs */
+  section, div, article, aside, header, footer, nav {
+    background: transparent !important;
+  }
+
+  /* Override specific background classes that might interfere */
+  .bg-gradient-to-br, .bg-gradient-to-r, .bg-gradient-to-l, 
+  .bg-gradient-to-t, .bg-gradient-to-b {
+    background: var(--app-background) !important;
   }
 
   html {

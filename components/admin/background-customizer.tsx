@@ -93,15 +93,35 @@ export function BackgroundCustomizer() {
     // Apply opacity to all background elements
     root.style.setProperty('--background-opacity', settings.opacity.toString())
     
-    // Apply to all main containers
-    const mainContainers = document.querySelectorAll('main, .main-container, .page-container')
-    mainContainers.forEach(container => {
-      if (settings.type === 'gradient') {
-        (container as HTMLElement).style.background = `linear-gradient(135deg, ${settings.primaryColor} 0%, ${settings.secondaryColor} 100%)`
-      } else if (settings.type === 'solid') {
-        (container as HTMLElement).style.background = settings.primaryColor
-      } else if (settings.type === 'image' && settings.imageUrl) {
-        (container as HTMLElement).style.background = `url('${settings.imageUrl}') ${settings.repeat} ${settings.position} / ${settings.size}`
+    // Apply to all elements that might have background overrides
+    const allElements = document.querySelectorAll('*')
+    allElements.forEach(element => {
+      const htmlElement = element as HTMLElement
+      const classList = htmlElement.className || ''
+      
+      // Skip elements that should keep their custom backgrounds
+      if (classList.includes('card-background') || 
+          classList.includes('flashcard-background') || 
+          classList.includes('glass-background') ||
+          classList.includes('bg-gradient-to-') ||
+          classList.includes('bg-') && !classList.includes('bg-white') && !classList.includes('bg-gray')) {
+        return
+      }
+      
+      // Apply background to main containers and pages
+      if (element.tagName === 'MAIN' || 
+          element.tagName === 'BODY' || 
+          element.tagName === 'HTML' ||
+          classList.includes('page') ||
+          classList.includes('container') ||
+          classList.includes('wrapper')) {
+        if (settings.type === 'gradient') {
+          htmlElement.style.background = `linear-gradient(135deg, ${settings.primaryColor} 0%, ${settings.secondaryColor} 100%)`
+        } else if (settings.type === 'solid') {
+          htmlElement.style.background = settings.primaryColor
+        } else if (settings.type === 'image' && settings.imageUrl) {
+          htmlElement.style.background = `url('${settings.imageUrl}') ${settings.repeat} ${settings.position} / ${settings.size}`
+        }
       }
     })
   }, [settings])
