@@ -27,6 +27,14 @@ interface BackgroundSettings {
   position: string
   size: string
   repeat: string
+  // Card customization
+  cardBackground: string
+  cardOpacity: number
+  cardBorder: string
+  // Text customization
+  textPrimary: string
+  textSecondary: string
+  textMuted: string
 }
 
 const defaultSettings: BackgroundSettings = {
@@ -36,7 +44,15 @@ const defaultSettings: BackgroundSettings = {
   opacity: 1,
   position: 'center',
   size: 'cover',
-  repeat: 'no-repeat'
+  repeat: 'no-repeat',
+  // Card customization defaults
+  cardBackground: '#ffffff',
+  cardOpacity: 0.9,
+  cardBorder: '#e5e7eb',
+  // Text customization defaults
+  textPrimary: '#1f2937',
+  textSecondary: '#4b5563',
+  textMuted: '#6b7280'
 }
 
 const presetGradients = [
@@ -46,6 +62,49 @@ const presetGradients = [
   { name: 'Sunset Orange', primary: '#ea580c', secondary: '#f97316' },
   { name: 'Royal Purple', primary: '#7c3aed', secondary: '#a855f7' },
   { name: 'Midnight Dark', primary: '#1f2937', secondary: '#374151' }
+]
+
+const presetCardThemes = [
+  { 
+    name: 'Classic White', 
+    cardBackground: '#ffffff', 
+    cardBorder: '#e5e7eb',
+    textPrimary: '#1f2937',
+    textSecondary: '#4b5563',
+    textMuted: '#6b7280'
+  },
+  { 
+    name: 'Warm Cream', 
+    cardBackground: '#fef7ed', 
+    cardBorder: '#fed7aa',
+    textPrimary: '#92400e',
+    textSecondary: '#a16207',
+    textMuted: '#ca8a04'
+  },
+  { 
+    name: 'Cool Blue', 
+    cardBackground: '#eff6ff', 
+    cardBorder: '#bfdbfe',
+    textPrimary: '#1e40af',
+    textSecondary: '#2563eb',
+    textMuted: '#3b82f6'
+  },
+  { 
+    name: 'Soft Gray', 
+    cardBackground: '#f9fafb', 
+    cardBorder: '#d1d5db',
+    textPrimary: '#374151',
+    textSecondary: '#4b5563',
+    textMuted: '#6b7280'
+  },
+  { 
+    name: 'Dark Theme', 
+    cardBackground: '#1f2937', 
+    cardBorder: '#374151',
+    textPrimary: '#f9fafb',
+    textSecondary: '#d1d5db',
+    textMuted: '#9ca3af'
+  }
 ]
 
 export function BackgroundCustomizer() {
@@ -92,6 +151,16 @@ export function BackgroundCustomizer() {
 
     // Apply opacity to all background elements
     root.style.setProperty('--background-opacity', settings.opacity.toString())
+    
+    // Apply card customization
+    root.style.setProperty('--card-background', settings.cardBackground)
+    root.style.setProperty('--card-opacity', settings.cardOpacity.toString())
+    root.style.setProperty('--card-border', settings.cardBorder)
+    
+    // Apply text customization
+    root.style.setProperty('--text-primary', settings.textPrimary)
+    root.style.setProperty('--text-secondary', settings.textSecondary)
+    root.style.setProperty('--text-muted', settings.textMuted)
     
     // Apply to all elements that might have background overrides
     const allElements = document.querySelectorAll('*')
@@ -367,6 +436,176 @@ export function BackgroundCustomizer() {
               className="mt-2"
             />
           </div>
+        </CardContent>
+      </Card>
+
+      {/* Card Customization */}
+      <Card className="bg-white dark:bg-gray-800 shadow-lg">
+        <CardHeader>
+          <CardTitle className="text-xl font-semibold text-gray-900 dark:text-gray-100 flex items-center gap-2">
+            <Palette className="h-5 w-5" />
+            Card Customization
+          </CardTitle>
+        </CardHeader>
+        <CardContent className="space-y-6">
+          {/* Preset Card Themes */}
+          <div>
+            <Label className="text-sm font-medium text-gray-700 dark:text-gray-300">Preset Card Themes</Label>
+            <div className="grid grid-cols-2 gap-3 mt-2">
+              {presetCardThemes.map((preset, index) => (
+                <Button
+                  key={index}
+                  variant="outline"
+                  size="sm"
+                  onClick={() => setSettings(prev => ({ 
+                    ...prev, 
+                    cardBackground: preset.cardBackground,
+                    cardBorder: preset.cardBorder,
+                    textPrimary: preset.textPrimary,
+                    textSecondary: preset.textSecondary,
+                    textMuted: preset.textMuted
+                  }))}
+                  className="h-12 flex items-center justify-center space-x-2"
+                  style={{
+                    background: preset.cardBackground,
+                    color: preset.textPrimary,
+                    borderColor: preset.cardBorder
+                  }}
+                >
+                  <span className="text-sm font-medium">{preset.name}</span>
+                </Button>
+              ))}
+            </div>
+          </div>
+
+          {/* Card Background Color */}
+          <div>
+            <Label className="text-sm font-medium text-gray-700 dark:text-gray-300">Card Background</Label>
+            <div className="flex items-center gap-3 mt-2">
+              <Input
+                type="color"
+                value={settings.cardBackground}
+                onChange={(e) => setSettings(prev => ({ ...prev, cardBackground: e.target.value }))}
+                className="w-16 h-10 p-1 border rounded"
+              />
+              <Input
+                type="text"
+                value={settings.cardBackground}
+                onChange={(e) => setSettings(prev => ({ ...prev, cardBackground: e.target.value }))}
+                className="flex-1"
+                placeholder="#ffffff"
+              />
+            </div>
+          </div>
+
+          {/* Card Opacity */}
+          <div>
+            <Label className="text-sm font-medium text-gray-700 dark:text-gray-300">
+              Card Opacity: {Math.round(settings.cardOpacity * 100)}%
+            </Label>
+            <Input
+              type="range"
+              min="0.1"
+              max="1"
+              step="0.1"
+              value={settings.cardOpacity}
+              onChange={(e) => setSettings(prev => ({ ...prev, cardOpacity: parseFloat(e.target.value) }))}
+              className="mt-2"
+            />
+          </div>
+
+          {/* Card Border Color */}
+          <div>
+            <Label className="text-sm font-medium text-gray-700 dark:text-gray-300">Card Border</Label>
+            <div className="flex items-center gap-3 mt-2">
+              <Input
+                type="color"
+                value={settings.cardBorder}
+                onChange={(e) => setSettings(prev => ({ ...prev, cardBorder: e.target.value }))}
+                className="w-16 h-10 p-1 border rounded"
+              />
+              <Input
+                type="text"
+                value={settings.cardBorder}
+                onChange={(e) => setSettings(prev => ({ ...prev, cardBorder: e.target.value }))}
+                className="flex-1"
+                placeholder="#e5e7eb"
+              />
+            </div>
+          </div>
+        </CardContent>
+      </Card>
+
+      {/* Text Customization */}
+      <Card className="bg-white dark:bg-gray-800 shadow-lg">
+        <CardHeader>
+          <CardTitle className="text-xl font-semibold text-gray-900 dark:text-gray-100 flex items-center gap-2">
+            <Palette className="h-5 w-5" />
+            Text Customization
+          </CardTitle>
+        </CardHeader>
+        <CardContent className="space-y-6">
+          {/* Primary Text Color */}
+          <div>
+            <Label className="text-sm font-medium text-gray-700 dark:text-gray-300">Primary Text (Headings)</Label>
+            <div className="flex items-center gap-3 mt-2">
+              <Input
+                type="color"
+                value={settings.textPrimary}
+                onChange={(e) => setSettings(prev => ({ ...prev, textPrimary: e.target.value }))}
+                className="w-16 h-10 p-1 border rounded"
+              />
+              <Input
+                type="text"
+                value={settings.textPrimary}
+                onChange={(e) => setSettings(prev => ({ ...prev, textPrimary: e.target.value }))}
+                className="flex-1"
+                placeholder="#1f2937"
+              />
+            </div>
+          </div>
+
+          {/* Secondary Text Color */}
+          <div>
+            <Label className="text-sm font-medium text-gray-700 dark:text-gray-300">Secondary Text (Body)</Label>
+            <div className="flex items-center gap-3 mt-2">
+              <Input
+                type="color"
+                value={settings.textSecondary}
+                onChange={(e) => setSettings(prev => ({ ...prev, textSecondary: e.target.value }))}
+                className="w-16 h-10 p-1 border rounded"
+              />
+              <Input
+                type="text"
+                value={settings.textSecondary}
+                onChange={(e) => setSettings(prev => ({ ...prev, textSecondary: e.target.value }))}
+                className="flex-1"
+                placeholder="#4b5563"
+              />
+            </div>
+          </div>
+
+          {/* Muted Text Color */}
+          <div>
+            <Label className="text-sm font-medium text-gray-700 dark:text-gray-300">Muted Text (Subtitles)</Label>
+            <div className="flex items-center gap-3 mt-2">
+              <Input
+                type="color"
+                value={settings.textMuted}
+                onChange={(e) => setSettings(prev => ({ ...prev, textMuted: e.target.value }))}
+                className="w-16 h-10 p-1 border rounded"
+              />
+              <Input
+                type="text"
+                value={settings.textMuted}
+                onChange={(e) => setSettings(prev => ({ ...prev, textMuted: e.target.value }))}
+                className="flex-1"
+                placeholder="#6b7280"
+              />
+            </div>
+          </div>
+        </CardContent>
+      </Card>
 
           {/* Preview */}
           <div>

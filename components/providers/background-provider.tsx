@@ -11,6 +11,14 @@ interface BackgroundSettings {
   position: string
   size: string
   repeat: string
+  // Card customization
+  cardBackground: string
+  cardOpacity: number
+  cardBorder: string
+  // Text customization
+  textPrimary: string
+  textSecondary: string
+  textMuted: string
 }
 
 export function BackgroundProvider({ children }: { children: React.ReactNode }) {
@@ -27,24 +35,28 @@ export function BackgroundProvider({ children }: { children: React.ReactNode }) 
           if (settings.type === 'gradient') {
             const gradient = `linear-gradient(135deg, ${settings.primaryColor} 0%, ${settings.secondaryColor} 100%)`
             root.style.setProperty('--app-background', gradient)
-            root.style.setProperty('--card-background', `rgba(255, 255, 255, ${settings.opacity * 0.9})`)
-            root.style.setProperty('--flashcard-background', `rgba(255, 255, 255, ${settings.opacity * 0.95})`)
             body.style.background = gradient
           } else if (settings.type === 'solid') {
             root.style.setProperty('--app-background', settings.primaryColor)
-            root.style.setProperty('--card-background', `rgba(255, 255, 255, ${settings.opacity * 0.9})`)
-            root.style.setProperty('--flashcard-background', `rgba(255, 255, 255, ${settings.opacity * 0.95})`)
             body.style.background = settings.primaryColor
           } else if (settings.type === 'image' && settings.imageUrl) {
             const imageStyle = `url('${settings.imageUrl}') ${settings.repeat} ${settings.position} / ${settings.size}`
             root.style.setProperty('--app-background', imageStyle)
-            root.style.setProperty('--card-background', `rgba(255, 255, 255, ${settings.opacity * 0.9})`)
-            root.style.setProperty('--flashcard-background', `rgba(255, 255, 255, ${settings.opacity * 0.95})`)
             body.style.background = imageStyle
           }
 
           // Apply opacity
           root.style.setProperty('--background-opacity', settings.opacity.toString())
+          
+          // Apply card customization
+          root.style.setProperty('--card-background', settings.cardBackground || '#ffffff')
+          root.style.setProperty('--card-opacity', (settings.cardOpacity || 0.9).toString())
+          root.style.setProperty('--card-border', settings.cardBorder || '#e5e7eb')
+          
+          // Apply text customization
+          root.style.setProperty('--text-primary', settings.textPrimary || '#1f2937')
+          root.style.setProperty('--text-secondary', settings.textSecondary || '#4b5563')
+          root.style.setProperty('--text-muted', settings.textMuted || '#6b7280')
         }
       } catch (error) {
         console.error('Error applying saved background settings:', error)
