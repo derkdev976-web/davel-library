@@ -95,18 +95,55 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: "Print service not found" }, { status: 404 })
     }
 
-    // Validate file type
-    const allowedTypes = ["application/pdf", "application/msword", "application/vnd.openxmlformats-officedocument.wordprocessingml.document", "text/plain", "image/jpeg", "image/png"]
-    if (!allowedTypes.includes(file.type)) {
+    // Validate file type using the same logic as main upload route
+    const allowedTypes = [
+      "application/pdf",
+      "application/vnd.openxmlformats-officedocument.wordprocessingml.document", // .docx
+      "application/msword", // .doc
+      "text/plain", // .txt
+      "application/rtf", // .rtf
+      "application/vnd.oasis.opendocument.text", // .odt
+      "application/vnd.openxmlformats-officedocument.presentationml.presentation", // .pptx
+      "application/vnd.ms-powerpoint", // .ppt
+      "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", // .xlsx
+      "application/vnd.ms-excel", // .xls
+      "image/jpeg", // .jpg
+      "image/png", // .png
+      "image/gif", // .gif
+      "image/webp" // .webp
+    ]
+
+    const fileExtension = '.' + file.name.split('.').pop()?.toLowerCase()
+    const extensionToMime: Record<string, string> = {
+      '.pdf': 'application/pdf',
+      '.docx': 'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
+      '.doc': 'application/msword',
+      '.txt': 'text/plain',
+      '.rtf': 'application/rtf',
+      '.odt': 'application/vnd.oasis.opendocument.text',
+      '.pptx': 'application/vnd.openxmlformats-officedocument.presentationml.presentation',
+      '.ppt': 'application/vnd.ms-powerpoint',
+      '.xlsx': 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+      '.xls': 'application/vnd.ms-excel',
+      '.jpg': 'image/jpeg',
+      '.jpeg': 'image/jpeg',
+      '.png': 'image/png',
+      '.gif': 'image/gif',
+      '.webp': 'image/webp'
+    }
+
+    const expectedMimeType = extensionToMime[fileExtension]
+    
+    if (!allowedTypes.includes(file.type) && (!expectedMimeType || !allowedTypes.includes(expectedMimeType))) {
       return NextResponse.json({ 
-        error: "Invalid file type. Only PDF, DOC, DOCX, TXT, JPG, and PNG files are allowed." 
+        error: `Invalid file type. Allowed types: ${allowedTypes.join(', ')}` 
       }, { status: 400 })
     }
 
-    // Validate file size (10MB max)
-    if (file.size > 10 * 1024 * 1024) {
+    // Validate file size (25MB max for print jobs)
+    if (file.size > 25 * 1024 * 1024) {
       return NextResponse.json({ 
-        error: "File too large. Maximum size is 10MB." 
+        error: "File too large. Maximum size is 25MB." 
       }, { status: 400 })
     }
 
@@ -117,9 +154,9 @@ export async function POST(request: NextRequest) {
     const result = await new Promise((resolve, reject) => {
       cloudinary.uploader.upload_stream(
         {
-          folder: 'davel-library/print-jobs',
+          folder: 'davel-library/print',
           public_id: `print_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`,
-          resource_type: 'raw'
+          resource_type: 'auto'
         },
         (error, result) => {
           if (error) reject(error)

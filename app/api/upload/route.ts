@@ -58,6 +58,26 @@ const FILE_CONFIGS = {
     ],
     maxSize: 50 * 1024 * 1024, // 50MB
     folder: "documents"
+  },
+  print: {
+    allowedTypes: [
+      "application/pdf",
+      "application/vnd.openxmlformats-officedocument.wordprocessingml.document", // .docx
+      "application/msword", // .doc
+      "text/plain", // .txt
+      "application/rtf", // .rtf
+      "application/vnd.oasis.opendocument.text", // .odt
+      "application/vnd.openxmlformats-officedocument.presentationml.presentation", // .pptx
+      "application/vnd.ms-powerpoint", // .ppt
+      "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", // .xlsx
+      "application/vnd.ms-excel", // .xls
+      "image/jpeg", // .jpg
+      "image/png", // .png
+      "image/gif", // .gif
+      "image/webp" // .webp
+    ],
+    maxSize: 25 * 1024 * 1024, // 25MB
+    folder: "print"
   }
 }
 
@@ -80,7 +100,11 @@ const EXTENSION_TO_MIME = {
   '.webp': 'image/webp',
   '.mp4': 'video/mp4',
   '.mov': 'video/quicktime',
-  '.webm': 'video/webm'
+  '.webm': 'video/webm',
+  '.pptx': 'application/vnd.openxmlformats-officedocument.presentationml.presentation',
+  '.ppt': 'application/vnd.ms-powerpoint',
+  '.xlsx': 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+  '.xls': 'application/vnd.ms-excel'
 }
 
 // Configure Cloudinary
