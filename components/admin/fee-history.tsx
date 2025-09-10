@@ -54,6 +54,24 @@ export function FeeHistory() {
   const [typeFilter, setTypeFilter] = useState("all")
   const [dateFilter, setDateFilter] = useState("all")
 
+  const calculateSummary = (data: FeeTransaction[]) => {
+    const totalFees = data.reduce((sum, t) => sum + t.amount, 0)
+    const totalCollected = data.filter(t => t.status === "PAID").reduce((sum, t) => sum + t.amount, 0)
+    const totalPending = data.filter(t => t.status === "PENDING").reduce((sum, t) => sum + t.amount, 0)
+    const totalOverdue = data.filter(t => t.status === "OVERDUE").reduce((sum, t) => sum + t.amount, 0)
+    const totalWaived = data.filter(t => t.status === "WAIVED").reduce((sum, t) => sum + t.amount, 0)
+    
+    setSummary({
+      totalFees,
+      totalCollected,
+      totalPending,
+      totalOverdue,
+      totalWaived,
+      averageFee: data.length > 0 ? totalFees / data.length : 0,
+      collectionRate: totalFees > 0 ? (totalCollected / totalFees) * 100 : 0
+    })
+  }
+
   const fetchFeeHistory = useCallback(async () => {
     try {
       setLoading(true)
@@ -75,25 +93,7 @@ export function FeeHistory() {
     } finally {
       setLoading(false)
     }
-  }, [])
-
-  const calculateSummary = (data: FeeTransaction[]) => {
-    const totalFees = data.reduce((sum, t) => sum + t.amount, 0)
-    const totalCollected = data.filter(t => t.status === "PAID").reduce((sum, t) => sum + t.amount, 0)
-    const totalPending = data.filter(t => t.status === "PENDING").reduce((sum, t) => sum + t.amount, 0)
-    const totalOverdue = data.filter(t => t.status === "OVERDUE").reduce((sum, t) => sum + t.amount, 0)
-    const totalWaived = data.filter(t => t.status === "WAIVED").reduce((sum, t) => sum + t.amount, 0)
-    
-    setSummary({
-      totalFees,
-      totalCollected,
-      totalPending,
-      totalOverdue,
-      totalWaived,
-      averageFee: data.length > 0 ? totalFees / data.length : 0,
-      collectionRate: totalFees > 0 ? (totalCollected / totalFees) * 100 : 0
-    })
-  }, [])
+  }, [toast])
 
   const applyFilters = useCallback(() => {
     let filtered = transactions
