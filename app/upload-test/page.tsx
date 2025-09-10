@@ -68,7 +68,7 @@ export default function UploadTestPage() {
   }
 
   const getFileIcon = (file: File) => {
-    if (file.type.startsWith('image/')) return <Image className="h-4 w-4" />
+    if (file.type.startsWith('image/')) return <Image className="h-4 w-4" alt="Image file" />
     if (file.type.startsWith('video/')) return <Video className="h-4 w-4" />
     return <FileText className="h-4 w-4" />
   }
@@ -235,6 +235,7 @@ export default function UploadTestPage() {
                         <Label className="text-sm font-medium">Preview:</Label>
                         <div className="mt-2">
                           {uploadResult.type.startsWith('image/') ? (
+                            {/* eslint-disable-next-line @next/next/no-img-element */}
                             <img
                               src={uploadResult.url}
                               alt="Upload preview"
@@ -276,7 +277,7 @@ export default function UploadTestPage() {
                 <ol className="list-decimal list-inside space-y-2 text-gray-600 dark:text-gray-300">
                   <li>Select an upload type from the dropdown</li>
                   <li>Choose a file that matches the allowed types for that category</li>
-                  <li>Click "Upload File" to test the upload</li>
+                  <li>Click &quot;Upload File&quot; to test the upload</li>
                   <li>Check the result panel for success/failure details</li>
                 </ol>
               </div>

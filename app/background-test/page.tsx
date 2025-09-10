@@ -193,7 +193,7 @@ export default function BackgroundTestPage() {
                   1. Open Background Customizer
                 </h4>
                 <p className="text-gray-600 dark:text-gray-300">
-                  Click the "Show Customizer" button above to open the background customization panel.
+                  Click the &quot;Show Customizer&quot; button above to open the background customization panel.
                 </p>
               </div>
               
@@ -211,7 +211,7 @@ export default function BackgroundTestPage() {
                   3. Save Settings
                 </h4>
                 <p className="text-gray-600 dark:text-gray-300">
-                  Click "Save Settings" to apply the changes globally across the entire web app.
+                  Click &quot;Save Settings&quot; to apply the changes globally across the entire web app.
                 </p>
               </div>
               
@@ -220,7 +220,7 @@ export default function BackgroundTestPage() {
                   4. Test All Pages
                 </h4>
                 <p className="text-gray-600 dark:text-gray-300">
-                  Use the "Visit Page" buttons above to navigate to different pages and verify that the background customization is applied consistently.
+                  Use the &quot;Visit Page&quot; buttons above to navigate to different pages and verify that the background customization is applied consistently.
                 </p>
               </div>
               

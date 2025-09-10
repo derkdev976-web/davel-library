@@ -180,7 +180,7 @@ export default function BackgroundDemoPage() {
                   1. Access the Customizer
                 </h4>
                 <p className="text-gray-600 dark:text-gray-300">
-                  Click the "Show Customizer" button above to open the background customization panel.
+                  Click the &quot;Show Customizer&quot; button above to open the background customization panel.
                 </p>
               </div>
               <div>
