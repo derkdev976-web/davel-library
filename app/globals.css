@@ -381,72 +381,72 @@
 
   /* ULTRA-AGGRESSIVE TEXT FIXES - Force ALL text to be readable */
   * {
-    color: var(--text-secondary, hsl(var(--text-secondary))) !important;
+    color: hsl(var(--text-secondary)) !important;
   }
 
   /* Override for headings */
   h1, h2, h3, h4, h5, h6, .text-xl, .text-2xl, .text-3xl, .text-4xl, .text-5xl, .text-6xl {
-    color: var(--text-primary, hsl(var(--text-primary))) !important;
+    color: hsl(var(--text-primary)) !important;
   }
 
   /* Fix footer text */
   footer, footer *, .footer, .footer * {
-    color: var(--text-secondary, hsl(var(--text-secondary))) !important;
+    color: hsl(var(--text-secondary)) !important;
   }
 
   /* Fix navigation text */
   nav, nav *, .nav, .nav * {
-    color: var(--text-secondary, hsl(var(--text-secondary))) !important;
+    color: hsl(var(--text-secondary)) !important;
   }
 
   /* Fix all button text */
   button, .btn, [role="button"] {
-    color: var(--text-secondary, hsl(var(--text-secondary))) !important;
+    color: hsl(var(--text-secondary)) !important;
   }
 
   /* Fix all link text */
   a, .link {
-    color: var(--text-secondary, hsl(var(--text-secondary))) !important;
+    color: hsl(var(--text-secondary)) !important;
   }
 
   /* Fix all form text */
   input, textarea, select, label {
-    color: var(--text-secondary, hsl(var(--text-secondary))) !important;
+    color: hsl(var(--text-secondary)) !important;
   }
 
   /* Fix all table text */
   table, table *, .table, .table * {
-    color: var(--text-secondary, hsl(var(--text-secondary))) !important;
+    color: hsl(var(--text-secondary)) !important;
   }
 
   /* Fix all list text */
   ul, ol, li, .list, .list * {
-    color: var(--text-secondary, hsl(var(--text-secondary))) !important;
+    color: hsl(var(--text-secondary)) !important;
   }
 
   /* Fix all section text */
   section, section *, .section, .section * {
-    color: var(--text-secondary, hsl(var(--text-secondary))) !important;
+    color: hsl(var(--text-secondary)) !important;
   }
 
   /* Fix all article text */
   article, article *, .article, .article * {
-    color: var(--text-secondary, hsl(var(--text-secondary))) !important;
+    color: hsl(var(--text-secondary)) !important;
   }
 
   /* Fix all aside text */
   aside, aside *, .aside, .aside * {
-    color: var(--text-secondary, hsl(var(--text-secondary))) !important;
+    color: hsl(var(--text-secondary)) !important;
   }
 
   /* Fix all header text */
   header, header *, .header, .header * {
-    color: var(--text-secondary, hsl(var(--text-secondary))) !important;
+    color: hsl(var(--text-secondary)) !important;
   }
 
   /* Fix all main text */
   main, main *, .main, .main * {
-    color: var(--text-secondary, hsl(var(--text-secondary))) !important;
+    color: hsl(var(--text-secondary)) !important;
   }
 
   html {
