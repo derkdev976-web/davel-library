@@ -1,6 +1,7 @@
 "use client"
 
 import { useEffect, useState, useCallback } from "react"
+import { useSession } from "next-auth/react"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
@@ -58,6 +59,7 @@ interface PrintService {
 }
 
 export default function PrintingServicesPage() {
+  const { data: session, status } = useSession()
   const [printJobs, setPrintJobs] = useState<PrintJob[]>([])
   const [services, setServices] = useState<PrintService[]>([])
   const [filteredJobs, setFilteredJobs] = useState<PrintJob[]>([])
@@ -239,7 +241,7 @@ export default function PrintingServicesPage() {
     return `${mb.toFixed(1)} MB`
   }
 
-  if (loading) {
+  if (status === "loading" || loading) {
     return (
       <div className="min-h-screen bg-gray-50 dark:bg-gray-900">
         <Header />
@@ -249,6 +251,28 @@ export default function PrintingServicesPage() {
               <div className="text-center">
                 <Printer className="h-8 w-8 mx-auto mb-2 animate-spin" />
                 <p>Loading Printing Services...</p>
+              </div>
+            </div>
+          </div>
+        </main>
+      </div>
+    )
+  }
+
+  if (!session) {
+    return (
+      <div className="min-h-screen bg-gray-50 dark:bg-gray-900">
+        <Header />
+        <main className="pt-20 pb-12">
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div className="flex items-center justify-center p-8">
+              <div className="text-center">
+                <AlertCircle className="h-8 w-8 mx-auto mb-2 text-red-500" />
+                <h2 className="text-xl font-semibold mb-2">Authentication Required</h2>
+                <p className="text-gray-600 mb-4">Please sign in to access printing services.</p>
+                <Button asChild>
+                  <a href="/auth/signin">Sign In</a>
+                </Button>
               </div>
             </div>
           </div>
