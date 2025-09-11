@@ -39,6 +39,8 @@ export default function NewsEventsPage() {
   const [typeFilter, setTypeFilter] = useState("")
   const [dateFilter, setDateFilter] = useState("")
   const [userRegistrations, setUserRegistrations] = useState<string[]>([])
+  const [lastUpdated, setLastUpdated] = useState<Date | null>(null)
+  const [previousItemCount, setPreviousItemCount] = useState(0)
 
   useEffect(() => {
     fetchNewsEvents()
@@ -47,6 +49,36 @@ export default function NewsEventsPage() {
     }
   }, [session])
 
+  // Auto-refresh content every 30 seconds
+  useEffect(() => {
+    const interval = setInterval(() => {
+      fetchNewsEvents()
+    }, 30000) // 30 seconds
+
+    return () => clearInterval(interval)
+  }, [])
+
+  // Refresh when user returns to tab/window
+  useEffect(() => {
+    const handleVisibilityChange = () => {
+      if (!document.hidden) {
+        fetchNewsEvents()
+      }
+    }
+
+    const handleFocus = () => {
+      fetchNewsEvents()
+    }
+
+    document.addEventListener('visibilitychange', handleVisibilityChange)
+    window.addEventListener('focus', handleFocus)
+
+    return () => {
+      document.removeEventListener('visibilitychange', handleVisibilityChange)
+      window.removeEventListener('focus', handleFocus)
+    }
+  }, [])
+
   const fetchNewsEvents = async () => {
     try {
       setLoading(true)
@@ -54,7 +86,20 @@ export default function NewsEventsPage() {
       const response = await fetch(`/api/news?t=${Date.now()}`)
       if (response.ok) {
         const data = await response.json()
-        setItems(data.items || [])
+        const newItems = data.items || []
+        
+        // Check if new content was added
+        if (previousItemCount > 0 && newItems.length > previousItemCount) {
+          toast({
+            title: "New content available!",
+            description: `${newItems.length - previousItemCount} new item(s) added`,
+            duration: 3000
+          })
+        }
+        
+        setItems(newItems)
+        setPreviousItemCount(newItems.length)
+        setLastUpdated(new Date())
       }
     } catch (error) {
       console.error('Error fetching news and events:', error)
@@ -149,6 +194,11 @@ export default function NewsEventsPage() {
           <p className="text-gray-600 dark:text-gray-300 text-xl max-w-2xl mx-auto">
             Stay updated with the latest happenings, announcements, and exciting events at Davel Library
           </p>
+          {lastUpdated && (
+            <p className="text-sm text-gray-500 dark:text-gray-400 mt-2">
+              Last updated: {lastUpdated.toLocaleTimeString()} • Auto-refreshes every 30 seconds
+            </p>
+          )}
         </div>
 
         {/* Search and Filter Section */}

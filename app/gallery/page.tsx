@@ -9,6 +9,7 @@ import { Button } from "@/components/ui/button"
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog"
 import { Badge } from "@/components/ui/badge"
 import { Input } from "@/components/ui/input"
+import { useToast } from "@/hooks/use-toast"
 import { Calendar, Tag, Eye, Search, Image as ImageIcon, RefreshCw } from "lucide-react"
 import Image from 'next/image'
 
@@ -23,13 +24,46 @@ interface GalleryItem {
 }
 
 export default function GalleryPage() {
+  const { toast } = useToast()
   const [items, setItems] = useState<GalleryItem[]>([])
   const [loading, setLoading] = useState(true)
   const [selectedItem, setSelectedItem] = useState<GalleryItem | null>(null)
   const [searchTerm, setSearchTerm] = useState("")
+  const [lastUpdated, setLastUpdated] = useState<Date | null>(null)
+  const [previousItemCount, setPreviousItemCount] = useState(0)
 
   useEffect(() => {
     fetchGallery()
+  }, [])
+
+  // Auto-refresh content every 30 seconds
+  useEffect(() => {
+    const interval = setInterval(() => {
+      fetchGallery()
+    }, 30000) // 30 seconds
+
+    return () => clearInterval(interval)
+  }, [])
+
+  // Refresh when user returns to tab/window
+  useEffect(() => {
+    const handleVisibilityChange = () => {
+      if (!document.hidden) {
+        fetchGallery()
+      }
+    }
+
+    const handleFocus = () => {
+      fetchGallery()
+    }
+
+    document.addEventListener('visibilitychange', handleVisibilityChange)
+    window.addEventListener('focus', handleFocus)
+
+    return () => {
+      document.removeEventListener('visibilitychange', handleVisibilityChange)
+      window.removeEventListener('focus', handleFocus)
+    }
   }, [])
 
   const fetchGallery = async () => {
@@ -39,7 +73,20 @@ export default function GalleryPage() {
       const response = await fetch(`/api/gallery?t=${Date.now()}`)
       if (response.ok) {
         const data = await response.json()
-        setItems(data.items || [])
+        const newItems = data.items || []
+        
+        // Check if new content was added
+        if (previousItemCount > 0 && newItems.length > previousItemCount) {
+          toast({
+            title: "New content available!",
+            description: `${newItems.length - previousItemCount} new item(s) added`,
+            duration: 3000
+          })
+        }
+        
+        setItems(newItems)
+        setPreviousItemCount(newItems.length)
+        setLastUpdated(new Date())
       }
     } catch (error) {
       console.error('Error fetching gallery:', error)
@@ -66,6 +113,11 @@ export default function GalleryPage() {
           <p className="text-gray-600 dark:text-gray-300 text-xl max-w-2xl mx-auto">
             Explore our stunning collection of images and videos showcasing library events, exhibitions, and moments
           </p>
+          {lastUpdated && (
+            <p className="text-sm text-gray-500 dark:text-gray-400 mt-2">
+              Last updated: {lastUpdated.toLocaleTimeString()} • Auto-refreshes every 30 seconds
+            </p>
+          )}
         </div>
         
         {/* Search Section */}
