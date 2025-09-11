@@ -29,7 +29,7 @@ export function NewsSection() {
 
   useEffect(() => {
     fetchNews()
-  }, [])
+  }, [fetchNews])
 
   // Auto-refresh content every 30 seconds
   useEffect(() => {
@@ -38,7 +38,7 @@ export function NewsSection() {
     }, 30000) // 30 seconds
 
     return () => clearInterval(interval)
-  }, [])
+  }, [fetchNews])
 
   // Refresh when user returns to tab/window
   useEffect(() => {
@@ -59,7 +59,7 @@ export function NewsSection() {
       document.removeEventListener('visibilitychange', handleVisibilityChange)
       window.removeEventListener('focus', handleFocus)
     }
-  }, [])
+  }, [fetchNews])
 
   const fetchNews = async () => {
     try {

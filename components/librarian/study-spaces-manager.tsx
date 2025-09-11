@@ -316,7 +316,7 @@ export function StudySpacesManager() {
             <div className="flex items-center space-x-2">
               <Calendar className="h-5 w-5 text-purple-600" />
               <div>
-                <p className="text-sm text-gray-600">Today's Bookings</p>
+                <p className="text-sm text-gray-600">Today&apos;s Bookings</p>
                 <p className="text-2xl font-bold">
                   {bookings.filter(b => {
                     const today = new Date().toDateString()

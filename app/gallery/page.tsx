@@ -34,7 +34,7 @@ export default function GalleryPage() {
 
   useEffect(() => {
     fetchGallery()
-  }, [])
+  }, [fetchGallery])
 
   // Auto-refresh content every 30 seconds
   useEffect(() => {
@@ -43,7 +43,7 @@ export default function GalleryPage() {
     }, 30000) // 30 seconds
 
     return () => clearInterval(interval)
-  }, [])
+  }, [fetchGallery])
 
   // Refresh when user returns to tab/window
   useEffect(() => {
@@ -64,7 +64,7 @@ export default function GalleryPage() {
       document.removeEventListener('visibilitychange', handleVisibilityChange)
       window.removeEventListener('focus', handleFocus)
     }
-  }, [])
+  }, [fetchGallery])
 
   const fetchGallery = async () => {
     try {

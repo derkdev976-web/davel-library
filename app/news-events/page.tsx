@@ -56,7 +56,7 @@ export default function NewsEventsPage() {
     }, 30000) // 30 seconds
 
     return () => clearInterval(interval)
-  }, [])
+  }, [fetchNewsEvents])
 
   // Refresh when user returns to tab/window
   useEffect(() => {
@@ -77,7 +77,7 @@ export default function NewsEventsPage() {
       document.removeEventListener('visibilitychange', handleVisibilityChange)
       window.removeEventListener('focus', handleFocus)
     }
-  }, [])
+  }, [fetchNewsEvents])
 
   const fetchNewsEvents = async () => {
     try {

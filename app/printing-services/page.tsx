@@ -276,7 +276,7 @@ export default function PrintingServicesPage() {
           </h1>
           <p className="text-lg text-gray-600 dark:text-gray-300 max-w-2xl mx-auto">
             Professional printing services for all your academic and personal needs. 
-            Upload your documents and we'll handle the rest.
+            Upload your documents and we&apos;ll handle the rest.
           </p>
         </div>
 
