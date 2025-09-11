@@ -163,6 +163,12 @@ export function EnhancedLibrarianDashboard() {
   
   const { toast } = useToast()
 
+  // Dialog states
+  const [isAddSpaceDialogOpen, setIsAddSpaceDialogOpen] = useState(false)
+  const [isViewBookingsDialogOpen, setIsViewBookingsDialogOpen] = useState(false)
+  const [isAddServiceDialogOpen, setIsAddServiceDialogOpen] = useState(false)
+  const [isViewRequestsDialogOpen, setIsViewRequestsDialogOpen] = useState(false)
+
   const fetchDashboardData = useCallback(async () => {
     try {
       setLoading(true)
@@ -659,11 +665,17 @@ export function EnhancedLibrarianDashboard() {
                     </Card>
                   </div>
                   <div className="flex justify-center space-x-4">
-                    <Button className="bg-blue-600 hover:bg-blue-700 text-white">
+                    <Button 
+                      className="bg-blue-600 hover:bg-blue-700 text-white"
+                      onClick={() => setIsAddSpaceDialogOpen(true)}
+                    >
                       <Plus className="h-4 w-4 mr-2" />
                       Add New Space
                     </Button>
-                    <Button className="bg-green-600 hover:bg-green-700 text-white">
+                    <Button 
+                      className="bg-green-600 hover:bg-green-700 text-white"
+                      onClick={() => setIsViewBookingsDialogOpen(true)}
+                    >
                       <Calendar className="h-4 w-4 mr-2" />
                       View Bookings
                     </Button>
@@ -717,11 +729,17 @@ export function EnhancedLibrarianDashboard() {
                     </Card>
                   </div>
                   <div className="flex justify-center space-x-4">
-                    <Button className="bg-blue-600 hover:bg-blue-700 text-white">
+                    <Button 
+                      className="bg-blue-600 hover:bg-blue-700 text-white"
+                      onClick={() => setIsAddServiceDialogOpen(true)}
+                    >
                       <Plus className="h-4 w-4 mr-2" />
                       Add New Service
                     </Button>
-                    <Button className="bg-green-600 hover:bg-green-700 text-white">
+                    <Button 
+                      className="bg-green-600 hover:bg-green-700 text-white"
+                      onClick={() => setIsViewRequestsDialogOpen(true)}
+                    >
                       <Eye className="h-4 w-4 mr-2" />
                       View All Requests
                     </Button>
@@ -812,6 +830,178 @@ export function EnhancedLibrarianDashboard() {
         onClose={() => setIsAddClassDialogOpen(false)}
         onSuccess={fetchDashboardData}
       />
+
+      {/* Add New Space Dialog */}
+      <Dialog open={isAddSpaceDialogOpen} onOpenChange={setIsAddSpaceDialogOpen}>
+        <DialogContent className="max-w-md">
+          <DialogHeader>
+            <DialogTitle>Add New Study Space</DialogTitle>
+          </DialogHeader>
+          <div className="space-y-4">
+            <div>
+              <Label htmlFor="spaceName">Space Name</Label>
+              <Input id="spaceName" placeholder="e.g., Study Room D" />
+            </div>
+            <div>
+              <Label htmlFor="capacity">Capacity</Label>
+              <Input id="capacity" type="number" placeholder="Number of people" />
+            </div>
+            <div>
+              <Label htmlFor="location">Location</Label>
+              <Input id="location" placeholder="e.g., Floor 2, Room 201" />
+            </div>
+            <div>
+              <Label htmlFor="amenities">Amenities</Label>
+              <Textarea id="amenities" placeholder="e.g., Whiteboard, WiFi, Power outlets" />
+            </div>
+          </div>
+          <DialogFooter>
+            <Button variant="outline" onClick={() => setIsAddSpaceDialogOpen(false)}>
+              Cancel
+            </Button>
+            <Button onClick={() => {
+              toast({ title: "Study space added successfully!" })
+              setIsAddSpaceDialogOpen(false)
+            }}>
+              Add Space
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
+
+      {/* View Bookings Dialog */}
+      <Dialog open={isViewBookingsDialogOpen} onOpenChange={setIsViewBookingsDialogOpen}>
+        <DialogContent className="max-w-4xl">
+          <DialogHeader>
+            <DialogTitle>Study Space Bookings</DialogTitle>
+          </DialogHeader>
+          <div className="space-y-4">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <Card className="p-4">
+                <h3 className="font-semibold mb-2">Study Room A</h3>
+                <div className="space-y-2">
+                  <div className="flex justify-between text-sm">
+                    <span>John Doe</span>
+                    <span>2:00 PM - 4:00 PM</span>
+                  </div>
+                  <div className="flex justify-between text-sm">
+                    <span>Jane Smith</span>
+                    <span>5:00 PM - 7:00 PM</span>
+                  </div>
+                </div>
+              </Card>
+              <Card className="p-4">
+                <h3 className="font-semibold mb-2">Study Room B</h3>
+                <div className="space-y-2">
+                  <div className="flex justify-between text-sm">
+                    <span>Mike Johnson</span>
+                    <span>1:00 PM - 3:00 PM</span>
+                  </div>
+                  <div className="flex justify-between text-sm">
+                    <span>Sarah Wilson</span>
+                    <span>4:00 PM - 6:00 PM</span>
+                  </div>
+                </div>
+              </Card>
+            </div>
+          </div>
+          <DialogFooter>
+            <Button onClick={() => setIsViewBookingsDialogOpen(false)}>
+              Close
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
+
+      {/* Add New Service Dialog */}
+      <Dialog open={isAddServiceDialogOpen} onOpenChange={setIsAddServiceDialogOpen}>
+        <DialogContent className="max-w-md">
+          <DialogHeader>
+            <DialogTitle>Add New Printing Service</DialogTitle>
+          </DialogHeader>
+          <div className="space-y-4">
+            <div>
+              <Label htmlFor="serviceName">Service Name</Label>
+              <Input id="serviceName" placeholder="e.g., Color Printing" />
+            </div>
+            <div>
+              <Label htmlFor="pricePerPage">Price per Page</Label>
+              <Input id="pricePerPage" type="number" step="0.01" placeholder="0.50" />
+            </div>
+            <div>
+              <Label htmlFor="colorPrice">Color Price (if applicable)</Label>
+              <Input id="colorPrice" type="number" step="0.01" placeholder="0.25" />
+            </div>
+            <div>
+              <Label htmlFor="maxPages">Maximum Pages</Label>
+              <Input id="maxPages" type="number" placeholder="100" />
+            </div>
+            <div>
+              <Label htmlFor="turnaroundTime">Turnaround Time</Label>
+              <Input id="turnaroundTime" placeholder="24 hours" />
+            </div>
+          </div>
+          <DialogFooter>
+            <Button variant="outline" onClick={() => setIsAddServiceDialogOpen(false)}>
+              Cancel
+            </Button>
+            <Button onClick={() => {
+              toast({ title: "Printing service added successfully!" })
+              setIsAddServiceDialogOpen(false)
+            }}>
+              Add Service
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
+
+      {/* View All Requests Dialog */}
+      <Dialog open={isViewRequestsDialogOpen} onOpenChange={setIsViewRequestsDialogOpen}>
+        <DialogContent className="max-w-6xl">
+          <DialogHeader>
+            <DialogTitle>All Printing Requests</DialogTitle>
+          </DialogHeader>
+          <div className="space-y-4">
+            <div className="grid grid-cols-1 gap-4">
+              <Card className="p-4">
+                <div className="flex justify-between items-start">
+                  <div>
+                    <h3 className="font-semibold">Research Paper - John Doe</h3>
+                    <p className="text-sm text-gray-600">15 pages, 2 copies, Color</p>
+                    <p className="text-sm text-gray-500">Submitted: 2 hours ago</p>
+                  </div>
+                  <Badge className="bg-yellow-100 text-yellow-800">Pending</Badge>
+                </div>
+              </Card>
+              <Card className="p-4">
+                <div className="flex justify-between items-start">
+                  <div>
+                    <h3 className="font-semibold">Presentation Slides - Jane Smith</h3>
+                    <p className="text-sm text-gray-600">25 pages, 1 copy, Black & White</p>
+                    <p className="text-sm text-gray-500">Submitted: 1 hour ago</p>
+                  </div>
+                  <Badge className="bg-blue-100 text-blue-800">In Progress</Badge>
+                </div>
+              </Card>
+              <Card className="p-4">
+                <div className="flex justify-between items-start">
+                  <div>
+                    <h3 className="font-semibold">Thesis Document - Mike Johnson</h3>
+                    <p className="text-sm text-gray-600">80 pages, 3 copies, Black & White</p>
+                    <p className="text-sm text-gray-500">Submitted: 30 minutes ago</p>
+                  </div>
+                  <Badge className="bg-green-100 text-green-800">Completed</Badge>
+                </div>
+              </Card>
+            </div>
+          </div>
+          <DialogFooter>
+            <Button onClick={() => setIsViewRequestsDialogOpen(false)}>
+              Close
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
     </div>
   )
 }
