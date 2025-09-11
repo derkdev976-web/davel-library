@@ -12,11 +12,12 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from "
 import { useToast } from "@/hooks/use-toast"
 import { 
   UserCheck, UserX, Eye, Clock, CheckCircle, XCircle, 
-  Search, Filter, Calendar, Mail, Phone, MapPin
+  Search, Filter, Calendar, Mail, Phone, MapPin, FileText
 } from "lucide-react"
 
 interface Application {
   id: string
+  userId?: string
   name: string
   email: string
   phone?: string
@@ -26,6 +27,11 @@ interface Application {
   notes?: string
   reviewedBy?: string
   reviewedAt?: string
+  // Document fields
+  idDocument?: string
+  proofOfAddress?: string
+  additionalDocuments?: string
+  source?: string
 }
 
 export function ApplicationsManager() {
@@ -37,6 +43,26 @@ export function ApplicationsManager() {
   const [filterStatus, setFilterStatus] = useState("all")
   const [reviewNotes, setReviewNotes] = useState("")
   const { toast } = useToast()
+
+  const viewDocument = async (userId: string, documentType: string, userType: string = "applicant") => {
+    try {
+      const response = await fetch(`/api/admin/documents/view?userId=${userId}&type=${documentType}&userType=${userType}`)
+      if (response.ok) {
+        const data = await response.json()
+        if (data.documentUrl) {
+          // Open document in new tab
+          window.open(data.documentUrl, '_blank')
+        } else {
+          toast({ title: "Document not found", variant: "destructive" })
+        }
+      } else {
+        toast({ title: "Error viewing document", variant: "destructive" })
+      }
+    } catch (error) {
+      console.error('Error viewing document:', error)
+      toast({ title: "Error viewing document", variant: "destructive" })
+    }
+  }
 
   const fetchApplications = useCallback(async () => {
     try {
@@ -192,6 +218,29 @@ export function ApplicationsManager() {
                       <p className="text-xs text-gray-500 dark:text-gray-500">
                         Applied: {new Date(application.appliedAt).toLocaleDateString()}
                       </p>
+                      {/* Document indicators */}
+                      {(application.idDocument || application.proofOfAddress || application.additionalDocuments) && (
+                        <div className="flex items-center space-x-1 mt-1">
+                          {application.idDocument && (
+                            <div className="flex items-center space-x-1">
+                              <FileText className="h-3 w-3 text-blue-600" />
+                              <span className="text-xs text-blue-600">ID</span>
+                            </div>
+                          )}
+                          {application.proofOfAddress && (
+                            <div className="flex items-center space-x-1">
+                              <FileText className="h-3 w-3 text-green-600" />
+                              <span className="text-xs text-green-600">Address</span>
+                            </div>
+                          )}
+                          {application.additionalDocuments && (
+                            <div className="flex items-center space-x-1">
+                              <FileText className="h-3 w-3 text-purple-600" />
+                              <span className="text-xs text-purple-600">Additional</span>
+                            </div>
+                          )}
+                        </div>
+                      )}
                     </div>
                   </div>
                   <div className="flex items-center space-x-2">
@@ -255,6 +304,63 @@ export function ApplicationsManager() {
                   </Badge>
                 </div>
               </div>
+              
+              {/* Documents Section */}
+              {(selectedApplication.idDocument || selectedApplication.proofOfAddress || selectedApplication.additionalDocuments) && (
+                <div>
+                  <Label>Documents</Label>
+                  <div className="space-y-2 mt-2">
+                    {selectedApplication.idDocument && (
+                      <div className="flex items-center justify-between p-3 border rounded-lg">
+                        <div className="flex items-center space-x-2">
+                          <FileText className="h-4 w-4 text-blue-600" />
+                          <span className="text-sm font-medium">ID Document</span>
+                        </div>
+                        <Button
+                          size="sm"
+                          variant="outline"
+                          onClick={() => selectedApplication.userId && viewDocument(selectedApplication.userId, "idDocument", selectedApplication.source === "database" ? "applicant" : "member")}
+                        >
+                          <Eye className="h-4 w-4 mr-1" />
+                          View
+                        </Button>
+                      </div>
+                    )}
+                    {selectedApplication.proofOfAddress && (
+                      <div className="flex items-center justify-between p-3 border rounded-lg">
+                        <div className="flex items-center space-x-2">
+                          <FileText className="h-4 w-4 text-green-600" />
+                          <span className="text-sm font-medium">Proof of Address</span>
+                        </div>
+                        <Button
+                          size="sm"
+                          variant="outline"
+                          onClick={() => selectedApplication.userId && viewDocument(selectedApplication.userId, "proofOfAddress", selectedApplication.source === "database" ? "applicant" : "member")}
+                        >
+                          <Eye className="h-4 w-4 mr-1" />
+                          View
+                        </Button>
+                      </div>
+                    )}
+                    {selectedApplication.additionalDocuments && (
+                      <div className="flex items-center justify-between p-3 border rounded-lg">
+                        <div className="flex items-center space-x-2">
+                          <FileText className="h-4 w-4 text-purple-600" />
+                          <span className="text-sm font-medium">Additional Documents</span>
+                        </div>
+                        <Button
+                          size="sm"
+                          variant="outline"
+                          onClick={() => selectedApplication.userId && viewDocument(selectedApplication.userId, "additionalDocuments", selectedApplication.source === "database" ? "applicant" : "member")}
+                        >
+                          <Eye className="h-4 w-4 mr-1" />
+                          View
+                        </Button>
+                      </div>
+                    )}
+                  </div>
+                </div>
+              )}
               
               {selectedApplication.notes && (
                 <div>

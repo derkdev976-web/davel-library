@@ -37,6 +37,7 @@ export async function GET() {
     // Format applications
     const formattedApplications = applications.map(app => ({
       id: app.id,
+      userId: app.userId,
       name: `${app.firstName} ${app.lastName}`.trim(),
       email: app.email,
       phone: app.phone,
@@ -51,12 +52,17 @@ export async function GET() {
       reviewedBy: app.reviewedBy,
       reviewedAt: app.reviewedAt?.toISOString().slice(0, 10),
       reviewNotes: app.reviewNotes,
+      // Include document fields
+      idDocument: app.idDocument,
+      proofOfAddress: app.proofOfAddress,
+      additionalDocuments: app.additionalDocuments,
       source: 'database'
     }))
 
     // Format approved members
     const formattedApprovedMembers = approvedMembers.map(member => ({
       id: member.id,
+      userId: member.id,
       name: member.name || `${member.profile?.firstName || ''} ${member.profile?.lastName || ''}`.trim() || 'Unknown',
       email: member.email,
       phone: member.phone || 'N/A',
@@ -68,6 +74,10 @@ export async function GET() {
       preferredGenres: member.profile?.preferredGenres || [],
       readingFrequency: member.profile?.readingFrequency || 'OCCASIONALLY',
       subscribeNewsletter: false,
+      // Include document fields from profile
+      idDocument: member.profile?.idDocument,
+      proofOfAddress: member.profile?.proofOfAddress,
+      additionalDocuments: member.profile?.additionalDocuments,
       source: 'database',
       lastLogin: member.lastLogin?.toISOString().slice(0, 10),
       memberSince: member.createdAt.toISOString().slice(0, 10)
