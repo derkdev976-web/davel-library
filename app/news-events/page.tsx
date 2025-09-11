@@ -189,7 +189,11 @@ export default function NewsEventsPage() {
       <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-24 pb-10">
         {/* Hero Section */}
         <div className="text-center mb-12">
-          <h1 className="text-5xl font-bold bg-gradient-to-r from-[#8B4513] via-[#D2691E] to-[#CD853F] bg-clip-text text-transparent mb-4">
+           <h1 className="text-5xl font-bold bg-clip-text text-transparent mb-4" style={{ 
+             background: 'linear-gradient(to right, var(--primary-color), var(--accent-color), var(--secondary-color))',
+             WebkitBackgroundClip: 'text',
+             WebkitTextFillColor: 'transparent'
+           }}>
             News & Events
           </h1>
           <p className="text-gray-600 dark:text-gray-300 text-xl max-w-2xl mx-auto">
@@ -207,12 +211,14 @@ export default function NewsEventsPage() {
           <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
             <div className="relative">
               <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-gray-400" />
-              <Input 
-                placeholder="Search news or events..." 
-                value={searchTerm}
-                onChange={(e) => setSearchTerm(e.target.value)}
-                className="pl-10 bg-white/50 dark:bg-gray-700/50 border-gray-300 dark:border-gray-600 focus:ring-2 focus:ring-[#8B4513]"
-              />
+               <Input 
+                 placeholder="Search news or events..." 
+                 value={searchTerm}
+                 onChange={(e) => setSearchTerm(e.target.value)}
+                 className="pl-10 bg-white/50 dark:bg-gray-700/50 border-gray-300 dark:border-gray-600 focus:ring-2 transition-colors duration-200"
+                 style={{ '--focus-ring-color': 'var(--primary-color)' } as React.CSSProperties}
+                 onFocus={(e) => e.currentTarget.style.setProperty('--tw-ring-color', 'var(--primary-color)')}
+               />
             </div>
             <div className="relative">
               <Filter className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-gray-400" />
@@ -220,7 +226,9 @@ export default function NewsEventsPage() {
                 placeholder="Filter by type (NEWS/EVENT)" 
                 value={typeFilter}
                 onChange={(e) => setTypeFilter(e.target.value)}
-                className="pl-10 bg-white/50 dark:bg-gray-700/50 border-gray-300 dark:border-gray-600 focus:ring-2 focus:ring-[#8B4513]"
+                className="pl-10 bg-white/50 dark:bg-gray-700/50 border-gray-300 dark:border-gray-600 focus:ring-2 transition-colors duration-200"
+                style={{ '--focus-ring-color': 'var(--primary-color)' } as React.CSSProperties}
+                onFocus={(e) => e.currentTarget.style.setProperty('--tw-ring-color', 'var(--primary-color)')}
               />
             </div>
             <Input 
@@ -228,12 +236,20 @@ export default function NewsEventsPage() {
               placeholder="Filter by date"
               value={dateFilter}
               onChange={(e) => setDateFilter(e.target.value)}
-              className="bg-white/50 dark:bg-gray-700/50 border-gray-300 dark:border-gray-600 focus:ring-2 focus:ring-[#8B4513]"
+              className="bg-white/50 dark:bg-gray-700/50 border-gray-300 dark:border-gray-600 focus:ring-2 transition-colors duration-200"
+              style={{ '--focus-ring-color': 'var(--primary-color)' } as React.CSSProperties}
+              onFocus={(e) => e.currentTarget.style.setProperty('--tw-ring-color', 'var(--primary-color)')}
             />
             <Button 
               onClick={fetchNewsEvents}
               disabled={loading}
-              className="bg-[#8B4513] hover:bg-[#A0522D] text-white flex items-center justify-center gap-2"
+              className="text-white flex items-center justify-center gap-2 transition-colors duration-200"
+              style={{ 
+                backgroundColor: 'var(--primary-color)',
+                '--hover-bg': 'var(--secondary-color)'
+              } as React.CSSProperties}
+              onMouseEnter={(e) => e.currentTarget.style.backgroundColor = 'var(--secondary-color)'}
+              onMouseLeave={(e) => e.currentTarget.style.backgroundColor = 'var(--primary-color)'}
             >
               <RefreshCw className={`h-4 w-4 ${loading ? 'animate-spin' : ''}`} />
               {loading ? 'Refreshing...' : 'Refresh'}
@@ -283,16 +299,25 @@ export default function NewsEventsPage() {
                   <Eye className="h-8 w-8 text-white" />
                 </div>
                 <div className="absolute top-4 left-4">
-                  <Badge 
-                    variant={item.type === 'EVENT' ? 'default' : 'secondary'}
-                    className="bg-[#8B4513] hover:bg-[#A0522D] text-white"
-                  >
+                   <Badge 
+                     variant={item.type === 'EVENT' ? 'default' : 'secondary'}
+                     className="text-white transition-colors duration-200"
+                     style={{ 
+                       backgroundColor: 'var(--primary-color)',
+                       '--hover-bg': 'var(--secondary-color)'
+                     } as React.CSSProperties}
+                     onMouseEnter={(e) => e.currentTarget.style.backgroundColor = 'var(--secondary-color)'}
+                     onMouseLeave={(e) => e.currentTarget.style.backgroundColor = 'var(--primary-color)'}
+                   >
                     {item.type}
                   </Badge>
                 </div>
               </div>
               <CardHeader className="pb-3">
-                <CardTitle className="text-xl font-bold text-gray-900 dark:text-gray-100 line-clamp-2 group-hover:text-[#8B4513] transition-colors duration-300">
+                 <CardTitle className="text-xl font-bold text-gray-900 dark:text-gray-100 line-clamp-2 transition-colors duration-300"
+                   onMouseEnter={(e) => e.currentTarget.style.color = 'var(--primary-color)'}
+                   onMouseLeave={(e) => e.currentTarget.style.color = ''}
+                 >
                   {item.title}
                 </CardTitle>
                 <div className="flex items-center text-sm text-gray-500 dark:text-gray-400">
@@ -316,8 +341,14 @@ export default function NewsEventsPage() {
                         <span className="font-medium">Already Registered</span>
                       </div>
                     ) : (
-                      <Button 
-                        className="w-full bg-[#8B4513] hover:bg-[#A0522D] text-white rounded-xl transition-all duration-300 hover:scale-105"
+                       <Button 
+                         className="w-full text-white rounded-xl transition-all duration-300 hover:scale-105"
+                         style={{ 
+                           backgroundColor: 'var(--primary-color)',
+                           '--hover-bg': 'var(--secondary-color)'
+                         } as React.CSSProperties}
+                         onMouseEnter={(e) => e.currentTarget.style.backgroundColor = 'var(--secondary-color)'}
+                         onMouseLeave={(e) => e.currentTarget.style.backgroundColor = 'var(--primary-color)'}
                         onClick={(e) => {
                           e.stopPropagation()
                           handleJoinEvent(item.id)
@@ -344,10 +375,16 @@ export default function NewsEventsPage() {
               <DialogTitle className="text-3xl font-bold text-gray-900 dark:text-gray-100">
                 {selectedItem?.title}
               </DialogTitle>
-              <Badge 
-                variant={selectedItem?.type === 'EVENT' ? 'default' : 'secondary'}
-                className="bg-[#8B4513] hover:bg-[#A0522D] text-white"
-              >
+               <Badge 
+                 variant={selectedItem?.type === 'EVENT' ? 'default' : 'secondary'}
+                 className="text-white transition-colors duration-200"
+                 style={{ 
+                   backgroundColor: 'var(--primary-color)',
+                   '--hover-bg': 'var(--secondary-color)'
+                 } as React.CSSProperties}
+                 onMouseEnter={(e) => e.currentTarget.style.backgroundColor = 'var(--secondary-color)'}
+                 onMouseLeave={(e) => e.currentTarget.style.backgroundColor = 'var(--primary-color)'}
+               >
                 {selectedItem?.type}
               </Badge>
             </div>
@@ -429,8 +466,14 @@ export default function NewsEventsPage() {
                       <span className="font-medium text-lg">Already Registered for This Event</span>
                     </div>
                   ) : (
-                    <Button 
-                      className="w-full bg-[#8B4513] hover:bg-[#A0522D] text-white rounded-xl text-lg py-3 transition-all duration-300 hover:scale-105"
+                     <Button 
+                       className="w-full text-white rounded-xl text-lg py-3 transition-all duration-300 hover:scale-105"
+                       style={{ 
+                         backgroundColor: 'var(--primary-color)',
+                         '--hover-bg': 'var(--secondary-color)'
+                       } as React.CSSProperties}
+                       onMouseEnter={(e) => e.currentTarget.style.backgroundColor = 'var(--secondary-color)'}
+                       onMouseLeave={(e) => e.currentTarget.style.backgroundColor = 'var(--primary-color)'}
                       onClick={() => {
                         handleJoinEvent(selectedItem.id)
                         setSelectedItem(null)

@@ -74,7 +74,7 @@ export function Header() {
         <div className="flex justify-between items-center h-16">
           {/* Logo */}
           <Link href="/" className="flex items-center space-x-2">
-            <BookOpen className="h-8 w-8 text-[#8B4513] dark:text-[#d2691e]" />
+            <BookOpen className="h-8 w-8" style={{ color: 'var(--primary-color)' }} />
             <span className="text-xl font-bold text-gradient">Davel Library</span>
           </Link>
 
@@ -84,13 +84,21 @@ export function Header() {
               <Link
                 key={item.name}
                 href={item.href}
-                className="text-gray-700 dark:text-gray-300 hover:text-[#8B4513] dark:hover:text-[#d2691e] transition-colors duration-200"
+                className="text-gray-700 dark:text-gray-300 transition-colors duration-200"
+                style={{ '--hover-color': 'var(--primary-color)' } as React.CSSProperties}
+                onMouseEnter={(e) => e.currentTarget.style.color = 'var(--primary-color)'}
+                onMouseLeave={(e) => e.currentTarget.style.color = ''}
               >
                 {item.name}
               </Link>
             ))}
             {session ? (
-              <Link href={session.user.role === "ADMIN" ? "/dashboard/admin" : session.user.role === "LIBRARIAN" ? "/dashboard/librarian" : "/dashboard/member"} className="text-gray-700 dark:text-gray-300 hover:text-[#8B4513] dark:hover:text-[#d2691e] transition-colors duration-200">
+              <Link 
+                href={session.user.role === "ADMIN" ? "/dashboard/admin" : session.user.role === "LIBRARIAN" ? "/dashboard/librarian" : "/dashboard/member"} 
+                className="text-gray-700 dark:text-gray-300 transition-colors duration-200"
+                onMouseEnter={(e) => e.currentTarget.style.color = 'var(--primary-color)'}
+                onMouseLeave={(e) => e.currentTarget.style.color = ''}
+              >
                 Dashboard
               </Link>
             ) : null}
@@ -148,7 +156,17 @@ export function Header() {
                   <Button variant="ghost">Sign In</Button>
                 </Link>
                 <Link href="/apply">
-                  <Button className="bg-[#8B4513] hover:bg-[#A0522D]">Apply Now</Button>
+                  <Button 
+                    className="transition-colors duration-200"
+                    style={{ 
+                      backgroundColor: 'var(--primary-color)',
+                      '--hover-bg': 'var(--secondary-color)'
+                    } as React.CSSProperties}
+                    onMouseEnter={(e) => e.currentTarget.style.backgroundColor = 'var(--secondary-color)'}
+                    onMouseLeave={(e) => e.currentTarget.style.backgroundColor = 'var(--primary-color)'}
+                  >
+                    Apply Now
+                  </Button>
                 </Link>
               </div>
             )}
@@ -168,7 +186,9 @@ export function Header() {
                 <Link
                   key={item.name}
                   href={item.href}
-                  className="block px-3 py-2 text-base font-medium text-gray-700 dark:text-gray-300 hover:text-[#8B4513] dark:hover:text-[#d2691e] hover:bg-gray-50 dark:hover:bg-gray-800 rounded-md"
+                  className="block px-3 py-2 text-base font-medium text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-800 rounded-md transition-colors duration-200"
+                  onMouseEnter={(e) => e.currentTarget.style.color = 'var(--primary-color)'}
+                  onMouseLeave={(e) => e.currentTarget.style.color = ''}
                   onClick={() => setIsMenuOpen(false)}
                 >
                   {item.name}
