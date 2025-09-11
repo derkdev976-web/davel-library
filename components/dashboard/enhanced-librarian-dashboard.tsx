@@ -29,7 +29,6 @@ import { PrintingRequestDialog } from "@/components/librarian/printing-request-d
 import { RestorationRequestDialog } from "@/components/librarian/restoration-request-dialog"
 import { OnlineMeetingDialog } from "@/components/librarian/online-meeting-dialog"
 import { AfternoonClassDialog } from "@/components/librarian/afternoon-class-dialog"
-import { PrintingRequestsTable } from "@/components/librarian/printing-requests-table"
 import { RestorationRequestsTable } from "@/components/librarian/restoration-requests-table"
 import { OnlineMeetingsTable } from "@/components/librarian/online-meetings-table"
 import { AfternoonClassesTable } from "@/components/librarian/afternoon-classes-table"
@@ -687,7 +686,53 @@ export function EnhancedLibrarianDashboard() {
                 <p className="text-sm text-gray-600">Full control over printing requests and document services</p>
               </CardHeader>
               <CardContent>
-                <PrintingRequestsTable />
+                <div className="space-y-6">
+                  <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                    <Card className="p-4 border border-gray-200 dark:border-gray-700">
+                      <div className="flex items-center justify-between">
+                        <div>
+                          <h3 className="font-semibold text-gray-900 dark:text-gray-100">Pending Jobs</h3>
+                          <p className="text-2xl font-bold text-blue-600">12</p>
+                        </div>
+                        <Clock className="h-8 w-8 text-blue-600" />
+                      </div>
+                    </Card>
+                    <Card className="p-4 border border-gray-200 dark:border-gray-700">
+                      <div className="flex items-center justify-between">
+                        <div>
+                          <h3 className="font-semibold text-gray-900 dark:text-gray-100">In Progress</h3>
+                          <p className="text-2xl font-bold text-yellow-600">3</p>
+                        </div>
+                        <Printer className="h-8 w-8 text-yellow-600" />
+                      </div>
+                    </Card>
+                    <Card className="p-4 border border-gray-200 dark:border-gray-700">
+                      <div className="flex items-center justify-between">
+                        <div>
+                          <h3 className="font-semibold text-gray-900 dark:text-gray-100">Completed Today</h3>
+                          <p className="text-2xl font-bold text-green-600">28</p>
+                        </div>
+                        <CheckCircle className="h-8 w-8 text-green-600" />
+                      </div>
+                    </Card>
+                  </div>
+                  <div className="flex justify-center space-x-4">
+                    <Button className="bg-blue-600 hover:bg-blue-700 text-white">
+                      <Plus className="h-4 w-4 mr-2" />
+                      Add New Service
+                    </Button>
+                    <Button className="bg-green-600 hover:bg-green-700 text-white">
+                      <Eye className="h-4 w-4 mr-2" />
+                      View All Requests
+                    </Button>
+                    <Button asChild className="bg-[#8B4513] hover:bg-[#A0522D] text-white">
+                      <a href="/printing-services" target="_blank">
+                        <Printer className="h-4 w-4 mr-2" />
+                        Open Printing Services
+                      </a>
+                    </Button>
+                  </div>
+                </div>
               </CardContent>
             </Card>
           </TabsContent>
