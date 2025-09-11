@@ -94,7 +94,13 @@ export function ContentManager() {
         resetForm()
         fetchContent()
       } else {
-        toast({ title: "Error adding content", variant: "destructive" })
+        const errorData = await response.json()
+        console.error('Content API error:', errorData)
+        toast({ 
+          title: "Error adding content", 
+          description: errorData.details || errorData.error || "Unknown error",
+          variant: "destructive" 
+        })
       }
     } catch (error) {
       console.error('Error adding content:', error)
