@@ -17,7 +17,7 @@ export async function GET() {
       imageUrl: item.imageUrl || "/images/catalog/placeholder.svg",
       createdAt: item.createdAt,
       category: item.category || "General",
-      tags: item.tags ? JSON.parse(item.tags) : []
+      tags: item.tags || []
     }))
 
     return NextResponse.json({ items })

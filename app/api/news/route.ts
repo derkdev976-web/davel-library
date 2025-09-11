@@ -25,7 +25,7 @@ export async function GET() {
       description: item.description,
       category: item.category,
       featured: item.isFeatured,
-      tags: item.tags ? JSON.parse(item.tags) : [],
+      tags: item.tags || [],
       location: item.location || "",
       attendees: item.attendees || 0,
       maxAttendees: item.maxAttendees || 0

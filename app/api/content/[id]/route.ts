@@ -1,16 +1,23 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { updateContent, deleteContent } from '@/lib/server-storage'
+import { getServerSession } from "next-auth"
+import { authOptions } from "@/lib/auth"
+import { prisma } from "@/lib/prisma"
 
 export async function PUT(request: NextRequest, { params }: { params: { id: string } }) {
   try {
-    const contentId = params.id
-    const updatedContent = await request.json()
+    const session = await getServerSession(authOptions)
     
-    const result = await updateContent(contentId, updatedContent)
-    
-    if (!result) {
-      return NextResponse.json({ error: 'Content not found' }, { status: 404 })
+    if (!session || (session.user.role !== "ADMIN" && session.user.role !== "LIBRARIAN")) {
+      return NextResponse.json({ error: "Unauthorized" }, { status: 401 })
     }
+
+    const contentId = params.id
+    const updateData = await request.json()
+    
+    const result = await prisma.content.update({
+      where: { id: contentId },
+      data: updateData
+    })
     
     return NextResponse.json({ 
       message: 'Content updated successfully', 
@@ -24,14 +31,19 @@ export async function PUT(request: NextRequest, { params }: { params: { id: stri
 
 export async function PATCH(request: NextRequest, { params }: { params: { id: string } }) {
   try {
+    const session = await getServerSession(authOptions)
+    
+    if (!session || (session.user.role !== "ADMIN" && session.user.role !== "LIBRARIAN")) {
+      return NextResponse.json({ error: "Unauthorized" }, { status: 401 })
+    }
+
     const contentId = params.id
     const updateData = await request.json()
     
-    const result = await updateContent(contentId, updateData)
-    
-    if (!result) {
-      return NextResponse.json({ error: 'Content not found' }, { status: 404 })
-    }
+    const result = await prisma.content.update({
+      where: { id: contentId },
+      data: updateData
+    })
     
     return NextResponse.json({ 
       message: 'Content updated successfully', 
@@ -45,13 +57,17 @@ export async function PATCH(request: NextRequest, { params }: { params: { id: st
 
 export async function DELETE(request: NextRequest, { params }: { params: { id: string } }) {
   try {
+    const session = await getServerSession(authOptions)
+    
+    if (!session || (session.user.role !== "ADMIN" && session.user.role !== "LIBRARIAN")) {
+      return NextResponse.json({ error: "Unauthorized" }, { status: 401 })
+    }
+
     const contentId = params.id
     
-    const result = await deleteContent(contentId)
-    
-    if (!result) {
-      return NextResponse.json({ error: 'Content not found' }, { status: 404 })
-    }
+    const result = await prisma.content.delete({
+      where: { id: contentId }
+    })
     
     return NextResponse.json({ 
       message: 'Content deleted successfully', 
