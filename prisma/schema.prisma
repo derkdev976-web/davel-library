@@ -546,7 +546,7 @@ model Content {
   content     String?
   type        String   // NEWS, EVENT, GALLERY
   category    String?
-  tags        String   @default("[]") // JSON array
+  tags        String[] @default([]) // Array of strings
   imageUrl    String?
   isPublished Boolean  @default(true)
   isFeatured  Boolean  @default(false)
