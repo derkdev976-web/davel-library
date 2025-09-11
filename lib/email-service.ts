@@ -156,6 +156,7 @@ class EmailService {
     firstName: string
     lastName: string
     notes?: string
+    temporaryPassword?: string
   }): Promise<boolean> {
     const subject = 'Welcome to Davel Library - Membership Approved!'
     
@@ -195,10 +196,24 @@ class EmailService {
             </ul>
           </div>
           
+          ${application.temporaryPassword ? `
+          <div style="background-color: #d1ecf1; padding: 20px; border-radius: 8px; margin: 20px 0; border-left: 4px solid #17a2b8;">
+            <h3 style="color: #0c5460; margin-top: 0;">🔐 Your Login Credentials:</h3>
+            <div style="background-color: white; padding: 15px; border-radius: 6px; margin: 10px 0;">
+              <p style="margin: 5px 0; color: #333;"><strong>Email:</strong> ${application.email}</p>
+              <p style="margin: 5px 0; color: #333;"><strong>Temporary Password:</strong> <code style="background-color: #f8f9fa; padding: 4px 8px; border-radius: 4px; font-family: monospace; font-size: 14px;">${application.temporaryPassword}</code></p>
+            </div>
+            <div style="background-color: #fff3cd; padding: 10px; border-radius: 4px; margin: 10px 0;">
+              <p style="margin: 0; color: #856404; font-size: 14px;"><strong>⚠️ Important:</strong> Please change your password after your first login for security reasons.</p>
+            </div>
+          </div>
+          ` : ''}
+          
           <div style="background-color: #fff3cd; padding: 20px; border-radius: 8px; margin: 20px 0; border-left: 4px solid #ffc107;">
             <h3 style="color: #856404; margin-top: 0;">Next Steps:</h3>
             <ol style="margin: 10px 0; padding-left: 20px; color: #333;">
-              <li>Visit our website to access your member portal</li>
+              <li>Use your login credentials above to access your member portal</li>
+              <li>Change your temporary password to something secure</li>
               <li>Explore our book collection and make your first reservation</li>
               <li>Check out upcoming events and workshops</li>
               <li>Download our mobile app for easy access</li>

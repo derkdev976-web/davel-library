@@ -43,15 +43,8 @@ export async function PATCH(
     if (status !== previousStatus) {
       try {
         if (status === "APPROVED" && previousStatus !== "APPROVED") {
-          // Send approval email
-          await emailService.sendApprovalEmail({
-            email: application.email,
-            firstName: application.firstName,
-            lastName: application.lastName,
-            notes: reviewNotes
-          })
-
-          // Create user account for approved member
+          // Create user account for approved member first
+          let temporaryPassword = null
           try {
             // Check if user already exists
             const existingUser = await prisma.user.findUnique({
@@ -59,6 +52,11 @@ export async function PATCH(
             })
 
             if (!existingUser) {
+              // Generate temporary password
+              const bcrypt = await import("bcryptjs")
+              temporaryPassword = Math.random().toString(36).slice(-8) // 8-character random password
+              const hashedPassword = await bcrypt.hash(temporaryPassword, 10)
+
               // Create user account for approved member
               await prisma.user.create({
                 data: {
@@ -66,6 +64,7 @@ export async function PATCH(
                   name: `${application.firstName} ${application.lastName}`,
                   role: "MEMBER",
                   isActive: true,
+                  password: hashedPassword,
                   membershipApplication: {
                     connect: { id: application.id }
                   },
@@ -93,6 +92,15 @@ export async function PATCH(
             console.error('Error creating user account for approved member:', error)
             // Don't fail the application update if user creation fails
           }
+
+          // Send approval email with login credentials
+          await emailService.sendApprovalEmail({
+            email: application.email,
+            firstName: application.firstName,
+            lastName: application.lastName,
+            notes: reviewNotes,
+            temporaryPassword: temporaryPassword
+          })
         } else if (status === "REJECTED" && previousStatus !== "REJECTED") {
           // Send rejection email
           await emailService.sendRejectionEmail({

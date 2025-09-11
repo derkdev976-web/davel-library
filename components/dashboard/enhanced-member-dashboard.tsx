@@ -292,6 +292,31 @@ export function EnhancedMemberDashboard() {
             </p>
           </div>
 
+          {/* Password Change Reminder */}
+          {session?.user?.email && (
+            <div className="bg-yellow-50 dark:bg-yellow-900/20 border border-yellow-200 dark:border-yellow-700 rounded-lg p-4 mb-6">
+              <div className="flex items-center space-x-3">
+                <Bell className="h-5 w-5 text-yellow-600 dark:text-yellow-400" />
+                <div className="flex-1">
+                  <h3 className="text-sm font-medium text-yellow-800 dark:text-yellow-200">
+                    Security Reminder
+                  </h3>
+                  <p className="text-sm text-yellow-700 dark:text-yellow-300 mt-1">
+                    If you're using a temporary password, please change it to something secure in your profile settings.
+                  </p>
+                </div>
+                <Button
+                  size="sm"
+                  variant="outline"
+                  className="border-yellow-300 text-yellow-700 hover:bg-yellow-100 dark:border-yellow-600 dark:text-yellow-300 dark:hover:bg-yellow-800"
+                  onClick={() => setSelectedTab("profile")}
+                >
+                  Change Password
+                </Button>
+              </div>
+            </div>
+          )}
+
           <Tabs value={selectedTab} onValueChange={setSelectedTab} className="space-y-6">
             <TabsList className="grid w-full grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-9 gap-1 p-1 bg-white/50 dark:bg-gray-800/50 backdrop-blur-sm rounded-xl shadow-lg">
               <TabsTrigger value="overview" className="text-xs sm:text-sm">
