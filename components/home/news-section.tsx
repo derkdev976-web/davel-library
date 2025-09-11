@@ -5,7 +5,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { Calendar, MapPin, Users, ArrowRight } from "lucide-react"
 import Link from "next/link"
-import { useEffect, useState } from "react"
+import { useEffect, useState, useCallback } from "react"
 import Image from 'next/image'
 
 interface NewsItem {
@@ -61,7 +61,7 @@ export function NewsSection() {
     }
   }, [fetchNews])
 
-  const fetchNews = async () => {
+  const fetchNews = useCallback(async () => {
     try {
       setLoading(true)
       // Add cache-busting parameter
@@ -85,7 +85,7 @@ export function NewsSection() {
     } finally {
       setLoading(false)
     }
-  }
+  }, [previousItemCount])
 
   if (loading) {
     return (

@@ -24,7 +24,7 @@ export async function GET(request: NextRequest) {
           },
           orderBy: { createdAt: 'desc' }
         }
-      } : false,
+      } : undefined,
       orderBy: { name: 'asc' }
     })
 

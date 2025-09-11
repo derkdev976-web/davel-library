@@ -1,6 +1,6 @@
 "use client"
 
-import { useState, useEffect } from "react"
+import { useState, useEffect, useCallback } from "react"
 import { Header } from "@/components/layout/header"
 import { Footer } from "@/components/layout/footer"
 import { Skeleton } from "@/components/ui/skeleton"
@@ -66,7 +66,7 @@ export default function GalleryPage() {
     }
   }, [fetchGallery])
 
-  const fetchGallery = async () => {
+  const fetchGallery = useCallback(async () => {
     try {
       setLoading(true)
       // Add cache-busting parameter
@@ -90,10 +90,11 @@ export default function GalleryPage() {
       }
     } catch (error) {
       console.error('Error fetching gallery:', error)
+      toast({ title: "Error fetching gallery", variant: "destructive" })
     } finally {
       setLoading(false)
     }
-  }
+  }, [previousItemCount, toast])
 
   const filteredItems = items.filter(item =>
     item.title.toLowerCase().includes(searchTerm.toLowerCase()) ||

@@ -1,6 +1,6 @@
 "use client"
 
-import { useState, useEffect } from "react"
+import { useState, useEffect, useCallback } from "react"
 import { useSession } from "next-auth/react"
 import { Header } from "@/components/layout/header"
 import { Footer } from "@/components/layout/footer"
@@ -47,7 +47,7 @@ export default function NewsEventsPage() {
     if (session?.user) {
       fetchUserRegistrations()
     }
-  }, [session])
+  }, [session, fetchNewsEvents])
 
   // Auto-refresh content every 30 seconds
   useEffect(() => {
@@ -79,7 +79,7 @@ export default function NewsEventsPage() {
     }
   }, [fetchNewsEvents])
 
-  const fetchNewsEvents = async () => {
+  const fetchNewsEvents = useCallback(async () => {
     try {
       setLoading(true)
       // Add cache-busting parameter
@@ -103,10 +103,11 @@ export default function NewsEventsPage() {
       }
     } catch (error) {
       console.error('Error fetching news and events:', error)
+      toast({ title: "Error fetching news and events", variant: "destructive" })
     } finally {
       setLoading(false)
     }
-  }
+  }, [previousItemCount, toast])
 
   const filteredItems = items.filter(item => {
     const matchesSearch = item.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
