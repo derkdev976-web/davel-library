@@ -90,7 +90,7 @@ export function Header() {
               </Link>
             ))}
             {session ? (
-              <Link href={session.user.role === "ADMIN" || session.user.role === "LIBRARIAN" ? "/dashboard/admin" : "/dashboard/member"} className="text-gray-700 dark:text-gray-300 hover:text-[#8B4513] dark:hover:text-[#d2691e] transition-colors duration-200">
+              <Link href={session.user.role === "ADMIN" ? "/dashboard/admin" : session.user.role === "LIBRARIAN" ? "/dashboard/librarian" : "/dashboard/member"} className="text-gray-700 dark:text-gray-300 hover:text-[#8B4513] dark:hover:text-[#d2691e] transition-colors duration-200">
                 Dashboard
               </Link>
             ) : null}
@@ -124,7 +124,7 @@ export function Header() {
                   </div>
                   <DropdownMenuSeparator />
                   <DropdownMenuItem asChild>
-                    <Link href={session.user.role === "ADMIN" || session.user.role === "LIBRARIAN" ? "/dashboard/admin" : "/dashboard/member"}>
+                    <Link href={session.user.role === "ADMIN" ? "/dashboard/admin" : session.user.role === "LIBRARIAN" ? "/dashboard/librarian" : "/dashboard/member"}>
                       <User className="mr-2 h-4 w-4" />
                       Dashboard
                     </Link>
