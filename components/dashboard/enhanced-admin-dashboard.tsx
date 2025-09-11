@@ -32,6 +32,7 @@ import { ContactStatistics } from "@/components/admin/contact-statistics"
 import { FeeManagement } from "@/components/admin/fee-management"
 import { FeeHistory } from "@/components/admin/fee-history"
 import { EmailTest } from "@/components/admin/email-test"
+import { EmailTestManager } from "@/components/admin/email-test-manager"
 import { NotificationSystem } from "@/components/notifications/notification-system"
 import { MemberProfilePicture } from "@/components/ui/public-profile-picture"
 
@@ -407,6 +408,10 @@ export function EnhancedAdminDashboard() {
             <TabsTrigger value="fees" className="flex items-center space-x-2">
               <DollarSign className="h-4 w-4" />
               <span className="hidden md:inline">Fees</span>
+            </TabsTrigger>
+            <TabsTrigger value="email-test" className="flex items-center space-x-2">
+              <Mail className="h-4 w-4" />
+              <span className="hidden md:inline">Email Test</span>
             </TabsTrigger>
           </TabsList>
 
@@ -890,6 +895,10 @@ export function EnhancedAdminDashboard() {
                 </CardContent>
               </Card>
             </div>
+          </TabsContent>
+
+          <TabsContent value="email-test" className="space-y-6">
+            <EmailTestManager />
           </TabsContent>
         </Tabs>
 

@@ -6,10 +6,12 @@ import { prisma } from "@/lib/prisma"
 
 // Email configuration
 const transporter = nodemailer.createTransport({
-  service: "gmail",
+  host: process.env.EMAIL_SERVER_HOST || "smtp.gmail.com",
+  port: parseInt(process.env.EMAIL_SERVER_PORT || "587"),
+  secure: false,
   auth: {
-    user: process.env.EMAIL_USER || "your-email@gmail.com",
-    pass: process.env.EMAIL_PASS || "your-app-password",
+    user: process.env.EMAIL_SERVER_USER || "",
+    pass: process.env.EMAIL_SERVER_PASSWORD || "",
   },
 })
 
@@ -95,7 +97,7 @@ export async function POST(request: NextRequest) {
     // Send confirmation email
     try {
       const mailOptions = {
-        from: process.env.EMAIL_USER || "noreply@davel.library.com",
+        from: process.env.EMAIL_FROM || "noreply@davel.library.com",
         to: formData.email,
         subject: `Membership Application Received - ${applicationId}`,
         html: emailContent,
@@ -151,7 +153,7 @@ export async function POST(request: NextRequest) {
       `
 
       const adminMailOptions = {
-        from: process.env.EMAIL_USER || "noreply@davel.library.com",
+        from: process.env.EMAIL_FROM || "noreply@davel.library.com",
         to: process.env.ADMIN_EMAIL || "admin@davel.library.com",
         subject: `New Membership Application - ${applicationId}`,
         html: adminNotification,

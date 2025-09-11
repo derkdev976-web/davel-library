@@ -6,10 +6,12 @@ import nodemailer from "nodemailer"
 
 // Email configuration
 const transporter = nodemailer.createTransport({
-  service: "gmail",
+  host: process.env.EMAIL_SERVER_HOST || "smtp.gmail.com",
+  port: parseInt(process.env.EMAIL_SERVER_PORT || "587"),
+  secure: false,
   auth: {
-    user: process.env.EMAIL_USER || "your-email@gmail.com",
-    pass: process.env.EMAIL_PASS || "your-app-password",
+    user: process.env.EMAIL_SERVER_USER || "",
+    pass: process.env.EMAIL_SERVER_PASSWORD || "",
   },
 })
 
@@ -168,7 +170,7 @@ export async function POST(request: NextRequest) {
     `
 
     const mailOptions = {
-      from: process.env.EMAIL_USER || "noreply@davel.library.com",
+      from: process.env.EMAIL_FROM || "noreply@davel.library.com",
       to: updatedApplication.email,
       subject: `Membership Application ${status} - ${updatedApplication.id}`,
       html: statusEmailContent,
