@@ -89,7 +89,7 @@ export default function SignIn() {
           title: "Login Successful",
           description: "Welcome back, Librarian!",
         })
-        router.push("/dashboard/librarian")
+        router.push("/dashboard/admin")
       }
     } catch (error) {
       toast({
