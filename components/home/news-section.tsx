@@ -24,17 +24,61 @@ interface NewsItem {
 export function NewsSection() {
   const [newsItems, setNewsItems] = useState<NewsItem[]>([])
   const [loading, setLoading] = useState(true)
+  const [lastUpdated, setLastUpdated] = useState<Date | null>(null)
+  const [previousItemCount, setPreviousItemCount] = useState(0)
 
   useEffect(() => {
     fetchNews()
   }, [])
 
+  // Auto-refresh content every 30 seconds
+  useEffect(() => {
+    const interval = setInterval(() => {
+      fetchNews()
+    }, 30000) // 30 seconds
+
+    return () => clearInterval(interval)
+  }, [])
+
+  // Refresh when user returns to tab/window
+  useEffect(() => {
+    const handleVisibilityChange = () => {
+      if (!document.hidden) {
+        fetchNews()
+      }
+    }
+
+    const handleFocus = () => {
+      fetchNews()
+    }
+
+    document.addEventListener('visibilitychange', handleVisibilityChange)
+    window.addEventListener('focus', handleFocus)
+
+    return () => {
+      document.removeEventListener('visibilitychange', handleVisibilityChange)
+      window.removeEventListener('focus', handleFocus)
+    }
+  }, [])
+
   const fetchNews = async () => {
     try {
-      const response = await fetch('/api/news')
+      setLoading(true)
+      // Add cache-busting parameter
+      const response = await fetch(`/api/news?t=${Date.now()}`)
       if (response.ok) {
         const data = await response.json()
-        setNewsItems(data.items || [])
+        const newItems = data.items || []
+        
+        // Check if new content was added
+        if (previousItemCount > 0 && newItems.length > previousItemCount) {
+          // Subtle notification for homepage (no toast to avoid interrupting user experience)
+          console.log(`New content available: ${newItems.length - previousItemCount} new item(s) added`)
+        }
+        
+        setNewsItems(newItems)
+        setPreviousItemCount(newItems.length)
+        setLastUpdated(new Date())
       }
     } catch (error) {
       console.error('Error fetching news:', error)
@@ -75,6 +119,11 @@ export function NewsSection() {
           <p className="text-lg text-gray-600 dark:text-gray-300 max-w-2xl mx-auto">
             Stay updated with the latest happenings at Davel Library
           </p>
+          {lastUpdated && (
+            <p className="text-sm text-gray-500 dark:text-gray-400 mt-2">
+              Last updated: {lastUpdated.toLocaleTimeString()} • Auto-refreshes every 30 seconds
+            </p>
+          )}
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 mb-12">
