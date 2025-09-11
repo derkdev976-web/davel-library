@@ -42,14 +42,14 @@ export default function AdminDashboardPage() {
     )
   }
 
-  // Show error if not admin
-  if (session.user?.role !== "ADMIN") {
+  // Show error if not admin or librarian
+  if (session.user?.role !== "ADMIN" && session.user?.role !== "LIBRARIAN") {
     return (
       <div className="min-h-screen app-background flex items-center justify-center">
         <Card className="p-8">
           <CardContent className="text-center">
             <h2 className="text-xl font-semibold mb-4">Access Denied</h2>
-            <p className="text-gray-600 mb-4">You need admin privileges to access this dashboard.</p>
+            <p className="text-gray-600 mb-4">You need admin or librarian privileges to access this dashboard.</p>
             <p className="text-sm text-gray-500">Current role: {session.user?.role}</p>
           </CardContent>
         </Card>
