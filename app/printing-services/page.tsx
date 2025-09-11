@@ -401,7 +401,7 @@ export default function PrintingServicesPage() {
                 <FileUpload
                   onFileSelect={handleFileUpload}
                   selectedFile={selectedFile}
-                  acceptedTypes={['application/pdf', 'application/msword', 'application/vnd.openxmlformats-officedocument.wordprocessingml.document']}
+                  accept="application/pdf,application/msword,application/vnd.openxmlformats-officedocument.wordprocessingml.document"
                   maxSize={10 * 1024 * 1024} // 10MB
                 />
                 {selectedFile && (
