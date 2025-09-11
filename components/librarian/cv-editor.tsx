@@ -25,7 +25,14 @@ import {
   Mail,
   Phone,
   MapPin,
-  Globe
+  Globe,
+  Printer,
+  FileDown,
+  Palette,
+  Layout,
+  Share2,
+  Copy,
+  Check
 } from "lucide-react"
 
 interface CVTemplate {
@@ -120,6 +127,62 @@ const defaultTemplates: CVTemplate[] = [
     }
   },
   {
+    id: "executive",
+    name: "Executive",
+    description: "Premium design for senior leadership and executive positions",
+    sections: [
+      { id: "personal", type: "personal", title: "Executive Profile", content: "", order: 1 },
+      { id: "summary", type: "custom", title: "Executive Summary", content: "", order: 2 },
+      { id: "experience", type: "experience", title: "Leadership Experience", content: "", order: 3 },
+      { id: "education", type: "education", title: "Education & Credentials", content: "", order: 4 },
+      { id: "certifications", type: "certifications", title: "Professional Certifications", content: "", order: 5 },
+      { id: "skills", type: "skills", title: "Core Competencies", content: "", order: 6 }
+    ],
+    styling: {
+      fontFamily: "Playfair Display",
+      fontSize: "13px",
+      colorScheme: "gold",
+      layout: "two-column"
+    }
+  },
+  {
+    id: "tech",
+    name: "Tech Professional",
+    description: "Modern design optimized for software engineers and tech roles",
+    sections: [
+      { id: "personal", type: "personal", title: "Contact", content: "", order: 1 },
+      { id: "summary", type: "custom", title: "About", content: "", order: 2 },
+      { id: "experience", type: "experience", title: "Experience", content: "", order: 3 },
+      { id: "projects", type: "projects", title: "Projects", content: "", order: 4 },
+      { id: "skills", type: "skills", title: "Technical Skills", content: "", order: 5 },
+      { id: "education", type: "education", title: "Education", content: "", order: 6 }
+    ],
+    styling: {
+      fontFamily: "JetBrains Mono",
+      fontSize: "12px",
+      colorScheme: "green",
+      layout: "single-column"
+    }
+  },
+  {
+    id: "creative",
+    name: "Creative Portfolio",
+    description: "Eye-catching design for creative and design roles",
+    sections: [
+      { id: "personal", type: "personal", title: "About Me", content: "", order: 1 },
+      { id: "experience", type: "experience", title: "Experience", content: "", order: 2 },
+      { id: "projects", type: "projects", title: "Portfolio", content: "", order: 3 },
+      { id: "skills", type: "skills", title: "Skills", content: "", order: 4 },
+      { id: "education", type: "education", title: "Education", content: "", order: 5 }
+    ],
+    styling: {
+      fontFamily: "Poppins",
+      fontSize: "16px",
+      colorScheme: "purple",
+      layout: "two-column"
+    }
+  },
+  {
     id: "academic",
     name: "Academic",
     description: "Traditional format ideal for academic and research positions",
@@ -138,21 +201,20 @@ const defaultTemplates: CVTemplate[] = [
     }
   },
   {
-    id: "creative",
-    name: "Creative",
-    description: "Eye-catching design for creative and design roles",
+    id: "minimalist",
+    name: "Minimalist",
+    description: "Ultra-clean design focusing on content over decoration",
     sections: [
-      { id: "personal", type: "personal", title: "About Me", content: "", order: 1 },
+      { id: "personal", type: "personal", title: "Contact", content: "", order: 1 },
       { id: "experience", type: "experience", title: "Experience", content: "", order: 2 },
-      { id: "projects", type: "projects", title: "Projects", content: "", order: 3 },
-      { id: "skills", type: "skills", title: "Skills", content: "", order: 4 },
-      { id: "education", type: "education", title: "Education", content: "", order: 5 }
+      { id: "education", type: "education", title: "Education", content: "", order: 3 },
+      { id: "skills", type: "skills", title: "Skills", content: "", order: 4 }
     ],
     styling: {
-      fontFamily: "Poppins",
-      fontSize: "16px",
-      colorScheme: "purple",
-      layout: "two-column"
+      fontFamily: "Helvetica",
+      fontSize: "11px",
+      colorScheme: "gray",
+      layout: "single-column"
     }
   }
 ]
@@ -177,6 +239,10 @@ export function CVEditor() {
   })
   const [activeTab, setActiveTab] = useState("personal")
   const [previewMode, setPreviewMode] = useState(false)
+  const [pdfUrl, setPdfUrl] = useState<string | null>(null)
+  const [isGeneratingPdf, setIsGeneratingPdf] = useState(false)
+  const [savedCvs, setSavedCvs] = useState<Array<{id: string, name: string, data: CVData, template: CVTemplate, createdAt: Date}>>([])
+  const [showSavedCvs, setShowSavedCvs] = useState(false)
   const { toast } = useToast()
 
   const addExperience = () => {
@@ -264,19 +330,329 @@ export function CVEditor() {
     }))
   }
 
-  const generateCV = () => {
-    // This would generate a PDF or HTML version of the CV
-    toast({ title: "CV generated successfully!" })
+  const generatePDF = async () => {
+    setIsGeneratingPdf(true)
+    try {
+      // Create a new window for PDF generation
+      const printWindow = window.open('', '_blank')
+      if (!printWindow) {
+        toast({ title: "Please allow popups to generate PDF", variant: "destructive" })
+        return
+      }
+
+      // Generate HTML content for PDF
+      const htmlContent = generateCVHTML()
+      
+      printWindow.document.write(`
+        <!DOCTYPE html>
+        <html>
+        <head>
+          <title>CV - ${cvData.personal.fullName || 'Resume'}</title>
+          <style>
+            ${getCVStyles()}
+            @media print {
+              body { margin: 0; }
+              .no-print { display: none !important; }
+            }
+          </style>
+        </head>
+        <body>
+          ${htmlContent}
+          <div class="no-print" style="position: fixed; top: 20px; right: 20px; z-index: 1000;">
+            <button onclick="window.print()" style="padding: 10px 20px; background: #3b82f6; color: white; border: none; border-radius: 5px; cursor: pointer; margin-right: 10px;">Print</button>
+            <button onclick="window.close()" style="padding: 10px 20px; background: #6b7280; color: white; border: none; border-radius: 5px; cursor: pointer;">Close</button>
+          </div>
+        </body>
+        </html>
+      `)
+      
+      printWindow.document.close()
+      
+      // Auto-print after a short delay
+      setTimeout(() => {
+        printWindow.print()
+      }, 500)
+      
+      toast({ title: "PDF generated successfully! Check the new window." })
+    } catch (error) {
+      console.error('Error generating PDF:', error)
+      toast({ title: "Error generating PDF", variant: "destructive" })
+    } finally {
+      setIsGeneratingPdf(false)
+    }
   }
 
-  const saveTemplate = () => {
-    // Save the current template
-    toast({ title: "Template saved successfully!" })
+  const printCV = () => {
+    const printWindow = window.open('', '_blank')
+    if (!printWindow) {
+      toast({ title: "Please allow popups to print CV", variant: "destructive" })
+      return
+    }
+
+    const htmlContent = generateCVHTML()
+    
+    printWindow.document.write(`
+      <!DOCTYPE html>
+      <html>
+      <head>
+        <title>CV - ${cvData.personal.fullName || 'Resume'}</title>
+        <style>
+          ${getCVStyles()}
+          @media print {
+            body { margin: 0; }
+            .no-print { display: none !important; }
+          }
+        </style>
+      </head>
+      <body>
+        ${htmlContent}
+        <div class="no-print" style="position: fixed; top: 20px; right: 20px; z-index: 1000;">
+          <button onclick="window.print()" style="padding: 10px 20px; background: #3b82f6; color: white; border: none; border-radius: 5px; cursor: pointer; margin-right: 10px;">Print</button>
+          <button onclick="window.close()" style="padding: 10px 20px; background: #6b7280; color: white; border: none; border-radius: 5px; cursor: pointer;">Close</button>
+        </div>
+      </body>
+      </html>
+    `)
+    
+    printWindow.document.close()
+    setTimeout(() => printWindow.print(), 500)
+  }
+
+  const saveCV = () => {
+    const cvName = prompt("Enter a name for this CV:")
+    if (!cvName) return
+
+    const newCV = {
+      id: Date.now().toString(),
+      name: cvName,
+      data: cvData,
+      template: selectedTemplate,
+      createdAt: new Date()
+    }
+
+    setSavedCvs(prev => [newCV, ...prev])
+    toast({ title: "CV saved successfully!" })
+  }
+
+  const loadSavedCV = (cv: any) => {
+    setCvData(cv.data)
+    setSelectedTemplate(cv.template)
+    setShowSavedCvs(false)
+    toast({ title: `Loaded CV: ${cv.name}` })
+  }
+
+  const deleteSavedCV = (id: string) => {
+    setSavedCvs(prev => prev.filter(cv => cv.id !== id))
+    toast({ title: "CV deleted successfully!" })
+  }
+
+  const copyToClipboard = async () => {
+    try {
+      const htmlContent = generateCVHTML()
+      await navigator.clipboard.writeText(htmlContent)
+      toast({ title: "CV content copied to clipboard!" })
+    } catch (error) {
+      toast({ title: "Failed to copy to clipboard", variant: "destructive" })
+    }
   }
 
   const loadTemplate = (template: CVTemplate) => {
     setSelectedTemplate(template)
     toast({ title: `Loaded template: ${template.name}` })
+  }
+
+  const getCVStyles = () => {
+    const { fontFamily, fontSize, colorScheme, layout } = selectedTemplate.styling
+    
+    const colorSchemes = {
+      blue: { primary: '#3b82f6', secondary: '#1e40af', accent: '#dbeafe' },
+      gold: { primary: '#f59e0b', secondary: '#d97706', accent: '#fef3c7' },
+      green: { primary: '#10b981', secondary: '#059669', accent: '#d1fae5' },
+      purple: { primary: '#8b5cf6', secondary: '#7c3aed', accent: '#ede9fe' },
+      black: { primary: '#000000', secondary: '#374151', accent: '#f3f4f6' },
+      gray: { primary: '#6b7280', secondary: '#4b5563', accent: '#f9fafb' }
+    }
+    
+    const colors = colorSchemes[colorScheme as keyof typeof colorSchemes] || colorSchemes.blue
+    
+    return `
+      * { margin: 0; padding: 0; box-sizing: border-box; }
+      body { 
+        font-family: ${fontFamily}, sans-serif; 
+        font-size: ${fontSize}; 
+        line-height: 1.6; 
+        color: #333; 
+        max-width: 210mm; 
+        margin: 0 auto; 
+        padding: 20mm;
+        background: white;
+      }
+      .cv-header { 
+        text-align: center; 
+        margin-bottom: 30px; 
+        padding-bottom: 20px; 
+        border-bottom: 3px solid ${colors.primary};
+      }
+      .cv-name { 
+        font-size: 2.5em; 
+        font-weight: bold; 
+        color: ${colors.primary}; 
+        margin-bottom: 10px;
+      }
+      .cv-contact { 
+        color: ${colors.secondary}; 
+        font-size: 1.1em;
+      }
+      .cv-section { 
+        margin-bottom: 25px; 
+      }
+      .cv-section-title { 
+        font-size: 1.4em; 
+        font-weight: bold; 
+        color: ${colors.primary}; 
+        margin-bottom: 15px; 
+        padding-bottom: 5px; 
+        border-bottom: 2px solid ${colors.accent};
+      }
+      .cv-item { 
+        margin-bottom: 15px; 
+      }
+      .cv-item-header { 
+        font-weight: bold; 
+        color: ${colors.secondary}; 
+        margin-bottom: 5px;
+      }
+      .cv-item-meta { 
+        color: #666; 
+        font-style: italic; 
+        margin-bottom: 8px;
+      }
+      .cv-item-description { 
+        color: #555; 
+        line-height: 1.5;
+      }
+      .cv-skills { 
+        display: flex; 
+        flex-wrap: wrap; 
+        gap: 8px; 
+      }
+      .cv-skill { 
+        background: ${colors.accent}; 
+        color: ${colors.secondary}; 
+        padding: 4px 12px; 
+        border-radius: 15px; 
+        font-size: 0.9em;
+      }
+      .cv-layout-two-column { 
+        display: grid; 
+        grid-template-columns: 1fr 2fr; 
+        gap: 30px; 
+      }
+      .cv-layout-single-column { 
+        display: block; 
+      }
+      @media print {
+        body { margin: 0; padding: 15mm; }
+        .cv-section { page-break-inside: avoid; }
+      }
+    `
+  }
+
+  const generateCVHTML = () => {
+    const { layout } = selectedTemplate.styling
+    const isTwoColumn = layout === 'two-column'
+    
+    return `
+      <div class="cv-layout-${layout}">
+        <div class="cv-header">
+          <div class="cv-name">${cvData.personal.fullName || 'Your Name'}</div>
+          <div class="cv-contact">
+            ${cvData.personal.email ? `<span>${cvData.personal.email}</span>` : ''}
+            ${cvData.personal.phone ? `<span> • ${cvData.personal.phone}</span>` : ''}
+            ${cvData.personal.address ? `<span> • ${cvData.personal.address}</span>` : ''}
+            ${cvData.personal.website ? `<span> • ${cvData.personal.website}</span>` : ''}
+            ${cvData.personal.linkedin ? `<span> • ${cvData.personal.linkedin}</span>` : ''}
+          </div>
+        </div>
+
+        ${cvData.personal.summary ? `
+          <div class="cv-section">
+            <div class="cv-section-title">Professional Summary</div>
+            <div class="cv-item-description">${cvData.personal.summary}</div>
+          </div>
+        ` : ''}
+
+        ${cvData.experience.length > 0 ? `
+          <div class="cv-section">
+            <div class="cv-section-title">Work Experience</div>
+            ${cvData.experience.map(exp => `
+              <div class="cv-item">
+                <div class="cv-item-header">${exp.title} at ${exp.company}</div>
+                <div class="cv-item-meta">${exp.location} • ${exp.startDate} - ${exp.current ? 'Present' : exp.endDate}</div>
+                <div class="cv-item-description">${exp.description}</div>
+              </div>
+            `).join('')}
+          </div>
+        ` : ''}
+
+        ${cvData.education.length > 0 ? `
+          <div class="cv-section">
+            <div class="cv-section-title">Education</div>
+            ${cvData.education.map(edu => `
+              <div class="cv-item">
+                <div class="cv-item-header">${edu.degree}</div>
+                <div class="cv-item-meta">${edu.institution}, ${edu.location} • ${edu.startDate} - ${edu.endDate}${edu.gpa ? ` • GPA: ${edu.gpa}` : ''}</div>
+                ${edu.description ? `<div class="cv-item-description">${edu.description}</div>` : ''}
+              </div>
+            `).join('')}
+          </div>
+        ` : ''}
+
+        ${cvData.skills.length > 0 ? `
+          <div class="cv-section">
+            <div class="cv-section-title">Skills</div>
+            ${cvData.skills.map(skill => `
+              <div class="cv-item">
+                <div class="cv-item-header">${skill.category}</div>
+                <div class="cv-skills">
+                  ${skill.items.map(item => `<span class="cv-skill">${item}</span>`).join('')}
+                </div>
+              </div>
+            `).join('')}
+          </div>
+        ` : ''}
+
+        ${cvData.projects.length > 0 ? `
+          <div class="cv-section">
+            <div class="cv-section-title">Projects</div>
+            ${cvData.projects.map(project => `
+              <div class="cv-item">
+                <div class="cv-item-header">${project.title}</div>
+                <div class="cv-item-description">${project.description}</div>
+                ${project.technologies.length > 0 ? `
+                  <div class="cv-skills" style="margin-top: 8px;">
+                    ${project.technologies.map(tech => `<span class="cv-skill">${tech}</span>`).join('')}
+                  </div>
+                ` : ''}
+                ${project.link ? `<div style="margin-top: 5px;"><a href="${project.link}" target="_blank">View Project</a></div>` : ''}
+              </div>
+            `).join('')}
+          </div>
+        ` : ''}
+
+        ${cvData.certifications.length > 0 ? `
+          <div class="cv-section">
+            <div class="cv-section-title">Certifications</div>
+            ${cvData.certifications.map(cert => `
+              <div class="cv-item">
+                <div class="cv-item-header">${cert.name}</div>
+                <div class="cv-item-meta">${cert.issuer} • ${cert.date}${cert.credentialId ? ` • ID: ${cert.credentialId}` : ''}</div>
+              </div>
+            `).join('')}
+          </div>
+        ` : ''}
+      </div>
+    `
   }
 
   return (
@@ -314,23 +690,79 @@ export function CVEditor() {
             </div>
 
             {/* Action Buttons */}
-            <div className="flex space-x-2">
+            <div className="flex flex-wrap gap-2">
               <Button onClick={() => setPreviewMode(!previewMode)} variant="outline">
                 <Eye className="h-4 w-4 mr-2" />
                 {previewMode ? 'Edit' : 'Preview'}
               </Button>
-              <Button onClick={saveTemplate} variant="outline">
+              <Button onClick={saveCV} variant="outline">
                 <Save className="h-4 w-4 mr-2" />
-                Save Template
+                Save CV
               </Button>
-              <Button onClick={generateCV} className="bg-blue-600 hover:bg-blue-700">
-                <Download className="h-4 w-4 mr-2" />
-                Generate CV
+              <Button onClick={() => setShowSavedCvs(!showSavedCvs)} variant="outline">
+                <FileText className="h-4 w-4 mr-2" />
+                Load Saved
+              </Button>
+              <Button onClick={generatePDF} disabled={isGeneratingPdf} className="bg-blue-600 hover:bg-blue-700">
+                <FileDown className="h-4 w-4 mr-2" />
+                {isGeneratingPdf ? 'Generating...' : 'Generate PDF'}
+              </Button>
+              <Button onClick={printCV} variant="outline">
+                <Printer className="h-4 w-4 mr-2" />
+                Print
+              </Button>
+              <Button onClick={copyToClipboard} variant="outline">
+                <Copy className="h-4 w-4 mr-2" />
+                Copy HTML
               </Button>
             </div>
           </div>
         </CardContent>
       </Card>
+
+      {/* Saved CVs Section */}
+      {showSavedCvs && (
+        <Card>
+          <CardHeader>
+            <CardTitle>Saved CVs</CardTitle>
+          </CardHeader>
+          <CardContent>
+            {savedCvs.length === 0 ? (
+              <p className="text-gray-500 text-center py-4">No saved CVs yet. Create and save your first CV!</p>
+            ) : (
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                {savedCvs.map((cv) => (
+                  <Card key={cv.id} className="hover:shadow-md transition-shadow">
+                    <CardContent className="p-4">
+                      <div className="flex justify-between items-start mb-2">
+                        <h3 className="font-semibold">{cv.name}</h3>
+                        <Button
+                          onClick={() => deleteSavedCV(cv.id)}
+                          variant="ghost"
+                          size="sm"
+                        >
+                          <Trash2 className="h-4 w-4" />
+                        </Button>
+                      </div>
+                      <p className="text-sm text-gray-600 mb-2">Template: {cv.template.name}</p>
+                      <p className="text-xs text-gray-500 mb-3">
+                        Created: {cv.createdAt.toLocaleDateString()}
+                      </p>
+                      <Button
+                        onClick={() => loadSavedCV(cv)}
+                        size="sm"
+                        className="w-full"
+                      >
+                        Load CV
+                      </Button>
+                    </CardContent>
+                  </Card>
+                ))}
+              </div>
+            )}
+          </CardContent>
+        </Card>
+      )}
 
       {!previewMode ? (
         <Card>
@@ -764,66 +1196,17 @@ export function CVEditor() {
       ) : (
         <Card>
           <CardHeader>
-            <CardTitle>CV Preview</CardTitle>
+            <CardTitle>CV Preview - {selectedTemplate.name}</CardTitle>
           </CardHeader>
           <CardContent>
-            <div className="bg-white p-8 shadow-lg">
-              {/* CV Preview Content */}
-              <div className="text-center mb-8">
-                <h1 className="text-3xl font-bold text-gray-900">{cvData.personal.fullName || "Your Name"}</h1>
-                <div className="flex justify-center space-x-4 text-gray-600 mt-2">
-                  {cvData.personal.email && <span>{cvData.personal.email}</span>}
-                  {cvData.personal.phone && <span>{cvData.personal.phone}</span>}
-                  {cvData.personal.address && <span>{cvData.personal.address}</span>}
-                </div>
-              </div>
-
-              {cvData.personal.summary && (
-                <div className="mb-6">
-                  <h2 className="text-xl font-semibold mb-2">Professional Summary</h2>
-                  <p className="text-gray-700">{cvData.personal.summary}</p>
-                </div>
-              )}
-
-              {cvData.experience.length > 0 && (
-                <div className="mb-6">
-                  <h2 className="text-xl font-semibold mb-4">Work Experience</h2>
-                  {cvData.experience.map((exp) => (
-                    <div key={exp.id} className="mb-4">
-                      <h3 className="font-semibold">{exp.title} at {exp.company}</h3>
-                      <p className="text-gray-600">{exp.location} • {exp.startDate} - {exp.current ? 'Present' : exp.endDate}</p>
-                      <p className="text-gray-700 mt-2">{exp.description}</p>
-                    </div>
-                  ))}
-                </div>
-              )}
-
-              {cvData.education.length > 0 && (
-                <div className="mb-6">
-                  <h2 className="text-xl font-semibold mb-4">Education</h2>
-                  {cvData.education.map((edu) => (
-                    <div key={edu.id} className="mb-4">
-                      <h3 className="font-semibold">{edu.degree}</h3>
-                      <p className="text-gray-600">{edu.institution}, {edu.location}</p>
-                      <p className="text-gray-600">{edu.startDate} - {edu.endDate}</p>
-                      {edu.gpa && <p className="text-gray-600">GPA: {edu.gpa}</p>}
-                      {edu.description && <p className="text-gray-700 mt-2">{edu.description}</p>}
-                    </div>
-                  ))}
-                </div>
-              )}
-
-              {cvData.skills.length > 0 && (
-                <div className="mb-6">
-                  <h2 className="text-xl font-semibold mb-4">Skills</h2>
-                  {cvData.skills.map((skill) => (
-                    <div key={skill.id} className="mb-2">
-                      <h3 className="font-semibold">{skill.category}</h3>
-                      <p className="text-gray-700">{skill.items.join(', ')}</p>
-                    </div>
-                  ))}
-                </div>
-              )}
+            <div 
+              className="bg-white p-8 shadow-lg max-w-4xl mx-auto"
+              style={{ 
+                fontFamily: selectedTemplate.styling.fontFamily,
+                fontSize: selectedTemplate.styling.fontSize 
+              }}
+            >
+              <div dangerouslySetInnerHTML={{ __html: generateCVHTML() }} />
             </div>
           </CardContent>
         </Card>
