@@ -6,40 +6,37 @@ import { prisma } from "@/lib/prisma"
 export async function GET(request: NextRequest) {
   try {
     const { searchParams } = new URL(request.url)
-    const capacity = searchParams.get("capacity")
-    const location = searchParams.get("location")
+    const includeBookings = searchParams.get("includeBookings") === "true"
+    const status = searchParams.get("status")
 
-    // Build where clause
-    const where: any = {
-      isActive: true
-    }
-    
-    if (capacity) {
-      where.capacity = {
-        gte: parseInt(capacity)
-      }
-    }
-    
-    if (location) {
-      where.location = {
-        contains: location,
-        mode: 'insensitive'
-      }
+    const where: any = { isActive: true }
+    if (status) {
+      where.isAvailable = status === "available"
     }
 
     const spaces = await prisma.studySpace.findMany({
       where,
-      orderBy: { name: "asc" }
+      include: includeBookings ? {
+        bookings: {
+          where: {
+            status: { in: ["CONFIRMED", "PENDING"] },
+            startTime: { gte: new Date() }
+          },
+          include: {
+            user: {
+              select: { id: true, name: true, email: true }
+            }
+          },
+          orderBy: { startTime: 'asc' }
+        }
+      } : false,
+      orderBy: { name: 'asc' }
     })
 
-    return NextResponse.json(spaces)
-
+    return NextResponse.json({ spaces })
   } catch (error) {
     console.error("Error fetching study spaces:", error)
-    return NextResponse.json(
-      { error: "Failed to fetch study spaces" },
-      { status: 500 }
-    )
+    return NextResponse.json({ error: "Failed to fetch study spaces" }, { status: 500 })
   }
 }
 
@@ -51,16 +48,10 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 })
     }
 
-    const { name, description, capacity, location, amenities, hourlyRate, image } = await request.json()
+    const body = await request.json()
+    const { name, description, capacity, location, amenities, hourlyRate, image } = body
 
-    if (!name || !description || !capacity || !location || !hourlyRate) {
-      return NextResponse.json(
-        { error: "Name, description, capacity, location, and hourly rate are required" },
-        { status: 400 }
-      )
-    }
-
-    const studySpace = await prisma.studySpace.create({
+    const newSpace = await prisma.studySpace.create({
       data: {
         name,
         description,
@@ -68,22 +59,16 @@ export async function POST(request: NextRequest) {
         location,
         amenities: amenities || [],
         hourlyRate: parseFloat(hourlyRate),
-        image,
-        isActive: true,
-        isAvailable: true
+        image
       }
     })
 
     return NextResponse.json({
-      success: true,
-      space: studySpace
-    })
-
+      message: "Study space created successfully",
+      space: newSpace
+    }, { status: 201 })
   } catch (error) {
     console.error("Error creating study space:", error)
-    return NextResponse.json(
-      { error: "Failed to create study space" },
-      { status: 500 }
-    )
+    return NextResponse.json({ error: "Failed to create study space" }, { status: 500 })
   }
 }

@@ -24,6 +24,8 @@ import { ReservationManager } from "@/components/admin/reservation-manager"
 import { ApplicationsManager } from "@/components/admin/applications-manager"
 import { BookManager } from "@/components/admin/book-manager"
 import { ContentManager } from "@/components/admin/content-manager"
+import { StudySpacesManager } from "@/components/librarian/study-spaces-manager"
+import { PrintingServicesManager } from "@/components/librarian/printing-services-manager"
 import { ChatInterface } from "@/components/chat/chat-interface"
 import { PrintingRequestDialog } from "@/components/librarian/printing-request-dialog"
 import { RestorationRequestDialog } from "@/components/librarian/restoration-request-dialog"
@@ -628,131 +630,11 @@ export function EnhancedLibrarianDashboard() {
           </TabsContent>
 
           <TabsContent value="study-spaces" className="space-y-6">
-            <Card className="bg-white dark:bg-gray-800 border-gray-200 dark:border-gray-700">
-              <CardHeader>
-                <CardTitle className="text-xl font-semibold text-gray-900 dark:text-gray-100">Study Spaces Management</CardTitle>                                                                                                                   
-                <p className="text-sm text-gray-600">Full control over study room bookings and space availability</p>
-              </CardHeader>
-              <CardContent>
-                <div className="space-y-6">
-                  <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-                    <Card className="p-4 border border-gray-200 dark:border-gray-700">
-                      <div className="flex items-center justify-between">
-                        <div>
-                          <h3 className="font-semibold text-gray-900 dark:text-gray-100">Study Room A</h3>
-                          <p className="text-sm text-gray-600">Capacity: 4 people</p>
-                        </div>
-                        <Badge className="bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200">Available</Badge>
-                      </div>
-                    </Card>
-                    <Card className="p-4 border border-gray-200 dark:border-gray-700">
-                      <div className="flex items-center justify-between">
-                        <div>
-                          <h3 className="font-semibold text-gray-900 dark:text-gray-100">Study Room B</h3>
-                          <p className="text-sm text-gray-600">Capacity: 6 people</p>
-                        </div>
-                        <Badge className="bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-200">Occupied</Badge>
-                      </div>
-                    </Card>
-                    <Card className="p-4 border border-gray-200 dark:border-gray-700">
-                      <div className="flex items-center justify-between">
-                        <div>
-                          <h3 className="font-semibold text-gray-900 dark:text-gray-100">Study Room C</h3>
-                          <p className="text-sm text-gray-600">Capacity: 2 people</p>
-                        </div>
-                        <Badge className="bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200">Available</Badge>
-                      </div>
-                    </Card>
-                  </div>
-                  <div className="flex justify-center space-x-4">
-                    <Button 
-                      className="bg-blue-600 hover:bg-blue-700 text-white"
-                      onClick={() => setIsAddSpaceDialogOpen(true)}
-                    >
-                      <Plus className="h-4 w-4 mr-2" />
-                      Add New Space
-                    </Button>
-                    <Button 
-                      className="bg-green-600 hover:bg-green-700 text-white"
-                      onClick={() => setIsViewBookingsDialogOpen(true)}
-                    >
-                      <Calendar className="h-4 w-4 mr-2" />
-                      View Bookings
-                    </Button>
-                    <Button asChild className="bg-[#8B4513] hover:bg-[#A0522D] text-white">
-                      <a href="/study-spaces" target="_blank">
-                        <Monitor className="h-4 w-4 mr-2" />
-                        Open Study Spaces
-                      </a>
-                    </Button>
-                  </div>
-                </div>
-              </CardContent>
-            </Card>
+            <StudySpacesManager />
           </TabsContent>
 
           <TabsContent value="printing-services" className="space-y-6">
-            <Card className="bg-white dark:bg-gray-800 border-gray-200 dark:border-gray-700">
-              <CardHeader>
-                <CardTitle className="text-xl font-semibold text-gray-900 dark:text-gray-100">Printing Services Management</CardTitle>                                                                                                                   
-                <p className="text-sm text-gray-600">Full control over printing requests and document services</p>
-              </CardHeader>
-              <CardContent>
-                <div className="space-y-6">
-                  <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                    <Card className="p-4 border border-gray-200 dark:border-gray-700">
-                      <div className="flex items-center justify-between">
-                        <div>
-                          <h3 className="font-semibold text-gray-900 dark:text-gray-100">Pending Jobs</h3>
-                          <p className="text-2xl font-bold text-blue-600">12</p>
-                        </div>
-                        <Clock className="h-8 w-8 text-blue-600" />
-                      </div>
-                    </Card>
-                    <Card className="p-4 border border-gray-200 dark:border-gray-700">
-                      <div className="flex items-center justify-between">
-                        <div>
-                          <h3 className="font-semibold text-gray-900 dark:text-gray-100">In Progress</h3>
-                          <p className="text-2xl font-bold text-yellow-600">3</p>
-                        </div>
-                        <Printer className="h-8 w-8 text-yellow-600" />
-                      </div>
-                    </Card>
-                    <Card className="p-4 border border-gray-200 dark:border-gray-700">
-                      <div className="flex items-center justify-between">
-                        <div>
-                          <h3 className="font-semibold text-gray-900 dark:text-gray-100">Completed Today</h3>
-                          <p className="text-2xl font-bold text-green-600">28</p>
-                        </div>
-                        <CheckCircle className="h-8 w-8 text-green-600" />
-                      </div>
-                    </Card>
-                  </div>
-                  <div className="flex justify-center space-x-4">
-                    <Button 
-                      className="bg-blue-600 hover:bg-blue-700 text-white"
-                      onClick={() => setIsAddServiceDialogOpen(true)}
-                    >
-                      <Plus className="h-4 w-4 mr-2" />
-                      Add New Service
-                    </Button>
-                    <Button 
-                      className="bg-green-600 hover:bg-green-700 text-white"
-                      onClick={() => setIsViewRequestsDialogOpen(true)}
-                    >
-                      <Eye className="h-4 w-4 mr-2" />
-                      View All Requests
-                    </Button>
-                    <Button asChild className="bg-[#8B4513] hover:bg-[#A0522D] text-white">
-                      <a href="/printing-services" target="_blank">
-                        <Printer className="h-4 w-4 mr-2" />
-                        Open Printing Services
-                      </a>
-                    </Button>
-                  </div>
-                </div>
-              </CardContent>
-            </Card>
+            <PrintingServicesManager />
           </TabsContent>
 
           <TabsContent value="cv-editor" className="space-y-6">

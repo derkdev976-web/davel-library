@@ -12,7 +12,8 @@
     "db:studio": "prisma studio",
     "db:generate": "prisma generate",
     "db:seed": "tsx prisma/seed.ts",
-    "create-users": "tsx scripts/create-admin-users.ts"
+    "create-users": "tsx scripts/create-admin-users.ts",
+    "seed-study-spaces": "tsx scripts/seed-study-spaces-and-printing.ts"
   },
   "dependencies": {
     "@hookform/resolvers": "^3.3.2",

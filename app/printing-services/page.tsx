@@ -1,50 +1,28 @@
 "use client"
 
-import { useEffect, useState, useCallback } from "react"
+import { useState, useEffect, useCallback } from "react"
 import { useSession } from "next-auth/react"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
-import { Badge } from "@/components/ui/badge"
 import { Input } from "@/components/ui/input"
+import { Label } from "@/components/ui/label"
 import { Textarea } from "@/components/ui/textarea"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from "@/components/ui/dialog"
+import { Badge } from "@/components/ui/badge"
 import { useToast } from "@/hooks/use-toast"
 import { Header } from "@/components/layout/header"
+import { FileUpload } from "@/components/ui/file-upload"
 import { 
-  Printer, 
   FileText, 
+  Printer, 
   Clock, 
-  CheckCircle, 
-  XCircle, 
+  CheckCircle,
   AlertCircle,
-  Download,
   Upload,
-  DollarSign,
-  Settings,
-  Palette
+  Download,
+  DollarSign
 } from "lucide-react"
-
-interface PrintJob {
-  id: string
-  fileName: string
-  fileSize: number
-  pages: number
-  copies: number
-  color: boolean
-  paperSize: string
-  paperType: string
-  status: string
-  totalCost: number
-  createdAt: string
-  completedAt?: string
-  pickupLocation: string
-  specialInstructions?: string
-  user: {
-    id: string
-    name: string
-    email: string
-  }
-}
 
 interface PrintService {
   id: string
@@ -56,227 +34,232 @@ interface PrintService {
   paperTypes: string[]
   maxPages: number
   turnaroundTime: string
+  isActive: boolean
+  createdAt: string
+  updatedAt: string
+}
+
+interface PrintJob {
+  id: string
+  userId: string
+  serviceId: string
+  fileName: string
+  fileUrl: string
+  fileSize: number
+  pages: number
+  copies: number
+  color: boolean
+  paperSize: string
+  paperType: string
+  pickupLocation: string
+  specialInstructions?: string
+  totalCost: number
+  status: "PENDING" | "PROCESSING" | "COMPLETED" | "CANCELLED" | "FAILED"
+  createdAt: string
+  updatedAt: string
+  completedAt?: string
+  user: {
+    id: string
+    name: string
+    email: string
+  }
+  service: {
+    id: string
+    name: string
+    description: string
+  }
 }
 
 export default function PrintingServicesPage() {
-  const { data: session, status } = useSession()
-  const [printJobs, setPrintJobs] = useState<PrintJob[]>([])
+  const { data: session } = useSession()
   const [services, setServices] = useState<PrintService[]>([])
-  const [filteredJobs, setFilteredJobs] = useState<PrintJob[]>([])
+  const [userPrintJobs, setUserPrintJobs] = useState<PrintJob[]>([])
   const [loading, setLoading] = useState(true)
-  const [searchTerm, setSearchTerm] = useState("")
-  const [selectedStatus, setSelectedStatus] = useState("all")
-  const [showNewJobForm, setShowNewJobForm] = useState(false)
+  const [isSubmitDialogOpen, setIsSubmitDialogOpen] = useState(false)
   const [selectedService, setSelectedService] = useState<PrintService | null>(null)
-  const [newJob, setNewJob] = useState({
-    fileName: "",
-    pages: 1,
-    copies: 1,
-    color: false,
-    paperSize: "A4",
-    paperType: "Standard",
-    pickupLocation: "Main Library",
-    specialInstructions: ""
-  })
   const [selectedFile, setSelectedFile] = useState<File | null>(null)
   const { toast } = useToast()
 
-  const fetchPrintJobs = useCallback(async () => {
+  const [printJobData, setPrintJobData] = useState({
+    serviceId: "",
+    pages: "",
+    copies: "1",
+    color: false,
+    paperSize: "A4",
+    paperType: "Standard",
+    pickupLocation: "",
+    specialInstructions: ""
+  })
+
+  const fetchServices = useCallback(async () => {
     try {
-      const response = await fetch("/api/print-jobs")
+      setLoading(true)
+      const response = await fetch('/api/print-services')
       if (response.ok) {
         const data = await response.json()
-        setPrintJobs(data)
+        setServices(data.services || [])
       }
     } catch (error) {
-      console.error("Error fetching print jobs:", error)
-      toast({ title: "Error loading print jobs", variant: "destructive" })
+      console.error('Error fetching print services:', error)
+      toast({ title: "Error fetching print services", variant: "destructive" })
     } finally {
       setLoading(false)
     }
   }, [toast])
 
-  const fetchServices = useCallback(async () => {
+  const fetchUserPrintJobs = useCallback(async () => {
+    if (!session?.user?.id) return
+    
     try {
-      const response = await fetch("/api/print-services")
+      const response = await fetch(`/api/print-jobs?userId=${session.user.id}`)
       if (response.ok) {
         const data = await response.json()
-        setServices(data)
+        setUserPrintJobs(data.printJobs || [])
       }
     } catch (error) {
-      console.error("Error fetching print services:", error)
+      console.error('Error fetching user print jobs:', error)
     }
-  }, [])
-
-  const filterJobs = useCallback(() => {
-    let filtered = printJobs
-
-    if (searchTerm) {
-      filtered = filtered.filter(job =>
-        job.fileName.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        job.user.name.toLowerCase().includes(searchTerm.toLowerCase())
-      )
-    }
-
-    if (selectedStatus !== "all") {
-      filtered = filtered.filter(job => job.status === selectedStatus)
-    }
-
-    setFilteredJobs(filtered)
-  }, [printJobs, searchTerm, selectedStatus])
+  }, [session?.user?.id])
 
   useEffect(() => {
-    fetchPrintJobs()
     fetchServices()
-  }, [fetchPrintJobs, fetchServices])
-
-  useEffect(() => {
-    filterJobs()
-  }, [filterJobs])
-
-  const handleFileSelect = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0]
-    if (file) {
-      setSelectedFile(file)
-      setNewJob({...newJob, fileName: file.name})
+    if (session?.user?.id) {
+      fetchUserPrintJobs()
     }
+  }, [fetchServices, fetchUserPrintJobs, session?.user?.id])
+
+  const openSubmitDialog = (service: PrintService) => {
+    if (!session) {
+      toast({ 
+        title: "Please sign in to submit a print job", 
+        variant: "destructive" 
+      })
+      return
+    }
+    
+    setSelectedService(service)
+    setPrintJobData({
+      serviceId: service.id,
+      pages: "",
+      copies: "1",
+      color: false,
+      paperSize: service.paperSizes[0] || "A4",
+      paperType: service.paperTypes[0] || "Standard",
+      pickupLocation: "",
+      specialInstructions: ""
+    })
+    setIsSubmitDialogOpen(true)
+  }
+
+  const handleFileUpload = async (file: File) => {
+    setSelectedFile(file)
+    
+    // Simulate file analysis to get page count
+    // In a real app, you'd use a PDF library to count pages
+    const mockPageCount = Math.floor(Math.random() * 20) + 1
+    setPrintJobData(prev => ({ ...prev, pages: mockPageCount.toString() }))
   }
 
   const calculateCost = () => {
-    if (!selectedService) return 0
-    const baseCost = selectedService.pricePerPage * newJob.pages * newJob.copies
-    const colorCost = newJob.color ? selectedService.colorPrice * newJob.pages * newJob.copies : 0
+    if (!selectedService || !printJobData.pages || !printJobData.copies) return 0
+    
+    const pages = parseInt(printJobData.pages)
+    const copies = parseInt(printJobData.copies)
+    const baseCost = selectedService.pricePerPage * pages * copies
+    const colorCost = printJobData.color ? selectedService.colorPrice * pages * copies : 0
+    
     return baseCost + colorCost
   }
 
-  const handleSubmitJob = async (e: React.FormEvent) => {
-    e.preventDefault()
-    if (!selectedFile || !selectedService) return
+  const handlePrintJobSubmit = async () => {
+    if (!selectedService || !selectedFile || !session?.user?.id) return
 
     try {
-      const formData = new FormData()
-      formData.append('file', selectedFile)
-      formData.append('serviceId', selectedService.id)
-      formData.append('pages', newJob.pages.toString())
-      formData.append('copies', newJob.copies.toString())
-      formData.append('color', newJob.color.toString())
-      formData.append('paperSize', newJob.paperSize)
-      formData.append('paperType', newJob.paperType)
-      formData.append('pickupLocation', newJob.pickupLocation)
-      formData.append('specialInstructions', newJob.specialInstructions)
-
-      const response = await fetch("/api/print-jobs", {
-        method: "POST",
-        body: formData
-      })
+      // In a real app, you'd upload the file to a cloud storage service
+      const mockFileUrl = `https://example.com/files/${selectedFile.name}`
       
+      const response = await fetch('/api/print-jobs', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          serviceId: selectedService.id,
+          fileName: selectedFile.name,
+          fileUrl: mockFileUrl,
+          fileSize: selectedFile.size,
+          pages: printJobData.pages,
+          copies: printJobData.copies,
+          color: printJobData.color,
+          paperSize: printJobData.paperSize,
+          paperType: printJobData.paperType,
+          pickupLocation: printJobData.pickupLocation,
+          specialInstructions: printJobData.specialInstructions
+        })
+      })
+
       if (response.ok) {
         toast({ title: "Print job submitted successfully!" })
-        setShowNewJobForm(false)
+        setIsSubmitDialogOpen(false)
         setSelectedFile(null)
-        setSelectedService(null)
-        setNewJob({
-          fileName: "",
-          pages: 1,
-          copies: 1,
+        setPrintJobData({
+          serviceId: "",
+          pages: "",
+          copies: "1",
           color: false,
           paperSize: "A4",
           paperType: "Standard",
-          pickupLocation: "Main Library",
+          pickupLocation: "",
           specialInstructions: ""
         })
-        fetchPrintJobs()
+        fetchUserPrintJobs()
       } else {
-        const error = await response.json()
-        toast({ title: error.error || "Failed to submit print job", variant: "destructive" })
+        const errorData = await response.json()
+        toast({ 
+          title: "Error submitting print job", 
+          description: errorData.error,
+          variant: "destructive" 
+        })
       }
     } catch (error) {
-      console.error("Error submitting print job:", error)
+      console.error('Error submitting print job:', error)
       toast({ title: "Error submitting print job", variant: "destructive" })
     }
   }
 
-  const handleCancelJob = async (jobId: string) => {
-    try {
-      const response = await fetch(`/api/print-jobs/${jobId}`, {
-        method: "DELETE"
-      })
-      
-      if (response.ok) {
-        toast({ title: "Print job cancelled successfully" })
-        fetchPrintJobs()
-      } else {
-        toast({ title: "Failed to cancel print job", variant: "destructive" })
-      }
-    } catch (error) {
-      console.error("Error cancelling print job:", error)
-      toast({ title: "Error cancelling print job", variant: "destructive" })
-    }
-  }
-
-  const getStatusColor = (status: string) => {
+  const getStatusBadge = (status: string) => {
     switch (status) {
-      case "PENDING": return "secondary"
-      case "PROCESSING": return "default"
-      case "COMPLETED": return "secondary"
-      case "CANCELLED": return "outline"
-      case "FAILED": return "destructive"
-      default: return "outline"
-    }
-  }
-
-  const getStatusIcon = (status: string) => {
-    switch (status) {
-      case "PENDING": return <Clock className="h-4 w-4" />
-      case "PROCESSING": return <Settings className="h-4 w-4" />
-      case "COMPLETED": return <CheckCircle className="h-4 w-4" />
-      case "CANCELLED": return <XCircle className="h-4 w-4" />
-      case "FAILED": return <AlertCircle className="h-4 w-4" />
-      default: return <Clock className="h-4 w-4" />
+      case "PENDING":
+        return <Badge className="bg-yellow-100 text-yellow-800"><AlertCircle className="h-3 w-3 mr-1" />Pending</Badge>
+      case "PROCESSING":
+        return <Badge className="bg-blue-100 text-blue-800"><Clock className="h-3 w-3 mr-1" />Processing</Badge>
+      case "COMPLETED":
+        return <Badge className="bg-green-100 text-green-800"><CheckCircle className="h-3 w-3 mr-1" />Completed</Badge>
+      case "CANCELLED":
+        return <Badge className="bg-red-100 text-red-800">Cancelled</Badge>
+      case "FAILED":
+        return <Badge className="bg-red-100 text-red-800">Failed</Badge>
+      default:
+        return <Badge variant="secondary">{status}</Badge>
     }
   }
 
   const formatFileSize = (bytes: number) => {
-    const mb = bytes / (1024 * 1024)
-    return `${mb.toFixed(1)} MB`
+    if (bytes === 0) return '0 Bytes'
+    const k = 1024
+    const sizes = ['Bytes', 'KB', 'MB', 'GB']
+    const i = Math.floor(Math.log(bytes) / Math.log(k))
+    return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i]
   }
 
-  if (status === "loading" || loading) {
+  if (loading) {
     return (
       <div className="min-h-screen bg-gray-50 dark:bg-gray-900">
         <Header />
-        <main className="pt-20 pb-12">
-          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div className="flex items-center justify-center p-8">
-              <div className="text-center">
-                <Printer className="h-8 w-8 mx-auto mb-2 animate-spin" />
-                <p>Loading Printing Services...</p>
-              </div>
-            </div>
+        <div className="flex items-center justify-center p-8">
+          <div className="text-center">
+            <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600 mx-auto mb-4"></div>
+            <p>Loading printing services...</p>
           </div>
-        </main>
-      </div>
-    )
-  }
-
-  if (!session) {
-    return (
-      <div className="min-h-screen bg-gray-50 dark:bg-gray-900">
-        <Header />
-        <main className="pt-20 pb-12">
-          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div className="flex items-center justify-center p-8">
-              <div className="text-center">
-                <AlertCircle className="h-8 w-8 mx-auto mb-2 text-red-500" />
-                <h2 className="text-xl font-semibold mb-2">Authentication Required</h2>
-                <p className="text-gray-600 mb-4">Please sign in to access printing services.</p>
-                <Button asChild>
-                  <a href="/auth/signin">Sign In</a>
-                </Button>
-              </div>
-            </div>
-          </div>
-        </main>
+        </div>
       </div>
     )
   }
@@ -284,329 +267,266 @@ export default function PrintingServicesPage() {
   return (
     <div className="min-h-screen bg-gray-50 dark:bg-gray-900">
       <Header />
-      <main className="pt-20 pb-12">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          {/* Header */}
-          <div className="mb-8">
-            <h1 className="text-4xl font-bold text-gradient mb-4">Printing Services</h1>
-            <p className="text-xl text-gray-600 dark:text-gray-300">
-              Professional printing services for documents, photos, and large format projects
-            </p>
-          </div>
+      
+      <div className="container mx-auto px-4 py-8">
+        {/* Header Section */}
+        <div className="text-center mb-12">
+          <h1 className="text-4xl font-bold text-gray-900 dark:text-gray-100 mb-4">
+            Printing Services
+          </h1>
+          <p className="text-lg text-gray-600 dark:text-gray-300 max-w-2xl mx-auto">
+            Professional printing services for all your academic and personal needs. 
+            Upload your documents and we'll handle the rest.
+          </p>
+        </div>
 
-          {/* Quick Actions */}
-          <div className="mb-8">
-            <Button 
-              onClick={() => setShowNewJobForm(!showNewJobForm)}
-              className="bg-blue-600 hover:bg-blue-700"
-            >
-              <Upload className="h-4 w-4 mr-2" />
-              Submit Print Job
-            </Button>
-          </div>
+        {/* User Print Jobs Section */}
+        {session && userPrintJobs.length > 0 && (
+          <Card className="mb-8">
+            <CardHeader>
+              <CardTitle className="flex items-center">
+                <FileText className="h-5 w-5 mr-2" />
+                My Print Jobs
+              </CardTitle>
+            </CardHeader>
+            <CardContent>
+              <div className="space-y-4">
+                {userPrintJobs.slice(0, 3).map((job) => (
+                  <div key={job.id} className="flex items-center justify-between p-4 border rounded-lg">
+                    <div>
+                      <h3 className="font-semibold">{job.fileName}</h3>
+                      <p className="text-sm text-gray-600">
+                        {job.service.name} • {job.pages} pages × {job.copies} copies
+                      </p>
+                      <p className="text-sm text-gray-500">
+                        {new Date(job.createdAt).toLocaleDateString()} • ${job.totalCost}
+                      </p>
+                    </div>
+                    {getStatusBadge(job.status)}
+                  </div>
+                ))}
+                {userPrintJobs.length > 3 && (
+                  <p className="text-sm text-gray-500 text-center">
+                    +{userPrintJobs.length - 3} more print jobs
+                  </p>
+                )}
+              </div>
+            </CardContent>
+          </Card>
+        )}
 
-          {/* New Job Form */}
-          {showNewJobForm && (
-            <Card className="mb-8">
+        {/* Print Services Grid */}
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          {services.map((service) => (
+            <Card key={service.id} className="hover:shadow-lg transition-shadow">
               <CardHeader>
-                <CardTitle>Submit Print Job</CardTitle>
+                <CardTitle className="flex items-center">
+                  <Printer className="h-5 w-5 mr-2" />
+                  {service.name}
+                </CardTitle>
+                <p className="text-sm text-gray-600">{service.description}</p>
               </CardHeader>
               <CardContent>
-                <form onSubmit={handleSubmitJob} className="space-y-4">
-                  <div>
-                    <label className="text-sm font-medium">Select File</label>
-                    <Input
-                      type="file"
-                      accept=".pdf,.doc,.docx,.txt,.jpg,.jpeg,.png"
-                      onChange={handleFileSelect}
-                      required
-                    />
+                <div className="space-y-3 mb-6">
+                  <div className="flex justify-between">
+                    <span className="text-sm text-gray-600">Price per page:</span>
+                    <span className="font-semibold">${service.pricePerPage}</span>
                   </div>
-                  
-                  <div>
-                    <label className="text-sm font-medium">Print Service</label>
-                    <Select onValueChange={(value) => {
-                      const service = services.find(s => s.id === value)
-                      setSelectedService(service || null)
-                    }}>
-                      <SelectTrigger>
-                        <SelectValue placeholder="Select a print service" />
-                      </SelectTrigger>
-                      <SelectContent>
-                        {services.map(service => (
-                          <SelectItem key={service.id} value={service.id}>
-                            {service.name} - ${service.pricePerPage}/page
-                          </SelectItem>
-                        ))}
-                      </SelectContent>
-                    </Select>
+                  <div className="flex justify-between">
+                    <span className="text-sm text-gray-600">Color printing:</span>
+                    <span className="font-semibold">${service.colorPrice}</span>
                   </div>
-                  
-                  <div className="grid grid-cols-2 gap-4">
-                    <div>
-                      <label className="text-sm font-medium">Pages</label>
-                      <Input
-                        type="number"
-                        min="1"
-                        value={newJob.pages}
-                        onChange={(e) => setNewJob({...newJob, pages: parseInt(e.target.value)})}
-                        required
-                      />
-                    </div>
-                    <div>
-                      <label className="text-sm font-medium">Copies</label>
-                      <Input
-                        type="number"
-                        min="1"
-                        value={newJob.copies}
-                        onChange={(e) => setNewJob({...newJob, copies: parseInt(e.target.value)})}
-                        required
-                      />
-                    </div>
+                  <div className="flex justify-between">
+                    <span className="text-sm text-gray-600">Max pages:</span>
+                    <span className="font-semibold">{service.maxPages}</span>
                   </div>
-                  
-                  <div className="grid grid-cols-2 gap-4">
-                    <div>
-                      <label className="text-sm font-medium">Paper Size</label>
-                      <Select value={newJob.paperSize} onValueChange={(value) => setNewJob({...newJob, paperSize: value})}>
-                        <SelectTrigger>
-                          <SelectValue />
-                        </SelectTrigger>
-                        <SelectContent>
-                          <SelectItem value="A4">A4</SelectItem>
-                          <SelectItem value="A3">A3</SelectItem>
-                          <SelectItem value="Letter">Letter</SelectItem>
-                          <SelectItem value="Legal">Legal</SelectItem>
-                        </SelectContent>
-                      </Select>
-                    </div>
-                    <div>
-                      <label className="text-sm font-medium">Paper Type</label>
-                      <Select value={newJob.paperType} onValueChange={(value) => setNewJob({...newJob, paperType: value})}>
-                        <SelectTrigger>
-                          <SelectValue />
-                        </SelectTrigger>
-                        <SelectContent>
-                          <SelectItem value="Standard">Standard</SelectItem>
-                          <SelectItem value="Glossy">Glossy</SelectItem>
-                          <SelectItem value="Matte">Matte</SelectItem>
-                          <SelectItem value="Photo">Photo</SelectItem>
-                        </SelectContent>
-                      </Select>
-                    </div>
+                  <div className="flex justify-between">
+                    <span className="text-sm text-gray-600">Turnaround:</span>
+                    <span className="font-semibold">{service.turnaroundTime}</span>
                   </div>
-                  
-                  <div>
-                    <label className="text-sm font-medium">Pickup Location</label>
-                    <Select value={newJob.pickupLocation} onValueChange={(value) => setNewJob({...newJob, pickupLocation: value})}>
-                      <SelectTrigger>
-                        <SelectValue />
-                      </SelectTrigger>
-                      <SelectContent>
-                        <SelectItem value="Main Library">Main Library</SelectItem>
-                        <SelectItem value="Science Library">Science Library</SelectItem>
-                        <SelectItem value="Medical Library">Medical Library</SelectItem>
-                      </SelectContent>
-                    </Select>
+                </div>
+
+                <div className="mb-4">
+                  <p className="text-sm font-medium text-gray-600 mb-2">Available sizes:</p>
+                  <div className="flex flex-wrap gap-1">
+                    {service.paperSizes.map((size, index) => (
+                      <Badge key={index} variant="secondary" className="text-xs">
+                        {size}
+                      </Badge>
+                    ))}
                   </div>
-                  
-                  <div>
-                    <label className="text-sm font-medium">Special Instructions</label>
-                    <Textarea
-                      value={newJob.specialInstructions}
-                      onChange={(e) => setNewJob({...newJob, specialInstructions: e.target.value})}
-                      placeholder="Any special requirements or instructions..."
-                      rows={3}
-                    />
+                </div>
+
+                <div className="mb-4">
+                  <p className="text-sm font-medium text-gray-600 mb-2">Paper types:</p>
+                  <div className="flex flex-wrap gap-1">
+                    {service.paperTypes.map((type, index) => (
+                      <Badge key={index} variant="outline" className="text-xs">
+                        {type}
+                      </Badge>
+                    ))}
                   </div>
-                  
-                  <div className="flex items-center space-x-2">
-                    <input
-                      type="checkbox"
-                      id="color"
-                      checked={newJob.color}
-                      onChange={(e) => setNewJob({...newJob, color: e.target.checked})}
-                    />
-                    <label htmlFor="color" className="text-sm font-medium">Color Printing</label>
-                  </div>
-                  
-                  {selectedService && (
-                    <div className="p-4 bg-gray-50 rounded-lg">
-                      <div className="flex items-center justify-between">
-                        <span className="text-sm font-medium">Estimated Cost:</span>
-                        <span className="text-lg font-bold">${calculateCost().toFixed(2)}</span>
-                      </div>
-                      <div className="text-xs text-gray-600 mt-1">
-                        Base: ${selectedService.pricePerPage} × {newJob.pages} pages × {newJob.copies} copies
-                        {newJob.color && ` + Color: $${selectedService.colorPrice} × ${newJob.pages} × ${newJob.copies}`}
-                      </div>
-                    </div>
-                  )}
-                  
-                  <div className="flex space-x-2">
-                    <Button type="submit" disabled={!selectedFile || !selectedService}>
-                      Submit Print Job
-                    </Button>
-                    <Button 
-                      type="button" 
-                      variant="outline"
-                      onClick={() => setShowNewJobForm(false)}
-                    >
-                      Cancel
-                    </Button>
-                  </div>
-                </form>
+                </div>
+
+                <Button
+                  onClick={() => openSubmitDialog(service)}
+                  className="w-full bg-blue-600 hover:bg-blue-700 text-white"
+                >
+                  <Upload className="h-4 w-4 mr-2" />
+                  Submit Print Job
+                </Button>
               </CardContent>
             </Card>
-          )}
+          ))}
+        </div>
 
-          {/* Search and Filters */}
-          <div className="mb-8 space-y-4">
-            <div className="flex flex-col md:flex-row gap-4">
-              <div className="flex-1">
-                <div className="relative">
-                  <FileText className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 h-4 w-4" />
+        {services.length === 0 && (
+          <div className="text-center py-12">
+            <p className="text-gray-500 text-lg">No printing services available at the moment.</p>
+          </div>
+        )}
+      </div>
+
+      {/* Print Job Submission Dialog */}
+      <Dialog open={isSubmitDialogOpen} onOpenChange={setIsSubmitDialogOpen}>
+        <DialogContent className="max-w-2xl">
+          <DialogHeader>
+            <DialogTitle>Submit Print Job - {selectedService?.name}</DialogTitle>
+          </DialogHeader>
+          {selectedService && (
+            <div className="space-y-6">
+              {/* File Upload */}
+              <div>
+                <Label>Upload Document</Label>
+                <FileUpload
+                  onFileSelect={handleFileUpload}
+                  selectedFile={selectedFile}
+                  acceptedTypes={['application/pdf', 'application/msword', 'application/vnd.openxmlformats-officedocument.wordprocessingml.document']}
+                  maxSize={10 * 1024 * 1024} // 10MB
+                />
+                {selectedFile && (
+                  <p className="text-sm text-gray-600 mt-2">
+                    File: {selectedFile.name} ({formatFileSize(selectedFile.size)})
+                  </p>
+                )}
+              </div>
+
+              <div className="grid grid-cols-2 gap-4">
+                <div>
+                  <Label htmlFor="pages">Number of Pages</Label>
                   <Input
-                    placeholder="Search print jobs..."
-                    value={searchTerm}
-                    onChange={(e) => setSearchTerm(e.target.value)}
-                    className="pl-10"
+                    id="pages"
+                    type="number"
+                    value={printJobData.pages}
+                    onChange={(e) => setPrintJobData({ ...printJobData, pages: e.target.value })}
+                    placeholder="Enter page count"
+                    min="1"
+                    max={selectedService.maxPages}
+                  />
+                </div>
+                <div>
+                  <Label htmlFor="copies">Number of Copies</Label>
+                  <Input
+                    id="copies"
+                    type="number"
+                    value={printJobData.copies}
+                    onChange={(e) => setPrintJobData({ ...printJobData, copies: e.target.value })}
+                    placeholder="1"
+                    min="1"
                   />
                 </div>
               </div>
-              <Select value={selectedStatus} onValueChange={setSelectedStatus}>
-                <SelectTrigger className="w-40">
-                  <SelectValue placeholder="Status" />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="all">All Status</SelectItem>
-                  <SelectItem value="PENDING">Pending</SelectItem>
-                  <SelectItem value="PROCESSING">Processing</SelectItem>
-                  <SelectItem value="COMPLETED">Completed</SelectItem>
-                  <SelectItem value="CANCELLED">Cancelled</SelectItem>
-                  <SelectItem value="FAILED">Failed</SelectItem>
-                </SelectContent>
-              </Select>
-            </div>
-            <div className="flex items-center justify-between">
-              <p className="text-sm text-gray-600">
-                {filteredJobs.length} print jobs found
-              </p>
-              <div className="flex gap-2">
-                <Badge variant="secondary">
-                  {printJobs.filter(j => j.status === "PENDING").length} Pending
-                </Badge>
-                <Badge variant="default">
-                  {printJobs.filter(j => j.status === "PROCESSING").length} Processing
-                </Badge>
-                <Badge variant="outline">
-                  {printJobs.filter(j => j.status === "COMPLETED").length} Completed
-                </Badge>
+
+              <div className="grid grid-cols-2 gap-4">
+                <div>
+                  <Label htmlFor="paperSize">Paper Size</Label>
+                  <Select value={printJobData.paperSize} onValueChange={(value) => setPrintJobData({ ...printJobData, paperSize: value })}>
+                    <SelectTrigger>
+                      <SelectValue />
+                    </SelectTrigger>
+                    <SelectContent>
+                      {selectedService.paperSizes.map((size) => (
+                        <SelectItem key={size} value={size}>{size}</SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                </div>
+                <div>
+                  <Label htmlFor="paperType">Paper Type</Label>
+                  <Select value={printJobData.paperType} onValueChange={(value) => setPrintJobData({ ...printJobData, paperType: value })}>
+                    <SelectTrigger>
+                      <SelectValue />
+                    </SelectTrigger>
+                    <SelectContent>
+                      {selectedService.paperTypes.map((type) => (
+                        <SelectItem key={type} value={type}>{type}</SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                </div>
               </div>
-            </div>
-          </div>
 
-          {/* Print Jobs List */}
-          {filteredJobs.length === 0 ? (
-            <Card>
-              <CardContent className="p-8 text-center">
-                <Printer className="h-12 w-12 mx-auto mb-4 text-gray-400" />
-                <h3 className="text-lg font-medium mb-2">No print jobs found</h3>
-                <p className="text-gray-600">
-                  {printJobs.length === 0 
-                    ? "Submit your first print job to get started!" 
-                    : "Try adjusting your search criteria."
-                  }
-                </p>
-              </CardContent>
-            </Card>
-          ) : (
-            <div className="space-y-4">
-              {filteredJobs.map((job) => (
-                <Card key={job.id} className="hover:shadow-md transition-shadow">
-                  <CardContent className="p-6">
-                    <div className="flex items-start justify-between">
-                      <div className="flex-1">
-                        <div className="flex items-center space-x-2 mb-2">
-                          {getStatusIcon(job.status)}
-                          <Badge variant={getStatusColor(job.status)}>
-                            {job.status}
-                          </Badge>
-                          {job.color && (
-                            <Badge variant="outline" className="flex items-center gap-1">
-                              <Palette className="h-3 w-3" />
-                              Color
-                            </Badge>
-                          )}
-                        </div>
-                        
-                        <h3 className="text-lg font-semibold mb-2">{job.fileName}</h3>
-                        
-                        <div className="grid grid-cols-2 md:grid-cols-4 gap-4 text-sm">
-                          <div>
-                            <span className="text-gray-500">Submitted by:</span>
-                            <p className="font-medium">{job.user.name}</p>
-                            <p className="text-gray-600">{job.user.email}</p>
-                          </div>
-                          <div>
-                            <span className="text-gray-500">Details:</span>
-                            <p>{job.pages} pages × {job.copies} copies</p>
-                            <p>{job.paperSize} {job.paperType}</p>
-                          </div>
-                          <div>
-                            <span className="text-gray-500">Pickup:</span>
-                            <p>{job.pickupLocation}</p>
-                            <p className="text-gray-600">{formatFileSize(job.fileSize)}</p>
-                          </div>
-                          <div>
-                            <span className="text-gray-500">Cost:</span>
-                            <p className="font-bold">${job.totalCost.toFixed(2)}</p>
-                            <p className="text-gray-600">
-                              {new Date(job.createdAt).toLocaleDateString()}
-                            </p>
-                          </div>
-                        </div>
+              <div>
+                <Label htmlFor="pickupLocation">Pickup Location</Label>
+                <Input
+                  id="pickupLocation"
+                  value={printJobData.pickupLocation}
+                  onChange={(e) => setPrintJobData({ ...printJobData, pickupLocation: e.target.value })}
+                  placeholder="e.g., Main Library Front Desk"
+                />
+              </div>
 
-                        {job.specialInstructions && (
-                          <div className="mt-4 p-3 bg-blue-50 rounded-lg">
-                            <span className="text-sm font-medium text-blue-800">Special Instructions:</span>
-                            <p className="text-sm text-blue-700 mt-1">{job.specialInstructions}</p>
-                          </div>
-                        )}
+              <div>
+                <Label htmlFor="specialInstructions">Special Instructions (Optional)</Label>
+                <Textarea
+                  id="specialInstructions"
+                  value={printJobData.specialInstructions}
+                  onChange={(e) => setPrintJobData({ ...printJobData, specialInstructions: e.target.value })}
+                  placeholder="Any special requirements or instructions..."
+                  rows={3}
+                />
+              </div>
 
-                        {job.status === "COMPLETED" && job.completedAt && (
-                          <div className="mt-2 text-sm text-green-600">
-                            Completed on {new Date(job.completedAt).toLocaleDateString()}
-                          </div>
-                        )}
-                      </div>
+              <div className="flex items-center space-x-2">
+                <input
+                  type="checkbox"
+                  id="color"
+                  checked={printJobData.color}
+                  onChange={(e) => setPrintJobData({ ...printJobData, color: e.target.checked })}
+                />
+                <Label htmlFor="color">Color printing (+${selectedService.colorPrice} per page)</Label>
+              </div>
 
-                      <div className="flex flex-col space-y-2 ml-4">
-                        {job.status === "PENDING" && (
-                          <Button 
-                            size="sm" 
-                            variant="outline"
-                            onClick={() => handleCancelJob(job.id)}
-                          >
-                            Cancel Job
-                          </Button>
-                        )}
-                        
-                        {job.status === "COMPLETED" && (
-                          <Button size="sm">
-                            <Download className="h-4 w-4 mr-2" />
-                            Download
-                          </Button>
-                        )}
-                      </div>
-                    </div>
-                  </CardContent>
-                </Card>
-              ))}
+              {/* Cost Calculation */}
+              {printJobData.pages && printJobData.copies && (
+                <div className="bg-blue-50 dark:bg-blue-900/20 p-4 rounded-lg">
+                  <div className="flex justify-between items-center">
+                    <span className="font-semibold">Total Cost:</span>
+                    <span className="text-2xl font-bold text-green-600">
+                      ${calculateCost().toFixed(2)}
+                    </span>
+                  </div>
+                  <p className="text-sm text-gray-600 mt-1">
+                    {printJobData.pages} pages × {printJobData.copies} copies × ${selectedService.pricePerPage}
+                    {printJobData.color && ` + color printing (${printJobData.pages} × ${printJobData.copies} × $${selectedService.colorPrice})`}
+                  </p>
+                </div>
+              )}
             </div>
           )}
-        </div>
-      </main>
+          <DialogFooter>
+            <Button variant="outline" onClick={() => setIsSubmitDialogOpen(false)}>
+              Cancel
+            </Button>
+            <Button 
+              onClick={handlePrintJobSubmit}
+              disabled={!selectedFile || !printJobData.pages || !printJobData.copies || !printJobData.pickupLocation}
+            >
+              Submit Print Job
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
     </div>
   )
 }
