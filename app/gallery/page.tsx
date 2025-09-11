@@ -9,7 +9,7 @@ import { Button } from "@/components/ui/button"
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog"
 import { Badge } from "@/components/ui/badge"
 import { Input } from "@/components/ui/input"
-import { Calendar, Tag, Eye, Search, Image as ImageIcon } from "lucide-react"
+import { Calendar, Tag, Eye, Search, Image as ImageIcon, RefreshCw } from "lucide-react"
 import Image from 'next/image'
 
 interface GalleryItem {
@@ -34,7 +34,9 @@ export default function GalleryPage() {
 
   const fetchGallery = async () => {
     try {
-      const response = await fetch('/api/gallery')
+      setLoading(true)
+      // Add cache-busting parameter
+      const response = await fetch(`/api/gallery?t=${Date.now()}`)
       if (response.ok) {
         const data = await response.json()
         setItems(data.items || [])
@@ -68,14 +70,24 @@ export default function GalleryPage() {
         
         {/* Search Section */}
         <div className="bg-white/80 dark:bg-gray-800/80 backdrop-blur-sm rounded-2xl p-6 mb-8 shadow-lg border border-gray-200/50 dark:border-gray-700/50">
-          <div className="relative max-w-md mx-auto">
-            <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-gray-400" />
-            <Input 
-              className="pl-10 bg-white/50 dark:bg-gray-700/50 border-gray-300 dark:border-gray-600 focus:ring-2 focus:ring-[#8B4513]"
-              placeholder="Search gallery..."
-              value={searchTerm}
-              onChange={(e) => setSearchTerm(e.target.value)}
-            />
+          <div className="flex flex-col sm:flex-row gap-4 items-center justify-center max-w-2xl mx-auto">
+            <div className="relative flex-1">
+              <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-gray-400" />
+              <Input 
+                className="pl-10 bg-white/50 dark:bg-gray-700/50 border-gray-300 dark:border-gray-600 focus:ring-2 focus:ring-[#8B4513]"
+                placeholder="Search gallery..."
+                value={searchTerm}
+                onChange={(e) => setSearchTerm(e.target.value)}
+              />
+            </div>
+            <Button 
+              onClick={fetchGallery}
+              disabled={loading}
+              className="bg-[#8B4513] hover:bg-[#A0522D] text-white flex items-center justify-center gap-2 min-w-[120px]"
+            >
+              <RefreshCw className={`h-4 w-4 ${loading ? 'animate-spin' : ''}`} />
+              {loading ? 'Refreshing...' : 'Refresh'}
+            </Button>
           </div>
         </div>
 

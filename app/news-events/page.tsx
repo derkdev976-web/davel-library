@@ -11,7 +11,7 @@ import { Button } from "@/components/ui/button"
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog"
 import { Badge } from "@/components/ui/badge"
 import { useToast } from "@/hooks/use-toast"
-import { Calendar, Clock, MapPin, Users, Eye, Tag, Search, Filter, CheckCircle } from "lucide-react"
+import { Calendar, Clock, MapPin, Users, Eye, Tag, Search, Filter, CheckCircle, RefreshCw } from "lucide-react"
 import Image from 'next/image'
 
 interface NewsEvent {
@@ -49,7 +49,9 @@ export default function NewsEventsPage() {
 
   const fetchNewsEvents = async () => {
     try {
-      const response = await fetch('/api/news')
+      setLoading(true)
+      // Add cache-busting parameter
+      const response = await fetch(`/api/news?t=${Date.now()}`)
       if (response.ok) {
         const data = await response.json()
         setItems(data.items || [])
@@ -151,7 +153,7 @@ export default function NewsEventsPage() {
 
         {/* Search and Filter Section */}
         <div className="bg-white/80 dark:bg-gray-800/80 backdrop-blur-sm rounded-2xl p-6 mb-8 shadow-lg border border-gray-200/50 dark:border-gray-700/50">
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+          <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
             <div className="relative">
               <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-gray-400" />
               <Input 
@@ -177,6 +179,14 @@ export default function NewsEventsPage() {
               onChange={(e) => setDateFilter(e.target.value)}
               className="bg-white/50 dark:bg-gray-700/50 border-gray-300 dark:border-gray-600 focus:ring-2 focus:ring-[#8B4513]"
             />
+            <Button 
+              onClick={fetchNewsEvents}
+              disabled={loading}
+              className="bg-[#8B4513] hover:bg-[#A0522D] text-white flex items-center justify-center gap-2"
+            >
+              <RefreshCw className={`h-4 w-4 ${loading ? 'animate-spin' : ''}`} />
+              {loading ? 'Refreshing...' : 'Refresh'}
+            </Button>
           </div>
         </div>
 

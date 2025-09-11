@@ -20,7 +20,14 @@ export async function GET() {
       tags: item.tags || []
     }))
 
-    return NextResponse.json({ items })
+    const response = NextResponse.json({ items })
+    
+    // Add cache-busting headers
+    response.headers.set('Cache-Control', 'no-store, no-cache, must-revalidate, proxy-revalidate')
+    response.headers.set('Pragma', 'no-cache')
+    response.headers.set('Expires', '0')
+    
+    return response
   } catch (error) {
     console.error("Error fetching gallery:", error)
     return NextResponse.json({ items: [] })
