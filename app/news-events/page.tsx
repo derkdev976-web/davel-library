@@ -42,6 +42,36 @@ export default function NewsEventsPage() {
   const [lastUpdated, setLastUpdated] = useState<Date | null>(null)
   const [previousItemCount, setPreviousItemCount] = useState(0)
 
+  const fetchNewsEvents = useCallback(async () => {
+    try {
+      setLoading(true)
+      // Add cache-busting parameter
+      const response = await fetch(`/api/news?t=${Date.now()}`)
+      if (response.ok) {
+        const data = await response.json()
+        const newItems = data.items || []
+        
+        // Check if new content was added
+        if (previousItemCount > 0 && newItems.length > previousItemCount) {
+          toast({
+            title: "New content available!",
+            description: `${newItems.length - previousItemCount} new item(s) added`,
+            duration: 3000
+          })
+        }
+        
+        setItems(newItems)
+        setPreviousItemCount(newItems.length)
+        setLastUpdated(new Date())
+      }
+    } catch (error) {
+      console.error('Error fetching news and events:', error)
+      toast({ title: "Error fetching news and events", variant: "destructive" })
+    } finally {
+      setLoading(false)
+    }
+  }, [previousItemCount, toast])
+
   useEffect(() => {
     fetchNewsEvents()
     if (session?.user) {
@@ -78,36 +108,6 @@ export default function NewsEventsPage() {
       window.removeEventListener('focus', handleFocus)
     }
   }, [fetchNewsEvents])
-
-  const fetchNewsEvents = useCallback(async () => {
-    try {
-      setLoading(true)
-      // Add cache-busting parameter
-      const response = await fetch(`/api/news?t=${Date.now()}`)
-      if (response.ok) {
-        const data = await response.json()
-        const newItems = data.items || []
-        
-        // Check if new content was added
-        if (previousItemCount > 0 && newItems.length > previousItemCount) {
-          toast({
-            title: "New content available!",
-            description: `${newItems.length - previousItemCount} new item(s) added`,
-            duration: 3000
-          })
-        }
-        
-        setItems(newItems)
-        setPreviousItemCount(newItems.length)
-        setLastUpdated(new Date())
-      }
-    } catch (error) {
-      console.error('Error fetching news and events:', error)
-      toast({ title: "Error fetching news and events", variant: "destructive" })
-    } finally {
-      setLoading(false)
-    }
-  }, [previousItemCount, toast])
 
   const filteredItems = items.filter(item => {
     const matchesSearch = item.title.toLowerCase().includes(searchTerm.toLowerCase()) ||

@@ -27,6 +27,32 @@ export function NewsSection() {
   const [lastUpdated, setLastUpdated] = useState<Date | null>(null)
   const [previousItemCount, setPreviousItemCount] = useState(0)
 
+  const fetchNews = useCallback(async () => {
+    try {
+      setLoading(true)
+      // Add cache-busting parameter
+      const response = await fetch(`/api/news?t=${Date.now()}`)
+      if (response.ok) {
+        const data = await response.json()
+        const newItems = data.items || []
+        
+        // Check if new content was added
+        if (previousItemCount > 0 && newItems.length > previousItemCount) {
+          // Subtle notification for homepage (no toast to avoid interrupting user experience)
+          console.log(`New content available: ${newItems.length - previousItemCount} new item(s) added`)
+        }
+        
+        setNewsItems(newItems)
+        setPreviousItemCount(newItems.length)
+        setLastUpdated(new Date())
+      }
+    } catch (error) {
+      console.error('Error fetching news:', error)
+    } finally {
+      setLoading(false)
+    }
+  }, [previousItemCount])
+
   useEffect(() => {
     fetchNews()
   }, [fetchNews])
@@ -60,32 +86,6 @@ export function NewsSection() {
       window.removeEventListener('focus', handleFocus)
     }
   }, [fetchNews])
-
-  const fetchNews = useCallback(async () => {
-    try {
-      setLoading(true)
-      // Add cache-busting parameter
-      const response = await fetch(`/api/news?t=${Date.now()}`)
-      if (response.ok) {
-        const data = await response.json()
-        const newItems = data.items || []
-        
-        // Check if new content was added
-        if (previousItemCount > 0 && newItems.length > previousItemCount) {
-          // Subtle notification for homepage (no toast to avoid interrupting user experience)
-          console.log(`New content available: ${newItems.length - previousItemCount} new item(s) added`)
-        }
-        
-        setNewsItems(newItems)
-        setPreviousItemCount(newItems.length)
-        setLastUpdated(new Date())
-      }
-    } catch (error) {
-      console.error('Error fetching news:', error)
-    } finally {
-      setLoading(false)
-    }
-  }, [previousItemCount])
 
   if (loading) {
     return (

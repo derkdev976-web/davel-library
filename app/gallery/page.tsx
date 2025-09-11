@@ -32,6 +32,36 @@ export default function GalleryPage() {
   const [lastUpdated, setLastUpdated] = useState<Date | null>(null)
   const [previousItemCount, setPreviousItemCount] = useState(0)
 
+  const fetchGallery = useCallback(async () => {
+    try {
+      setLoading(true)
+      // Add cache-busting parameter
+      const response = await fetch(`/api/gallery?t=${Date.now()}`)
+      if (response.ok) {
+        const data = await response.json()
+        const newItems = data.items || []
+        
+        // Check if new content was added
+        if (previousItemCount > 0 && newItems.length > previousItemCount) {
+          toast({
+            title: "New content available!",
+            description: `${newItems.length - previousItemCount} new item(s) added`,
+            duration: 3000
+          })
+        }
+        
+        setItems(newItems)
+        setPreviousItemCount(newItems.length)
+        setLastUpdated(new Date())
+      }
+    } catch (error) {
+      console.error('Error fetching gallery:', error)
+      toast({ title: "Error fetching gallery", variant: "destructive" })
+    } finally {
+      setLoading(false)
+    }
+  }, [previousItemCount, toast])
+
   useEffect(() => {
     fetchGallery()
   }, [fetchGallery])
@@ -65,36 +95,6 @@ export default function GalleryPage() {
       window.removeEventListener('focus', handleFocus)
     }
   }, [fetchGallery])
-
-  const fetchGallery = useCallback(async () => {
-    try {
-      setLoading(true)
-      // Add cache-busting parameter
-      const response = await fetch(`/api/gallery?t=${Date.now()}`)
-      if (response.ok) {
-        const data = await response.json()
-        const newItems = data.items || []
-        
-        // Check if new content was added
-        if (previousItemCount > 0 && newItems.length > previousItemCount) {
-          toast({
-            title: "New content available!",
-            description: `${newItems.length - previousItemCount} new item(s) added`,
-            duration: 3000
-          })
-        }
-        
-        setItems(newItems)
-        setPreviousItemCount(newItems.length)
-        setLastUpdated(new Date())
-      }
-    } catch (error) {
-      console.error('Error fetching gallery:', error)
-      toast({ title: "Error fetching gallery", variant: "destructive" })
-    } finally {
-      setLoading(false)
-    }
-  }, [previousItemCount, toast])
 
   const filteredItems = items.filter(item =>
     item.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
