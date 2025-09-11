@@ -273,7 +273,7 @@ export default function StudySpacesPage() {
             </p>
             <div className="bg-gradient-to-r from-yellow-100 to-orange-100 dark:from-yellow-900/20 dark:to-orange-900/20 rounded-2xl p-4 border border-yellow-200 dark:border-yellow-700/30">
               <p className="text-sm font-medium text-yellow-800 dark:text-yellow-200 italic">
-                💡 "{randomQuote}"
+                💡 &ldquo;{randomQuote}&rdquo;
               </p>
             </div>
           </div>

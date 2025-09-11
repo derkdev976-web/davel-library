@@ -312,7 +312,7 @@ export default function PrintingServicesPage() {
             </p>
             <div className="bg-gradient-to-r from-blue-100 to-indigo-100 dark:from-blue-900/20 dark:to-indigo-900/20 rounded-2xl p-4 border border-blue-200 dark:border-blue-700/30">
               <p className="text-sm font-medium text-blue-800 dark:text-blue-200 italic">
-                💡 "{randomTip}"
+                💡 &ldquo;{randomTip}&rdquo;
               </p>
             </div>
           </div>
