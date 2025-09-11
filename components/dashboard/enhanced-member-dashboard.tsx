@@ -302,7 +302,7 @@ export function EnhancedMemberDashboard() {
                     Security Reminder
                   </h3>
                   <p className="text-sm text-yellow-700 dark:text-yellow-300 mt-1">
-                    If you're using a temporary password, please change it to something secure in your profile settings.
+                    If you&apos;re using a temporary password, please change it to something secure in your profile settings.
                   </p>
                 </div>
                 <Button
