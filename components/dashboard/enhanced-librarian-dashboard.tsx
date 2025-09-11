@@ -617,12 +617,6 @@ export function EnhancedLibrarianDashboard() {
                         Open Digital Library
                       </a>
                     </Button>
-                    <Button asChild className="bg-blue-600 hover:bg-blue-700 text-white">
-                      <a href="/dashboard/admin" target="_blank">
-                        <Settings className="h-4 w-4 mr-2" />
-                        Advanced Management
-                      </a>
-                    </Button>
                   </div>
                 </div>
               </CardContent>
@@ -674,12 +668,6 @@ export function EnhancedLibrarianDashboard() {
                         Open Research Assistance
                       </a>
                     </Button>
-                    <Button asChild className="bg-blue-600 hover:bg-blue-700 text-white">
-                      <a href="/dashboard/admin" target="_blank">
-                        <Settings className="h-4 w-4 mr-2" />
-                        Advanced Management
-                      </a>
-                    </Button>
                   </div>
                 </div>
               </CardContent>
@@ -719,12 +707,6 @@ export function EnhancedLibrarianDashboard() {
                         Open Study Spaces
                       </a>
                     </Button>
-                    <Button asChild className="bg-blue-600 hover:bg-blue-700 text-white">
-                      <a href="/dashboard/admin" target="_blank">
-                        <Settings className="h-4 w-4 mr-2" />
-                        Advanced Management
-                      </a>
-                    </Button>
                   </div>
                 </div>
               </CardContent>
@@ -762,12 +744,6 @@ export function EnhancedLibrarianDashboard() {
                       <a href="/printing-services" target="_blank">
                         <Printer className="h-4 w-4 mr-2" />
                         Open Printing Services
-                      </a>
-                    </Button>
-                    <Button asChild className="bg-blue-600 hover:bg-blue-700 text-white">
-                      <a href="/dashboard/admin" target="_blank">
-                        <Settings className="h-4 w-4 mr-2" />
-                        Advanced Management
                       </a>
                     </Button>
                   </div>
