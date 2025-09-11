@@ -20,7 +20,17 @@ import {
   Star,
   Wifi,
   Monitor,
-  Coffee
+  Coffee,
+  BookOpen,
+  Lightbulb,
+  Zap,
+  Heart,
+  Sparkles,
+  Crown,
+  Gift,
+  Trophy,
+  Target,
+  Rocket
 } from "lucide-react"
 
 interface StudySpace {
@@ -225,20 +235,73 @@ export default function StudySpacesPage() {
     )
   }
 
+  // Random elements for enhanced design
+  const randomIcons = [BookOpen, Lightbulb, Zap, Heart, Sparkles, Crown, Gift, Trophy, Target, Rocket]
+  const randomIcon = randomIcons[Math.floor(Math.random() * randomIcons.length)]
+  const RandomIcon = randomIcon
+
+  // Random motivational quotes
+  const quotes = [
+    "Knowledge is power, but enthusiasm pulls the switch!",
+    "Study hard, dream big, achieve more!",
+    "Every expert was once a beginner!",
+    "Success is the sum of small efforts repeated day in and day out!",
+    "The future belongs to those who believe in the beauty of their dreams!"
+  ]
+  const randomQuote = quotes[Math.floor(Math.random() * quotes.length)]
+
   return (
-    <div className="min-h-screen bg-gray-50 dark:bg-gray-900">
+    <div className="min-h-screen bg-gradient-to-br from-blue-50 via-indigo-50 to-purple-50 dark:from-gray-900 dark:via-gray-800 dark:to-gray-900">
       <Header />
       
       <div className="container mx-auto px-4 py-8">
-        {/* Header Section */}
-        <div className="text-center mb-12">
-          <h1 className="text-4xl font-bold text-gray-900 dark:text-gray-100 mb-4">
-            Study Spaces
-          </h1>
-          <p className="text-lg text-gray-600 dark:text-gray-300 max-w-2xl mx-auto">
-            Book a quiet study space for your academic work. Choose from our variety of rooms 
-            equipped with modern amenities to enhance your learning experience.
-          </p>
+        {/* Enhanced Header Section */}
+        <div className="text-center mb-12 relative">
+          <div className="absolute inset-0 bg-gradient-to-r from-blue-400/20 via-purple-400/20 to-pink-400/20 rounded-3xl blur-3xl"></div>
+          <div className="relative bg-white/80 dark:bg-gray-800/80 backdrop-blur-sm rounded-3xl p-8 shadow-2xl border border-white/20 dark:border-gray-700/20">
+            <div className="flex items-center justify-center mb-4">
+              <div className="p-3 rounded-full bg-gradient-to-r from-blue-500 to-purple-600 text-white shadow-lg">
+                <RandomIcon className="h-8 w-8" />
+              </div>
+            </div>
+            <h1 className="text-5xl font-bold bg-gradient-to-r from-blue-600 via-purple-600 to-pink-600 bg-clip-text text-transparent mb-4">
+              Study Spaces
+            </h1>
+            <p className="text-lg text-gray-600 dark:text-gray-300 max-w-2xl mx-auto mb-4">
+              Book a quiet study space for your academic work. Choose from our variety of rooms 
+              equipped with modern amenities to enhance your learning experience.
+            </p>
+            <div className="bg-gradient-to-r from-yellow-100 to-orange-100 dark:from-yellow-900/20 dark:to-orange-900/20 rounded-2xl p-4 border border-yellow-200 dark:border-yellow-700/30">
+              <p className="text-sm font-medium text-yellow-800 dark:text-yellow-200 italic">
+                💡 "{randomQuote}"
+              </p>
+            </div>
+          </div>
+        </div>
+
+        {/* Free Classes Section */}
+        <div className="mb-8">
+          <div className="bg-gradient-to-r from-green-100 to-emerald-100 dark:from-green-900/20 dark:to-emerald-900/20 rounded-2xl p-6 border border-green-200 dark:border-green-700/30">
+            <div className="flex items-center justify-between">
+              <div className="flex items-center space-x-3">
+                <div className="p-2 rounded-full bg-green-500 text-white">
+                  <Gift className="h-5 w-5" />
+                </div>
+                <div>
+                  <h3 className="text-lg font-semibold text-green-800 dark:text-green-200">
+                    Free Study Sessions Available!
+                  </h3>
+                  <p className="text-sm text-green-700 dark:text-green-300">
+                    Join our free study groups and collaborative learning sessions
+                  </p>
+                </div>
+              </div>
+              <Badge className="bg-green-500 text-white hover:bg-green-600">
+                <Sparkles className="h-3 w-3 mr-1" />
+                FREE
+              </Badge>
+            </div>
+          </div>
         </div>
 
         {/* User Bookings Section */}
@@ -285,15 +348,27 @@ export default function StudySpacesPage() {
 
         {/* Study Spaces Grid */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {spaces.map((space) => (
-            <Card key={space.id} className="hover:shadow-lg transition-shadow">
-              <CardHeader>
+          {spaces.map((space, index) => {
+            const cardColors = [
+              "from-blue-500 to-purple-600",
+              "from-green-500 to-teal-600", 
+              "from-pink-500 to-rose-600",
+              "from-orange-500 to-red-600",
+              "from-indigo-500 to-blue-600",
+              "from-emerald-500 to-green-600"
+            ]
+            const randomColor = cardColors[index % cardColors.length]
+            
+            return (
+            <Card key={space.id} className="group hover:shadow-2xl transition-all duration-500 bg-white/90 dark:bg-gray-800/90 backdrop-blur-sm border-gray-200/50 dark:border-gray-700/50 rounded-2xl overflow-hidden hover:scale-105">
+              <div className={`h-2 bg-gradient-to-r ${randomColor}`}></div>
+              <CardHeader className="pb-3">
                 <div className="flex justify-between items-start">
-                  <CardTitle className="text-xl">{space.name}</CardTitle>
+                  <CardTitle className="text-xl font-bold text-gray-900 dark:text-gray-100 group-hover:text-blue-600 transition-colors duration-300">{space.name}</CardTitle>
                   <Badge className={
                     space.isAvailable && space.isActive 
-                      ? "bg-green-100 text-green-800" 
-                      : "bg-red-100 text-red-800"
+                      ? "bg-green-100 text-green-800 border-green-200" 
+                      : "bg-red-100 text-red-800 border-red-200"
                   }>
                     {space.isAvailable && space.isActive ? "Available" : "Unavailable"}
                   </Badge>
@@ -327,13 +402,21 @@ export default function StudySpacesPage() {
                 )}
 
                 <div className="flex justify-between items-center mb-4">
-                  <span className="text-2xl font-bold text-green-600">
-                    ${space.hourlyRate}/hour
-                  </span>
+                  <div className="flex flex-col">
+                    <span className="text-2xl font-bold bg-gradient-to-r from-green-600 to-emerald-600 bg-clip-text text-transparent">
+                      ${space.hourlyRate}/hour
+                    </span>
+                    {Math.random() > 0.7 && (
+                      <span className="text-xs text-orange-600 font-medium">
+                        <Crown className="h-3 w-3 inline mr-1" />
+                        Premium Space
+                      </span>
+                    )}
+                  </div>
                   <Button
                     onClick={() => openBookingDialog(space)}
                     disabled={!space.isAvailable || !space.isActive}
-                    className="bg-blue-600 hover:bg-blue-700 text-white"
+                    className="bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white shadow-lg hover:shadow-xl transition-all duration-300"
                   >
                     <Calendar className="h-4 w-4 mr-2" />
                     Book Now
@@ -341,7 +424,8 @@ export default function StudySpacesPage() {
                 </div>
               </CardContent>
             </Card>
-          ))}
+            )
+          })}
         </div>
 
         {spaces.length === 0 && (

@@ -21,7 +21,17 @@ import {
   AlertCircle,
   Upload,
   Download,
-  DollarSign
+  DollarSign,
+  Sparkles,
+  Gift,
+  Crown,
+  Zap,
+  Star,
+  Rocket,
+  Target,
+  Heart,
+  Lightbulb,
+  Trophy
 } from "lucide-react"
 
 interface PrintService {
@@ -264,20 +274,73 @@ export default function PrintingServicesPage() {
     )
   }
 
+  // Random elements for enhanced design
+  const randomIcons = [Printer, FileText, Zap, Star, Rocket, Target, Heart, Lightbulb, Trophy, Crown]
+  const randomIcon = randomIcons[Math.floor(Math.random() * randomIcons.length)]
+  const RandomIcon = randomIcon
+
+  // Random printing tips
+  const tips = [
+    "Save paper, save trees! Use double-sided printing when possible.",
+    "High-quality prints start with high-quality files!",
+    "Need it fast? Try our express printing service!",
+    "Color printing adds impact to your presentations!",
+    "Proofread before you print - save time and paper!"
+  ]
+  const randomTip = tips[Math.floor(Math.random() * tips.length)]
+
   return (
-    <div className="min-h-screen bg-gray-50 dark:bg-gray-900">
+    <div className="min-h-screen bg-gradient-to-br from-orange-50 via-red-50 to-pink-50 dark:from-gray-900 dark:via-gray-800 dark:to-gray-900">
       <Header />
       
       <div className="container mx-auto px-4 py-8">
-        {/* Header Section */}
-        <div className="text-center mb-12">
-          <h1 className="text-4xl font-bold text-gray-900 dark:text-gray-100 mb-4">
-            Printing Services
-          </h1>
-          <p className="text-lg text-gray-600 dark:text-gray-300 max-w-2xl mx-auto">
-            Professional printing services for all your academic and personal needs. 
-            Upload your documents and we&apos;ll handle the rest.
-          </p>
+        {/* Enhanced Header Section */}
+        <div className="text-center mb-12 relative">
+          <div className="absolute inset-0 bg-gradient-to-r from-orange-400/20 via-red-400/20 to-pink-400/20 rounded-3xl blur-3xl"></div>
+          <div className="relative bg-white/80 dark:bg-gray-800/80 backdrop-blur-sm rounded-3xl p-8 shadow-2xl border border-white/20 dark:border-gray-700/20">
+            <div className="flex items-center justify-center mb-4">
+              <div className="p-3 rounded-full bg-gradient-to-r from-orange-500 to-red-600 text-white shadow-lg">
+                <RandomIcon className="h-8 w-8" />
+              </div>
+            </div>
+            <h1 className="text-5xl font-bold bg-gradient-to-r from-orange-600 via-red-600 to-pink-600 bg-clip-text text-transparent mb-4">
+              Printing Services
+            </h1>
+            <p className="text-lg text-gray-600 dark:text-gray-300 max-w-2xl mx-auto mb-4">
+              Professional printing services for all your academic and personal needs. 
+              Upload your documents and we&apos;ll handle the rest.
+            </p>
+            <div className="bg-gradient-to-r from-blue-100 to-indigo-100 dark:from-blue-900/20 dark:to-indigo-900/20 rounded-2xl p-4 border border-blue-200 dark:border-blue-700/30">
+              <p className="text-sm font-medium text-blue-800 dark:text-blue-200 italic">
+                💡 "{randomTip}"
+              </p>
+            </div>
+          </div>
+        </div>
+
+        {/* Free Services Section */}
+        <div className="mb-8">
+          <div className="bg-gradient-to-r from-purple-100 to-pink-100 dark:from-purple-900/20 dark:to-pink-900/20 rounded-2xl p-6 border border-purple-200 dark:border-purple-700/30">
+            <div className="flex items-center justify-between">
+              <div className="flex items-center space-x-3">
+                <div className="p-2 rounded-full bg-purple-500 text-white">
+                  <Gift className="h-5 w-5" />
+                </div>
+                <div>
+                  <h3 className="text-lg font-semibold text-purple-800 dark:text-purple-200">
+                    Free Printing Credits Available!
+                  </h3>
+                  <p className="text-sm text-purple-700 dark:text-purple-300">
+                    Get 10 free pages every month for students and members
+                  </p>
+                </div>
+              </div>
+              <Badge className="bg-purple-500 text-white hover:bg-purple-600">
+                <Sparkles className="h-3 w-3 mr-1" />
+                FREE
+              </Badge>
+            </div>
+          </div>
         </div>
 
         {/* User Print Jobs Section */}
@@ -317,14 +380,26 @@ export default function PrintingServicesPage() {
 
         {/* Print Services Grid */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {services.map((service) => (
-            <Card key={service.id} className="hover:shadow-lg transition-shadow">
-              <CardHeader>
-                <CardTitle className="flex items-center">
+          {services.map((service, index) => {
+            const cardColors = [
+              "from-orange-500 to-red-600",
+              "from-blue-500 to-indigo-600", 
+              "from-green-500 to-teal-600",
+              "from-purple-500 to-pink-600",
+              "from-yellow-500 to-orange-600",
+              "from-cyan-500 to-blue-600"
+            ]
+            const randomColor = cardColors[index % cardColors.length]
+            
+            return (
+            <Card key={service.id} className="group hover:shadow-2xl transition-all duration-500 bg-white/90 dark:bg-gray-800/90 backdrop-blur-sm border-gray-200/50 dark:border-gray-700/50 rounded-2xl overflow-hidden hover:scale-105">
+              <div className={`h-2 bg-gradient-to-r ${randomColor}`}></div>
+              <CardHeader className="pb-3">
+                <CardTitle className="flex items-center text-xl font-bold text-gray-900 dark:text-gray-100 group-hover:text-orange-600 transition-colors duration-300">
                   <Printer className="h-5 w-5 mr-2" />
                   {service.name}
                 </CardTitle>
-                <p className="text-sm text-gray-600">{service.description}</p>
+                <p className="text-sm text-gray-600 dark:text-gray-400">{service.description}</p>
               </CardHeader>
               <CardContent>
                 <div className="space-y-3 mb-6">
@@ -368,16 +443,27 @@ export default function PrintingServicesPage() {
                   </div>
                 </div>
 
-                <Button
-                  onClick={() => openSubmitDialog(service)}
-                  className="w-full bg-blue-600 hover:bg-blue-700 text-white"
-                >
-                  <Upload className="h-4 w-4 mr-2" />
-                  Submit Print Job
-                </Button>
+                <div className="space-y-3">
+                  {Math.random() > 0.8 && (
+                    <div className="bg-gradient-to-r from-yellow-100 to-orange-100 dark:from-yellow-900/20 dark:to-orange-900/20 rounded-lg p-2 border border-yellow-200 dark:border-yellow-700/30">
+                      <p className="text-xs text-yellow-800 dark:text-yellow-200 font-medium">
+                        <Zap className="h-3 w-3 inline mr-1" />
+                        Popular Choice!
+                      </p>
+                    </div>
+                  )}
+                  <Button
+                    onClick={() => openSubmitDialog(service)}
+                    className="w-full bg-gradient-to-r from-orange-600 to-red-600 hover:from-orange-700 hover:to-red-700 text-white shadow-lg hover:shadow-xl transition-all duration-300"
+                  >
+                    <Upload className="h-4 w-4 mr-2" />
+                    Submit Print Job
+                  </Button>
+                </div>
               </CardContent>
             </Card>
-          ))}
+            )
+          })}
         </div>
 
         {services.length === 0 && (
