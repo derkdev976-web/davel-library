@@ -29,7 +29,7 @@ interface ContentItem {
   isPublished: boolean
   isFeatured: boolean
   createdAt: string
-  eventDate?: string
+  eventDate?: string | null
   location?: string
   attendees?: number
   maxAttendees?: number
@@ -54,7 +54,7 @@ export function ContentManager() {
     imageUrl: "/images/catalog/placeholder.svg",
     isPublished: true,
     isFeatured: false,
-    eventDate: "",
+    eventDate: null as string | null,
     location: "",
     attendees: 0,
     maxAttendees: 0
@@ -181,7 +181,7 @@ export function ContentManager() {
       imageUrl: "/images/catalog/placeholder.svg",
       isPublished: true,
       isFeatured: false,
-      eventDate: "",
+      eventDate: null as string | null,
       location: "",
       attendees: 0,
       maxAttendees: 0
@@ -200,7 +200,7 @@ export function ContentManager() {
       imageUrl: item.imageUrl,
       isPublished: item.isPublished,
       isFeatured: item.isFeatured,
-      eventDate: item.eventDate || "",
+      eventDate: item.eventDate || null,
       location: item.location || "",
       attendees: item.attendees || 0,
       maxAttendees: item.maxAttendees || 0
@@ -429,8 +429,8 @@ export function ContentManager() {
                   <Input
                     id="eventDate"
                     type="datetime-local"
-                    value={formData.eventDate}
-                    onChange={(e) => setFormData({ ...formData, eventDate: e.target.value })}
+                    value={formData.eventDate || ""}
+                    onChange={(e) => setFormData({ ...formData, eventDate: e.target.value || null })}
                   />
                 </div>
               )}
