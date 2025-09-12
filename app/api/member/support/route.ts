@@ -35,7 +35,7 @@ export async function GET() {
     // Format the data
     const formattedRequests = supportRequests.map(request => ({
       id: request.id,
-      subject: request.subject,
+      subject: request.title,
       description: request.description,
       category: request.category,
       priority: request.priority,
