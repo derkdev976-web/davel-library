@@ -85,7 +85,10 @@ export async function GET() {
     const ebooks = await prisma.book.findMany({
       where: {
         isElectronic: true,
-        isAvailable: true
+        isLocked: false,
+        availableCopies: {
+          gt: 0
+        }
       },
       select: {
         id: true,

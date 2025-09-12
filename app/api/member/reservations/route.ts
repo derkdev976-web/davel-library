@@ -81,7 +81,7 @@ export async function POST(request: NextRequest) {
         id: true,
         title: true,
         availableCopies: true,
-        isAvailable: true
+        isLocked: true
       }
     })
 
@@ -92,7 +92,7 @@ export async function POST(request: NextRequest) {
       )
     }
 
-    if (!book.isAvailable || book.availableCopies <= 0) {
+    if (book.isLocked || book.availableCopies <= 0) {
       return NextResponse.json(
         { error: "Book is not available for reservation" },
         { status: 400 }
