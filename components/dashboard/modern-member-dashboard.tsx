@@ -652,13 +652,55 @@ export function ModernMemberDashboard() {
               </Card>
             </TabsContent>
 
-            <TabsContent value="fees">
+            <TabsContent value="fees" className="space-y-6">
               <Card className="bg-white/70 dark:bg-slate-800/70 backdrop-blur-sm border-0 shadow-lg">
                 <CardHeader>
-                  <CardTitle>Fees & Payments</CardTitle>
+                  <CardTitle className="flex items-center space-x-2">
+                    <CreditCard className="h-5 w-5 text-green-600" />
+                    <span>Fees & Payments</span>
+                  </CardTitle>
                 </CardHeader>
                 <CardContent>
-                  <p className="text-slate-500 dark:text-slate-400">Fee management features coming soon...</p>
+                  <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
+                    <div className="p-4 bg-gradient-to-r from-green-50 to-emerald-50 dark:from-green-900/20 dark:to-emerald-900/20 rounded-lg border border-green-200 dark:border-green-800">
+                      <div className="flex items-center justify-between">
+                        <div>
+                          <p className="text-sm text-green-600 dark:text-green-400">Total Fees</p>
+                          <p className="text-2xl font-bold text-green-800 dark:text-green-200">R0</p>
+                        </div>
+                        <DollarSign className="h-8 w-8 text-green-600" />
+                      </div>
+                    </div>
+                    <div className="p-4 bg-gradient-to-r from-blue-50 to-cyan-50 dark:from-blue-900/20 dark:to-cyan-900/20 rounded-lg border border-blue-200 dark:border-blue-800">
+                      <div className="flex items-center justify-between">
+                        <div>
+                          <p className="text-sm text-blue-600 dark:text-blue-400">Total Paid</p>
+                          <p className="text-2xl font-bold text-blue-800 dark:text-blue-200">R0</p>
+                        </div>
+                        <CheckCircle className="h-8 w-8 text-blue-600" />
+                      </div>
+                    </div>
+                    <div className="p-4 bg-gradient-to-r from-orange-50 to-red-50 dark:from-orange-900/20 dark:to-red-900/20 rounded-lg border border-orange-200 dark:border-orange-800">
+                      <div className="flex items-center justify-between">
+                        <div>
+                          <p className="text-sm text-orange-600 dark:text-orange-400">Outstanding</p>
+                          <p className="text-2xl font-bold text-orange-800 dark:text-orange-200">R0</p>
+                        </div>
+                        <Clock className="h-8 w-8 text-orange-600" />
+                      </div>
+                    </div>
+                  </div>
+                  
+                  <div className="space-y-4">
+                    <h3 className="text-lg font-semibold text-slate-900 dark:text-white">Recent Fees</h3>
+                    <div className="text-center py-8">
+                      <CreditCard className="h-12 w-12 text-slate-400 mx-auto mb-4" />
+                      <p className="text-slate-500 dark:text-slate-400">No fees at this time</p>
+                      <p className="text-sm text-slate-400 dark:text-slate-500 mt-1">
+                        Your account is in good standing
+                      </p>
+                    </div>
+                  </div>
                 </CardContent>
               </Card>
             </TabsContent>
@@ -702,35 +744,203 @@ export function ModernMemberDashboard() {
               </Card>
             </TabsContent>
 
-            <TabsContent value="support">
+            <TabsContent value="support" className="space-y-6">
               <Card className="bg-white/70 dark:bg-slate-800/70 backdrop-blur-sm border-0 shadow-lg">
                 <CardHeader>
-                  <CardTitle>Support</CardTitle>
+                  <CardTitle className="flex items-center space-x-2">
+                    <HelpCircle className="h-5 w-5 text-purple-600" />
+                    <span>Support Center</span>
+                  </CardTitle>
                 </CardHeader>
                 <CardContent>
-                  <p className="text-slate-500 dark:text-slate-400">Support features coming soon...</p>
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div className="space-y-4">
+                      <h3 className="text-lg font-semibold text-slate-900 dark:text-white">Quick Help</h3>
+                      <div className="space-y-3">
+                        <div className="p-4 bg-slate-50 dark:bg-slate-700/50 rounded-lg hover:bg-slate-100 dark:hover:bg-slate-700 transition-colors cursor-pointer">
+                          <h4 className="font-medium text-slate-900 dark:text-white">How to reserve books?</h4>
+                          <p className="text-sm text-slate-600 dark:text-slate-300 mt-1">
+                            Learn how to search and reserve books from our catalog
+                          </p>
+                        </div>
+                        <div className="p-4 bg-slate-50 dark:bg-slate-700/50 rounded-lg hover:bg-slate-100 dark:hover:bg-slate-700 transition-colors cursor-pointer">
+                          <h4 className="font-medium text-slate-900 dark:text-white">Download ebooks</h4>
+                          <p className="text-sm text-slate-600 dark:text-slate-300 mt-1">
+                            Access and download digital books from your dashboard
+                          </p>
+                        </div>
+                        <div className="p-4 bg-slate-50 dark:bg-slate-700/50 rounded-lg hover:bg-slate-100 dark:hover:bg-slate-700 transition-colors cursor-pointer">
+                          <h4 className="font-medium text-slate-900 dark:text-white">Account settings</h4>
+                          <p className="text-sm text-slate-600 dark:text-slate-300 mt-1">
+                            Update your profile and change password
+                          </p>
+                        </div>
+                      </div>
+                    </div>
+                    
+                    <div className="space-y-4">
+                      <h3 className="text-lg font-semibold text-slate-900 dark:text-white">Contact Support</h3>
+                      <div className="space-y-3">
+                        <div className="p-4 bg-gradient-to-r from-blue-50 to-purple-50 dark:from-blue-900/20 dark:to-purple-900/20 rounded-lg border border-blue-200 dark:border-blue-800">
+                          <div className="flex items-center space-x-3">
+                            <MessageSquare className="h-6 w-6 text-blue-600" />
+                            <div>
+                              <h4 className="font-medium text-slate-900 dark:text-white">Live Chat</h4>
+                              <p className="text-sm text-slate-600 dark:text-slate-300">Available 9 AM - 5 PM</p>
+                            </div>
+                          </div>
+                        </div>
+                        <div className="p-4 bg-gradient-to-r from-green-50 to-emerald-50 dark:from-green-900/20 dark:to-emerald-900/20 rounded-lg border border-green-200 dark:border-green-800">
+                          <div className="flex items-center space-x-3">
+                            <Bell className="h-6 w-6 text-green-600" />
+                            <div>
+                              <h4 className="font-medium text-slate-900 dark:text-white">Email Support</h4>
+                              <p className="text-sm text-slate-600 dark:text-slate-300">support@davel.library.com</p>
+                            </div>
+                          </div>
+                        </div>
+                        <div className="p-4 bg-gradient-to-r from-orange-50 to-red-50 dark:from-orange-900/20 dark:to-red-900/20 rounded-lg border border-orange-200 dark:border-orange-800">
+                          <div className="flex items-center space-x-3">
+                            <Phone className="h-6 w-6 text-orange-600" />
+                            <div>
+                              <h4 className="font-medium text-slate-900 dark:text-white">Phone Support</h4>
+                              <p className="text-sm text-slate-600 dark:text-slate-300">+27 11 123 4567</p>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
                 </CardContent>
               </Card>
             </TabsContent>
 
-            <TabsContent value="documents">
+            <TabsContent value="documents" className="space-y-6">
               <Card className="bg-white/70 dark:bg-slate-800/70 backdrop-blur-sm border-0 shadow-lg">
                 <CardHeader>
-                  <CardTitle>Documents</CardTitle>
+                  <CardTitle className="flex items-center space-x-2">
+                    <FileText className="h-5 w-5 text-blue-600" />
+                    <span>My Documents</span>
+                  </CardTitle>
                 </CardHeader>
                 <CardContent>
-                  <p className="text-slate-500 dark:text-slate-400">Document management features coming soon...</p>
+                  <div className="space-y-6">
+                    <div>
+                      <h3 className="text-lg font-semibold text-slate-900 dark:text-white mb-4">Uploaded Documents</h3>
+                      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                        <div className="p-4 bg-slate-50 dark:bg-slate-700/50 rounded-lg border border-slate-200 dark:border-slate-700">
+                          <div className="flex items-center space-x-3">
+                            <div className="h-10 w-10 bg-gradient-to-r from-blue-500 to-purple-500 rounded-lg flex items-center justify-center">
+                              <FileText className="h-5 w-5 text-white" />
+                            </div>
+                            <div>
+                              <h4 className="font-medium text-slate-900 dark:text-white">ID Document</h4>
+                              <p className="text-sm text-slate-600 dark:text-slate-300">Government issued ID</p>
+                            </div>
+                          </div>
+                        </div>
+                        <div className="p-4 bg-slate-50 dark:bg-slate-700/50 rounded-lg border border-slate-200 dark:border-slate-700">
+                          <div className="flex items-center space-x-3">
+                            <div className="h-10 w-10 bg-gradient-to-r from-green-500 to-emerald-500 rounded-lg flex items-center justify-center">
+                              <FileText className="h-5 w-5 text-white" />
+                            </div>
+                            <div>
+                              <h4 className="font-medium text-slate-900 dark:text-white">Proof of Address</h4>
+                              <p className="text-sm text-slate-600 dark:text-slate-300">Utility bill or bank statement</p>
+                            </div>
+                          </div>
+                        </div>
+                        <div className="p-4 bg-slate-50 dark:bg-slate-700/50 rounded-lg border border-slate-200 dark:border-slate-700">
+                          <div className="flex items-center space-x-3">
+                            <div className="h-10 w-10 bg-gradient-to-r from-orange-500 to-red-500 rounded-lg flex items-center justify-center">
+                              <FileText className="h-5 w-5 text-white" />
+                            </div>
+                            <div>
+                              <h4 className="font-medium text-slate-900 dark:text-white">Additional Documents</h4>
+                              <p className="text-sm text-slate-600 dark:text-slate-300">Any other required documents</p>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                    
+                    <div>
+                      <h3 className="text-lg font-semibold text-slate-900 dark:text-white mb-4">Document Requests</h3>
+                      <div className="text-center py-8">
+                        <FileText className="h-12 w-12 text-slate-400 mx-auto mb-4" />
+                        <p className="text-slate-500 dark:text-slate-400">No document requests at this time</p>
+                        <p className="text-sm text-slate-400 dark:text-slate-500 mt-1">
+                          All your documents are up to date
+                        </p>
+                      </div>
+                    </div>
+                  </div>
                 </CardContent>
               </Card>
             </TabsContent>
 
-            <TabsContent value="history">
+            <TabsContent value="history" className="space-y-6">
               <Card className="bg-white/70 dark:bg-slate-800/70 backdrop-blur-sm border-0 shadow-lg">
                 <CardHeader>
-                  <CardTitle>History</CardTitle>
+                  <CardTitle className="flex items-center space-x-2">
+                    <History className="h-5 w-5 text-indigo-600" />
+                    <span>Borrowing History</span>
+                  </CardTitle>
                 </CardHeader>
                 <CardContent>
-                  <p className="text-slate-500 dark:text-slate-400">History features coming soon...</p>
+                  <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
+                    <div className="p-4 bg-gradient-to-r from-blue-50 to-cyan-50 dark:from-blue-900/20 dark:to-cyan-900/20 rounded-lg border border-blue-200 dark:border-blue-800">
+                      <div className="flex items-center justify-between">
+                        <div>
+                          <p className="text-sm text-blue-600 dark:text-blue-400">Books Borrowed</p>
+                          <p className="text-2xl font-bold text-blue-800 dark:text-blue-200">0</p>
+                        </div>
+                        <BookOpen className="h-8 w-8 text-blue-600" />
+                      </div>
+                    </div>
+                    <div className="p-4 bg-gradient-to-r from-green-50 to-emerald-50 dark:from-green-900/20 dark:to-emerald-900/20 rounded-lg border border-green-200 dark:border-green-800">
+                      <div className="flex items-center justify-between">
+                        <div>
+                          <p className="text-sm text-green-600 dark:text-green-400">Books Read</p>
+                          <p className="text-2xl font-bold text-green-800 dark:text-green-200">0</p>
+                        </div>
+                        <CheckCircle className="h-8 w-8 text-green-600" />
+                      </div>
+                    </div>
+                    <div className="p-4 bg-gradient-to-r from-purple-50 to-pink-50 dark:from-purple-900/20 dark:to-pink-900/20 rounded-lg border border-purple-200 dark:border-purple-800">
+                      <div className="flex items-center justify-between">
+                        <div>
+                          <p className="text-sm text-purple-600 dark:text-purple-400">Reviews Written</p>
+                          <p className="text-2xl font-bold text-purple-800 dark:text-purple-200">0</p>
+                        </div>
+                        <Star className="h-8 w-8 text-purple-600" />
+                      </div>
+                    </div>
+                  </div>
+                  
+                  <div className="space-y-6">
+                    <div>
+                      <h3 className="text-lg font-semibold text-slate-900 dark:text-white mb-4">Recent Activity</h3>
+                      <div className="text-center py-8">
+                        <History className="h-12 w-12 text-slate-400 mx-auto mb-4" />
+                        <p className="text-slate-500 dark:text-slate-400">No borrowing history yet</p>
+                        <p className="text-sm text-slate-400 dark:text-slate-500 mt-1">
+                          Start borrowing books to see your history here
+                        </p>
+                      </div>
+                    </div>
+                    
+                    <div>
+                      <h3 className="text-lg font-semibold text-slate-900 dark:text-white mb-4">Reading Progress</h3>
+                      <div className="text-center py-8">
+                        <BookOpen className="h-12 w-12 text-slate-400 mx-auto mb-4" />
+                        <p className="text-slate-500 dark:text-slate-400">No reading progress tracked</p>
+                        <p className="text-sm text-slate-400 dark:text-slate-500 mt-1">
+                          Your reading progress will appear here
+                        </p>
+                      </div>
+                    </div>
+                  </div>
                 </CardContent>
               </Card>
             </TabsContent>

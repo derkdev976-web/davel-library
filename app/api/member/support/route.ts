@@ -3,34 +3,58 @@ import { getServerSession } from "next-auth"
 import { authOptions } from "@/lib/auth"
 import { prisma } from "@/lib/prisma"
 
-export async function GET(request: NextRequest) {
+export async function GET() {
   try {
     const session = await getServerSession(authOptions)
     
-    if (!session?.user?.id) {
+    if (!session || session.user.role !== "MEMBER") {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 })
     }
 
+    const userId = session.user.id
+
+    // Get member's support requests
     const supportRequests = await prisma.supportRequest.findMany({
-      where: { userId: session.user.id },
-      orderBy: { createdAt: "desc" }
+      where: { userId },
+      include: {
+        responses: {
+          include: {
+            responder: {
+              select: {
+                name: true,
+                role: true
+              }
+            }
+          },
+          orderBy: { createdAt: 'asc' }
+        }
+      },
+      orderBy: { createdAt: 'desc' }
     })
 
+    // Format the data
     const formattedRequests = supportRequests.map(request => ({
       id: request.id,
-      title: request.title,
-      category: request.category,
-      status: request.status,
-      priority: request.priority,
-      createdAt: request.createdAt.toISOString(),
+      subject: request.subject,
       description: request.description,
-      resolution: request.resolution,
-      resolvedAt: request.resolvedAt?.toISOString()
+      category: request.category,
+      priority: request.priority,
+      status: request.status,
+      createdAt: request.createdAt.toISOString(),
+      updatedAt: request.updatedAt.toISOString(),
+      responses: request.responses.map(response => ({
+        id: response.id,
+        content: response.content,
+        responderName: response.responder.name || 'Support Team',
+        responderRole: response.responder.role,
+        createdAt: response.createdAt.toISOString()
+      }))
     }))
 
-    return NextResponse.json(formattedRequests)
+    return NextResponse.json({ supportRequests: formattedRequests })
+
   } catch (error) {
-    console.error("Error fetching member support requests:", error)
+    console.error("Error fetching support requests:", error)
     return NextResponse.json(
       { error: "Failed to fetch support requests" },
       { status: 500 }
@@ -42,36 +66,45 @@ export async function POST(request: NextRequest) {
   try {
     const session = await getServerSession(authOptions)
     
-    if (!session?.user?.id) {
+    if (!session || session.user.role !== "MEMBER") {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 })
     }
 
-    const { title, description, category } = await request.json()
+    const userId = session.user.id
+    const { subject, description, category, priority } = await request.json()
 
-    if (!title || !description || !category) {
-      return NextResponse.json({ error: "Title, description, and category are required" }, { status: 400 })
+    if (!subject || !description || !category) {
+      return NextResponse.json(
+        { error: "Subject, description, and category are required" },
+        { status: 400 }
+      )
     }
 
+    // Create support request
     const supportRequest = await prisma.supportRequest.create({
       data: {
-        userId: session.user.id,
-        title: title.trim(),
-        description: description.trim(),
-        category: category,
-        priority: "MEDIUM",
-        status: "OPEN"
+        userId,
+        subject,
+        description,
+        category,
+        priority: priority || 'MEDIUM',
+        status: 'OPEN'
       }
     })
 
     return NextResponse.json({
-      id: supportRequest.id,
-      title: supportRequest.title,
-      category: supportRequest.category,
-      status: supportRequest.status,
-      priority: supportRequest.priority,
-      createdAt: supportRequest.createdAt.toISOString(),
-      description: supportRequest.description
+      success: true,
+      supportRequest: {
+        id: supportRequest.id,
+        subject: supportRequest.subject,
+        description: supportRequest.description,
+        category: supportRequest.category,
+        priority: supportRequest.priority,
+        status: supportRequest.status,
+        createdAt: supportRequest.createdAt.toISOString()
+      }
     })
+
   } catch (error) {
     console.error("Error creating support request:", error)
     return NextResponse.json(
