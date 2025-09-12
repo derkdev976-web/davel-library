@@ -84,7 +84,7 @@ export async function POST(request: NextRequest) {
     const supportRequest = await prisma.supportRequest.create({
       data: {
         userId,
-        subject,
+        title: subject,
         description,
         category,
         priority: priority || 'MEDIUM',
@@ -96,7 +96,7 @@ export async function POST(request: NextRequest) {
       success: true,
       supportRequest: {
         id: supportRequest.id,
-        subject: supportRequest.subject,
+        subject: supportRequest.title,
         description: supportRequest.description,
         category: supportRequest.category,
         priority: supportRequest.priority,
