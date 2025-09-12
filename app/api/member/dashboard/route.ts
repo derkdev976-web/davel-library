@@ -20,6 +20,7 @@ export async function GET() {
         id: true,
         firstName: true,
         lastName: true,
+        phone: true,
         dateOfBirth: true,
         gender: true,
         profilePicture: true,
