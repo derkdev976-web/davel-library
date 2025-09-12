@@ -17,7 +17,7 @@ import {
   FileText, 
   Printer, 
   Clock, 
-  CheckCircle,
+  CheckCircle, 
   AlertCircle,
   Upload,
   Download,
@@ -205,7 +205,7 @@ export default function PrintingServicesPage() {
           specialInstructions: printJobData.specialInstructions
         })
       })
-
+      
       if (response.ok) {
         toast({ title: "Print job submitted successfully!" })
         setIsSubmitDialogOpen(false)
@@ -264,12 +264,12 @@ export default function PrintingServicesPage() {
     return (
       <div className="min-h-screen bg-gray-50 dark:bg-gray-900">
         <Header />
-        <div className="flex items-center justify-center p-8">
-          <div className="text-center">
+            <div className="flex items-center justify-center p-8">
+              <div className="text-center">
             <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600 mx-auto mb-4"></div>
             <p>Loading printing services...</p>
-          </div>
-        </div>
+              </div>
+            </div>
       </div>
     )
   }
@@ -319,7 +319,7 @@ export default function PrintingServicesPage() {
         </div>
 
         {/* Free Services Section */}
-        <div className="mb-8">
+          <div className="mb-8">
           <div className="bg-gradient-to-r from-purple-100 to-pink-100 dark:from-purple-900/20 dark:to-pink-900/20 rounded-2xl p-6 border border-purple-200 dark:border-purple-700/30">
             <div className="flex items-center justify-between">
               <div className="flex items-center space-x-3">
@@ -441,7 +441,7 @@ export default function PrintingServicesPage() {
                       </Badge>
                     ))}
                   </div>
-                </div>
+          </div>
 
                 <div className="space-y-3">
                   {Math.random() > 0.8 && (
@@ -452,27 +452,27 @@ export default function PrintingServicesPage() {
                       </p>
                     </div>
                   )}
-                  <Button
+            <Button 
                     onClick={() => openSubmitDialog(service)}
                     className="w-full bg-gradient-to-r from-orange-600 to-red-600 hover:from-orange-700 hover:to-red-700 text-white shadow-lg hover:shadow-xl transition-all duration-300"
-                  >
-                    <Upload className="h-4 w-4 mr-2" />
-                    Submit Print Job
-                  </Button>
+            >
+              <Upload className="h-4 w-4 mr-2" />
+              Submit Print Job
+            </Button>
                 </div>
               </CardContent>
             </Card>
             )
           })}
-        </div>
+          </div>
 
         {services.length === 0 && (
           <div className="text-center py-12">
             <p className="text-gray-500 text-lg">No printing services available at the moment.</p>
           </div>
         )}
-      </div>
-
+                  </div>
+                  
       {/* Print Job Submission Dialog */}
       <Dialog open={isSubmitDialogOpen} onOpenChange={setIsSubmitDialogOpen}>
         <DialogContent className="max-w-2xl">
@@ -482,7 +482,7 @@ export default function PrintingServicesPage() {
           {selectedService && (
             <div className="space-y-6">
               {/* File Upload */}
-              <div>
+                  <div>
                 <Label>Upload Document</Label>
                 <FileUpload
                   onFileSelect={handleFileUpload}
@@ -495,64 +495,64 @@ export default function PrintingServicesPage() {
                     File: {selectedFile.name} ({formatFileSize(selectedFile.size)})
                   </p>
                 )}
-              </div>
-
-              <div className="grid grid-cols-2 gap-4">
-                <div>
+                  </div>
+                  
+                  <div className="grid grid-cols-2 gap-4">
+                    <div>
                   <Label htmlFor="pages">Number of Pages</Label>
-                  <Input
+                      <Input
                     id="pages"
-                    type="number"
+                        type="number"
                     value={printJobData.pages}
                     onChange={(e) => setPrintJobData({ ...printJobData, pages: e.target.value })}
                     placeholder="Enter page count"
-                    min="1"
+                        min="1"
                     max={selectedService.maxPages}
-                  />
-                </div>
-                <div>
+                      />
+                    </div>
+                    <div>
                   <Label htmlFor="copies">Number of Copies</Label>
-                  <Input
+                      <Input
                     id="copies"
-                    type="number"
+                        type="number"
                     value={printJobData.copies}
                     onChange={(e) => setPrintJobData({ ...printJobData, copies: e.target.value })}
                     placeholder="1"
-                    min="1"
-                  />
-                </div>
-              </div>
-
-              <div className="grid grid-cols-2 gap-4">
-                <div>
+                        min="1"
+                      />
+                    </div>
+                  </div>
+                  
+                  <div className="grid grid-cols-2 gap-4">
+                    <div>
                   <Label htmlFor="paperSize">Paper Size</Label>
                   <Select value={printJobData.paperSize} onValueChange={(value) => setPrintJobData({ ...printJobData, paperSize: value })}>
-                    <SelectTrigger>
-                      <SelectValue />
-                    </SelectTrigger>
-                    <SelectContent>
+                        <SelectTrigger>
+                          <SelectValue />
+                        </SelectTrigger>
+                        <SelectContent>
                       {selectedService.paperSizes.map((size) => (
                         <SelectItem key={size} value={size}>{size}</SelectItem>
                       ))}
-                    </SelectContent>
-                  </Select>
-                </div>
-                <div>
+                        </SelectContent>
+                      </Select>
+                    </div>
+                    <div>
                   <Label htmlFor="paperType">Paper Type</Label>
                   <Select value={printJobData.paperType} onValueChange={(value) => setPrintJobData({ ...printJobData, paperType: value })}>
-                    <SelectTrigger>
-                      <SelectValue />
-                    </SelectTrigger>
-                    <SelectContent>
+                        <SelectTrigger>
+                          <SelectValue />
+                        </SelectTrigger>
+                        <SelectContent>
                       {selectedService.paperTypes.map((type) => (
                         <SelectItem key={type} value={type}>{type}</SelectItem>
                       ))}
-                    </SelectContent>
-                  </Select>
-                </div>
-              </div>
-
-              <div>
+                        </SelectContent>
+                      </Select>
+                    </div>
+                  </div>
+                  
+                  <div>
                 <Label htmlFor="pickupLocation">Pickup Location</Label>
                 <Input
                   id="pickupLocation"
@@ -560,29 +560,29 @@ export default function PrintingServicesPage() {
                   onChange={(e) => setPrintJobData({ ...printJobData, pickupLocation: e.target.value })}
                   placeholder="e.g., Main Library Front Desk"
                 />
-              </div>
-
-              <div>
+                  </div>
+                  
+                  <div>
                 <Label htmlFor="specialInstructions">Special Instructions (Optional)</Label>
-                <Textarea
+                    <Textarea
                   id="specialInstructions"
                   value={printJobData.specialInstructions}
                   onChange={(e) => setPrintJobData({ ...printJobData, specialInstructions: e.target.value })}
-                  placeholder="Any special requirements or instructions..."
-                  rows={3}
-                />
-              </div>
-
-              <div className="flex items-center space-x-2">
-                <input
-                  type="checkbox"
-                  id="color"
+                      placeholder="Any special requirements or instructions..."
+                      rows={3}
+                    />
+                  </div>
+                  
+                  <div className="flex items-center space-x-2">
+                    <input
+                      type="checkbox"
+                      id="color"
                   checked={printJobData.color}
                   onChange={(e) => setPrintJobData({ ...printJobData, color: e.target.checked })}
-                />
+                    />
                 <Label htmlFor="color">Color printing (+${selectedService.colorPrice} per page)</Label>
-              </div>
-
+                  </div>
+                  
               {/* Cost Calculation */}
               {printJobData.pages && printJobData.copies && (
                 <div className="bg-blue-50 dark:bg-blue-900/20 p-4 rounded-lg">
@@ -591,25 +591,25 @@ export default function PrintingServicesPage() {
                     <span className="text-2xl font-bold text-green-600">
                       ${calculateCost().toFixed(2)}
                     </span>
-                  </div>
+                      </div>
                   <p className="text-sm text-gray-600 mt-1">
                     {printJobData.pages} pages × {printJobData.copies} copies × ${selectedService.pricePerPage}
                     {printJobData.color && ` + color printing (${printJobData.pages} × ${printJobData.copies} × $${selectedService.colorPrice})`}
                   </p>
-                </div>
+                      </div>
               )}
-            </div>
-          )}
+                    </div>
+                  )}
           <DialogFooter>
             <Button variant="outline" onClick={() => setIsSubmitDialogOpen(false)}>
-              Cancel
-            </Button>
-            <Button 
+                      Cancel
+                    </Button>
+                          <Button 
               onClick={handlePrintJobSubmit}
               disabled={!selectedFile || !printJobData.pages || !printJobData.copies || !printJobData.pickupLocation}
-            >
+                          >
               Submit Print Job
-            </Button>
+                          </Button>
           </DialogFooter>
         </DialogContent>
       </Dialog>

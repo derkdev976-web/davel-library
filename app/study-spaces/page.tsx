@@ -18,7 +18,7 @@ import {
   CheckCircle,
   AlertCircle,
   Star,
-  Wifi,
+  Wifi, 
   Monitor,
   Coffee,
   BookOpen,
@@ -165,7 +165,7 @@ export default function StudySpacesPage() {
           duration: duration.toString()
         })
       })
-
+      
       if (response.ok) {
         toast({ title: "Study space booking requested successfully!" })
         setIsBookingDialogOpen(false)
@@ -225,12 +225,12 @@ export default function StudySpacesPage() {
     return (
       <div className="min-h-screen bg-gray-50 dark:bg-gray-900">
         <Header />
-        <div className="flex items-center justify-center p-8">
-          <div className="text-center">
+            <div className="flex items-center justify-center p-8">
+              <div className="text-center">
             <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600 mx-auto mb-4"></div>
             <p>Loading study spaces...</p>
-          </div>
-        </div>
+              </div>
+            </div>
       </div>
     )
   }
@@ -274,10 +274,10 @@ export default function StudySpacesPage() {
             <div className="bg-gradient-to-r from-yellow-100 to-orange-100 dark:from-yellow-900/20 dark:to-orange-900/20 rounded-2xl p-4 border border-yellow-200 dark:border-yellow-700/30">
               <p className="text-sm font-medium text-yellow-800 dark:text-yellow-200 italic">
                 💡 &ldquo;{randomQuote}&rdquo;
-              </p>
-            </div>
+            </p>
           </div>
-        </div>
+                </div>
+              </div>
 
         {/* Free Classes Section */}
         <div className="mb-8">
@@ -286,7 +286,7 @@ export default function StudySpacesPage() {
               <div className="flex items-center space-x-3">
                 <div className="p-2 rounded-full bg-green-500 text-white">
                   <Gift className="h-5 w-5" />
-                </div>
+            </div>
                 <div>
                   <h3 className="text-lg font-semibold text-green-800 dark:text-green-200">
                     Free Study Sessions Available!
@@ -299,10 +299,10 @@ export default function StudySpacesPage() {
               <Badge className="bg-green-500 text-white hover:bg-green-600">
                 <Sparkles className="h-3 w-3 mr-1" />
                 FREE
-              </Badge>
+                </Badge>
+              </div>
             </div>
           </div>
-        </div>
 
         {/* User Bookings Section */}
         {session && userBookings.length > 0 && (
@@ -342,8 +342,8 @@ export default function StudySpacesPage() {
                   </p>
                 )}
               </div>
-            </CardContent>
-          </Card>
+              </CardContent>
+            </Card>
         )}
 
         {/* Study Spaces Grid */}
@@ -371,34 +371,34 @@ export default function StudySpacesPage() {
                       : "bg-red-100 text-red-800 border-red-200"
                   }>
                     {space.isAvailable && space.isActive ? "Available" : "Unavailable"}
-                  </Badge>
-                </div>
+                        </Badge>
+                      </div>
                 <div className="flex items-center space-x-4 text-sm text-gray-600">
                   <div className="flex items-center">
                     <Users className="h-4 w-4 mr-1" />
                     {space.capacity} people
-                  </div>
+                    </div>
                   <div className="flex items-center">
                     <MapPin className="h-4 w-4 mr-1" />
                     {space.location}
-                  </div>
-                </div>
+                      </div>
+                    </div>
               </CardHeader>
               <CardContent>
                 <p className="text-gray-700 mb-4">{space.description}</p>
-                
+
                 {space.amenities.length > 0 && (
                   <div className="mb-4">
                     <p className="text-sm font-medium text-gray-600 mb-2">Amenities:</p>
-                    <div className="flex flex-wrap gap-2">
+                      <div className="flex flex-wrap gap-2">
                       {space.amenities.map((amenity, index) => (
                         <div key={index} className="flex items-center space-x-1 bg-gray-100 dark:bg-gray-700 px-2 py-1 rounded-full text-xs">
-                          {getAmenityIcon(amenity)}
+                            {getAmenityIcon(amenity)}
                           <span>{amenity}</span>
                         </div>
-                      ))}
+                        ))}
+                      </div>
                     </div>
-                  </div>
                 )}
 
                 <div className="flex justify-between items-center mb-4">
@@ -413,17 +413,17 @@ export default function StudySpacesPage() {
                       </span>
                     )}
                   </div>
-                  <Button
+                    <Button 
                     onClick={() => openBookingDialog(space)}
                     disabled={!space.isAvailable || !space.isActive}
                     className="bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white shadow-lg hover:shadow-xl transition-all duration-300"
-                  >
-                    <Calendar className="h-4 w-4 mr-2" />
+                    >
+                      <Calendar className="h-4 w-4 mr-2" />
                     Book Now
-                  </Button>
+                    </Button>
                 </div>
-              </CardContent>
-            </Card>
+                  </CardContent>
+                </Card>
             )
           })}
         </div>
@@ -431,10 +431,10 @@ export default function StudySpacesPage() {
         {spaces.length === 0 && (
           <div className="text-center py-12">
             <p className="text-gray-500 text-lg">No study spaces available at the moment.</p>
-          </div>
-        )}
-      </div>
-
+            </div>
+          )}
+                    </div>
+                    
       {/* Booking Dialog */}
       <Dialog open={isBookingDialogOpen} onOpenChange={setIsBookingDialogOpen}>
         <DialogContent className="max-w-md">
@@ -448,10 +448,10 @@ export default function StudySpacesPage() {
                 <p className="text-sm text-gray-600">{selectedSpace.location}</p>
                 <p className="text-sm text-gray-600">Capacity: {selectedSpace.capacity} people</p>
                 <p className="text-lg font-semibold text-green-600">${selectedSpace.hourlyRate}/hour</p>
-              </div>
-
-              <div className="grid grid-cols-2 gap-4">
-                <div>
+                    </div>
+                    
+                    <div className="grid grid-cols-2 gap-4">
+                      <div>
                   <Label htmlFor="startDate">Start Date</Label>
                   <Input
                     id="startDate"
@@ -463,9 +463,9 @@ export default function StudySpacesPage() {
                 </div>
                 <div>
                   <Label htmlFor="startTime">Start Time</Label>
-                  <Input
+                        <Input
                     id="startTime"
-                    type="time"
+                          type="time"
                     value={bookingData.startTime}
                     onChange={(e) => setBookingData({ ...bookingData, startTime: e.target.value })}
                   />
@@ -478,19 +478,19 @@ export default function StudySpacesPage() {
                     value={bookingData.endDate}
                     onChange={(e) => setBookingData({ ...bookingData, endDate: e.target.value })}
                     min={bookingData.startDate || new Date().toISOString().split('T')[0]}
-                  />
-                </div>
-                <div>
+                        />
+                      </div>
+                      <div>
                   <Label htmlFor="endTime">End Time</Label>
-                  <Input
+                        <Input
                     id="endTime"
-                    type="time"
+                          type="time"
                     value={bookingData.endTime}
                     onChange={(e) => setBookingData({ ...bookingData, endTime: e.target.value })}
-                  />
-                </div>
-              </div>
-
+                        />
+                      </div>
+                    </div>
+                    
               {bookingData.startDate && bookingData.startTime && bookingData.endDate && bookingData.endTime && (
                 <div className="bg-blue-50 dark:bg-blue-900/20 p-4 rounded-lg">
                   <p className="text-sm">
@@ -512,11 +512,11 @@ export default function StudySpacesPage() {
                         return hours > 0 ? `$${(hours * selectedSpace.hourlyRate).toFixed(2)}` : "$0.00"
                       })()
                     }
-                  </p>
-                </div>
+                              </p>
+                            </div>
               )}
-            </div>
-          )}
+              </div>
+            )}
           <DialogFooter>
             <Button variant="outline" onClick={() => setIsBookingDialogOpen(false)}>
               Cancel

@@ -2,24 +2,22 @@ import { NextRequest, NextResponse } from "next/server"
 import { getServerSession } from "next-auth"
 import { authOptions } from "@/lib/auth"
 import { prisma } from "@/lib/prisma"
-import fs from 'fs'
-import path from 'path'
+import { readFile } from "fs/promises"
+import { join } from "path"
+import { existsSync } from "fs"
 
 export async function GET(request: NextRequest) {
   try {
     const session = await getServerSession(authOptions)
     
     if (!session || session.user.role !== "ADMIN") {
-      return NextResponse.json(
-        { error: "Admin access required" },
-        { status: 401 }
-      )
+      return NextResponse.json({ error: "Unauthorized" }, { status: 401 })
     }
 
     const { searchParams } = new URL(request.url)
     const userId = searchParams.get("userId")
     const documentType = searchParams.get("type")
-    const userType = searchParams.get("userType")
+    const userType = searchParams.get("userType") || "applicant"
 
     if (!userId || !documentType) {
       return NextResponse.json(
@@ -35,83 +33,48 @@ export async function GET(request: NextRequest) {
       const application = await prisma.membershipApplication.findUnique({
         where: { userId },
         select: {
-          id: true,
-          firstName: true,
-          lastName: true,
-          email: true,
           idDocument: true,
           proofOfAddress: true,
           additionalDocuments: true
         }
       })
 
-      if (!application) {
-        return NextResponse.json(
-          { error: "Application not found" },
-          { status: 404 }
-        )
+      if (application) {
+        switch (documentType) {
+          case "id":
+            documentUrl = application.idDocument
+            break
+          case "address":
+            documentUrl = application.proofOfAddress
+            break
+          case "additional":
+            documentUrl = application.additionalDocuments
+            break
+        }
       }
-
-      // Get the specific document URL
-      switch (documentType) {
-        case "idDocument":
-          documentUrl = application.idDocument
-          break
-        case "proofOfAddress":
-          documentUrl = application.proofOfAddress
-          break
-        case "additionalDocuments":
-          documentUrl = application.additionalDocuments
-          break
-        default:
-          return NextResponse.json(
-            { error: "Invalid document type" },
-            { status: 400 }
-          )
-      }
-    } else {
+    } else if (userType === "member") {
       // Get document from user profile
-      const user = await prisma.user.findUnique({
-        where: { id: userId },
+      const profile = await prisma.userProfile.findUnique({
+        where: { userId },
         select: {
-          id: true,
-          name: true,
-          email: true,
-          profile: {
-            select: {
-              firstName: true,
-              lastName: true,
-              idDocument: true,
-              proofOfAddress: true,
-              additionalDocuments: true
-            }
-          }
+          idDocument: true,
+          proofOfAddress: true,
+          additionalDocuments: true
         }
       })
 
-      if (!user || !user.profile) {
-        return NextResponse.json(
-          { error: "User or profile not found" },
-          { status: 404 }
-        )
-      }
-
-      // Get the specific document URL
-      switch (documentType) {
-        case "idDocument":
-          documentUrl = user.profile.idDocument
-          break
-        case "proofOfAddress":
-          documentUrl = user.profile.proofOfAddress
-          break
-        case "additionalDocuments":
-          documentUrl = user.profile.additionalDocuments
-          break
-        default:
-          return NextResponse.json(
-            { error: "Invalid document type" },
-            { status: 400 }
-          )
+      if (profile) {
+        switch (documentType) {
+          case "id":
+            documentUrl = profile.idDocument
+            break
+          case "address":
+            documentUrl = profile.proofOfAddress
+            break
+          case "additional":
+            documentUrl = profile.additionalDocuments
+            break
+        }
       }
     }
 
@@ -122,64 +85,52 @@ export async function GET(request: NextRequest) {
       )
     }
 
-    // Check if it's a URL or file path
-    if (documentUrl.startsWith('http')) {
-      // It's a URL, redirect to it
-      return NextResponse.redirect(documentUrl)
-    } else {
-      // It's a file path, try to serve it
-      try {
-        const filePath = path.join(process.cwd(), 'public', documentUrl)
-        
-        if (!fs.existsSync(filePath)) {
-          return NextResponse.json(
-            { error: "File not found on server" },
-            { status: 404 }
-          )
-        }
-
-        const fileBuffer = fs.readFileSync(filePath)
-        const fileExtension = path.extname(filePath).toLowerCase()
-        
-        // Determine content type
-        let contentType = 'application/octet-stream'
-        switch (fileExtension) {
-          case '.pdf':
-            contentType = 'application/pdf'
-            break
-          case '.jpg':
-          case '.jpeg':
-            contentType = 'image/jpeg'
-            break
-          case '.png':
-            contentType = 'image/png'
-            break
-          case '.gif':
-            contentType = 'image/gif'
-            break
-          case '.webp':
-            contentType = 'image/webp'
-            break
-        }
-
-        return new NextResponse(fileBuffer, {
-          headers: {
-            'Content-Type': contentType,
-            'Content-Disposition': `inline; filename="${path.basename(filePath)}"`,
-            'Cache-Control': 'public, max-age=3600'
-          }
-        })
-      } catch (fileError) {
-        console.error('Error serving file:', fileError)
-        return NextResponse.json(
-          { error: "Error serving file" },
-          { status: 500 }
-        )
-      }
+    // Check if file exists
+    const filePath = join(process.cwd(), "public", documentUrl)
+    if (!existsSync(filePath)) {
+      return NextResponse.json(
+        { error: "File not found on server" },
+        { status: 404 }
+      )
     }
 
+    // Read file
+    const fileBuffer = await readFile(filePath)
+    
+    // Determine content type based on file extension
+    const extension = documentUrl.split('.').pop()?.toLowerCase()
+    let contentType = 'application/octet-stream'
+    
+    switch (extension) {
+      case 'pdf':
+        contentType = 'application/pdf'
+        break
+      case 'jpg':
+      case 'jpeg':
+        contentType = 'image/jpeg'
+        break
+      case 'png':
+        contentType = 'image/png'
+        break
+      case 'gif':
+        contentType = 'image/gif'
+        break
+      case 'webp':
+        contentType = 'image/webp'
+        break
+    }
+
+    // Return file with appropriate headers
+    return new NextResponse(fileBuffer, {
+      headers: {
+        'Content-Type': contentType,
+        'Content-Disposition': `inline; filename="${documentUrl.split('/').pop()}"`,
+        'Cache-Control': 'no-cache'
+      }
+    })
+
   } catch (error) {
-    console.error("Document serve error:", error)
+    console.error("Error serving document:", error)
     return NextResponse.json(
       { error: "Failed to serve document" },
       { status: 500 }

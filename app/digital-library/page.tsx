@@ -52,7 +52,7 @@ export default function DigitalLibraryPage() {
       const response = await fetch("/api/books?digital=true")
       if (response.ok) {
         const data = await response.json()
-        setEbooks(data)
+        setEbooks(data.books || [])
       }
     } catch (error) {
       console.error("Error fetching ebooks:", error)
