@@ -76,6 +76,8 @@ model User {
   printJobs             PrintJob[]
   profile               UserProfile?
   userVisits            UserVisit[]
+  memberFees            MemberFee[]
+  payments              Payment[]
 
   @@map("users")
 }
@@ -560,4 +562,44 @@ model Content {
   @@index([type, isPublished])
   @@index([isFeatured])
   @@index([eventDate])
+}
+
+model MemberFee {
+  id          String    @id @default(cuid())
+  userId      String
+  type        String    // MEMBERSHIP, LATE_FEE, DAMAGE_FEE, etc.
+  description String
+  amount      Float
+  status      String    // PENDING, PAID, OVERDUE
+  dueDate     DateTime?
+  paidAt      DateTime?
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+
+  user        User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  payments    Payment[]
+
+  @@index([userId])
+  @@index([status])
+  @@index([dueDate])
+}
+
+model Payment {
+  id            String    @id @default(cuid())
+  userId        String
+  feeId         String?
+  amount        Float
+  method        String    // CASH, CARD, BANK_TRANSFER, etc.
+  status        String    // PENDING, COMPLETED, FAILED
+  description   String?
+  transactionId String?   @unique
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+
+  user          User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  fee           MemberFee? @relation(fields: [feeId], references: [id], onDelete: SetNull)
+
+  @@index([userId])
+  @@index([status])
+  @@index([transactionId])
 }
