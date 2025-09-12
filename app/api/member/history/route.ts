@@ -105,7 +105,7 @@ export async function GET() {
         coverImage: review.book.coverImage
       },
       rating: review.rating,
-      comment: review.comment,
+      comment: review.review,
       createdAt: review.createdAt.toISOString()
     }))
 
