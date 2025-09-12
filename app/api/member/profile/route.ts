@@ -65,16 +65,30 @@ export async function PATCH(request: NextRequest) {
     const userId = session.user.id
     const body = await request.json()
 
+    // Update user profile
     const updatedProfile = await prisma.userProfile.update({
       where: { userId },
       data: {
         firstName: body.firstName,
         lastName: body.lastName,
-        phone: body.phone,
         bio: body.bio,
         preferredGenres: body.preferredGenres ? body.preferredGenres.join(', ') : undefined,
         readingFrequency: body.readingFrequency
       }
+    })
+
+    // Update user phone if provided
+    if (body.phone !== undefined) {
+      await prisma.user.update({
+        where: { id: userId },
+        data: { phone: body.phone }
+      })
+    }
+
+    // Get updated user data to include phone
+    const updatedUser = await prisma.user.findUnique({
+      where: { id: userId },
+      select: { phone: true }
     })
 
     return NextResponse.json({
@@ -83,7 +97,7 @@ export async function PATCH(request: NextRequest) {
         id: updatedProfile.id,
         firstName: updatedProfile.firstName,
         lastName: updatedProfile.lastName,
-        phone: updatedProfile.phone,
+        phone: updatedUser?.phone,
         bio: updatedProfile.bio,
         preferredGenres: updatedProfile.preferredGenres ? updatedProfile.preferredGenres.split(',').map(g => g.trim()) : [],
         readingFrequency: updatedProfile.readingFrequency
