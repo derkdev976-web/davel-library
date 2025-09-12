@@ -19,6 +19,7 @@ export async function GET() {
         user: {
           select: {
             email: true,
+            phone: true,
             createdAt: true
           }
         }
@@ -34,7 +35,7 @@ export async function GET() {
       firstName: profile.firstName,
       lastName: profile.lastName,
       email: profile.user.email,
-      phone: profile.phone,
+      phone: profile.user.phone,
       dateOfBirth: profile.dateOfBirth?.toISOString().split('T')[0],
       gender: profile.gender,
       profilePicture: profile.profilePicture,
