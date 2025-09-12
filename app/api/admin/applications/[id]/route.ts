@@ -99,7 +99,7 @@ export async function PATCH(
             firstName: application.firstName,
             lastName: application.lastName,
             notes: reviewNotes,
-            temporaryPassword: temporaryPassword
+            temporaryPassword: temporaryPassword || undefined
           })
         } else if (status === "REJECTED" && previousStatus !== "REJECTED") {
           // Send rejection email
