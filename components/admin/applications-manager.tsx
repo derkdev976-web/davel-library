@@ -46,17 +46,20 @@ export function ApplicationsManager() {
 
   const viewDocument = async (userId: string, documentType: string, userType: string = "applicant") => {
     try {
-      const response = await fetch(`/api/admin/documents/view?userId=${userId}&type=${documentType}&userType=${userType}`)
-      if (response.ok) {
-        const data = await response.json()
+      // First check if document exists
+      const checkResponse = await fetch(`/api/admin/documents/view?userId=${userId}&type=${documentType}&userType=${userType}`)
+      if (checkResponse.ok) {
+        const data = await checkResponse.json()
         if (data.documentUrl) {
-          // Open document in new tab
-          window.open(data.documentUrl, '_blank')
+          // Use the new serve endpoint for better file handling
+          const serveUrl = `/api/admin/documents/serve?userId=${userId}&type=${documentType}&userType=${userType}`
+          window.open(serveUrl, '_blank')
         } else {
           toast({ title: "Document not found", variant: "destructive" })
         }
       } else {
-        toast({ title: "Error viewing document", variant: "destructive" })
+        const errorData = await checkResponse.json()
+        toast({ title: errorData.error || "Error viewing document", variant: "destructive" })
       }
     } catch (error) {
       console.error('Error viewing document:', error)

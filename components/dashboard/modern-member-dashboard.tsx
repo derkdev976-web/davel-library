@@ -541,24 +541,113 @@ export function ModernMemberDashboard() {
             </TabsContent>
 
             {/* Other tabs content would go here... */}
-            <TabsContent value="books">
+            <TabsContent value="books" className="space-y-6">
               <Card className="bg-white/70 dark:bg-slate-800/70 backdrop-blur-sm border-0 shadow-lg">
                 <CardHeader>
-                  <CardTitle>My Book Reservations</CardTitle>
+                  <CardTitle className="flex items-center space-x-2">
+                    <BookOpen className="h-5 w-5 text-blue-600" />
+                    <span>My Book Reservations</span>
+                  </CardTitle>
                 </CardHeader>
                 <CardContent>
-                  <p className="text-slate-500 dark:text-slate-400">Book management features coming soon...</p>
+                  {reservations.length > 0 ? (
+                    <div className="space-y-4">
+                      {reservations.map((reservation) => (
+                        <div key={reservation.id} className="flex items-center justify-between p-4 bg-slate-50 dark:bg-slate-700/50 rounded-lg">
+                          <div className="flex items-center space-x-4">
+                            <div className="h-12 w-12 bg-gradient-to-r from-blue-500 to-purple-500 rounded-lg flex items-center justify-center">
+                              <BookOpen className="h-6 w-6 text-white" />
+                            </div>
+                            <div>
+                              <h3 className="font-medium text-slate-900 dark:text-white">{reservation.bookTitle}</h3>
+                              <p className="text-sm text-slate-600 dark:text-slate-300">{reservation.bookAuthor}</p>
+                              <p className="text-xs text-slate-500 dark:text-slate-400">
+                                Reserved: {new Date(reservation.reservedAt).toLocaleDateString()}
+                              </p>
+                            </div>
+                          </div>
+                          <div className="text-right">
+                            <Badge 
+                              variant={reservation.status === 'ACTIVE' ? 'default' : 
+                                     reservation.status === 'PENDING' ? 'secondary' : 'outline'}
+                              className="bg-gradient-to-r from-blue-500 to-purple-500 text-white"
+                            >
+                              {reservation.status}
+                            </Badge>
+                            {reservation.dueDate && (
+                              <p className="text-xs text-slate-500 dark:text-slate-400 mt-1">
+                                Due: {new Date(reservation.dueDate).toLocaleDateString()}
+                              </p>
+                            )}
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  ) : (
+                    <div className="text-center py-8">
+                      <BookOpen className="h-12 w-12 text-slate-400 mx-auto mb-4" />
+                      <p className="text-slate-500 dark:text-slate-400">No book reservations yet</p>
+                      <p className="text-sm text-slate-400 dark:text-slate-500 mt-1">
+                        Visit our catalog to reserve books
+                      </p>
+                    </div>
+                  )}
                 </CardContent>
               </Card>
             </TabsContent>
 
-            <TabsContent value="ebooks">
+            <TabsContent value="ebooks" className="space-y-6">
               <Card className="bg-white/70 dark:bg-slate-800/70 backdrop-blur-sm border-0 shadow-lg">
                 <CardHeader>
-                  <CardTitle>Ebooks</CardTitle>
+                  <CardTitle className="flex items-center space-x-2">
+                    <FileText className="h-5 w-5 text-indigo-600" />
+                    <span>Available Ebooks</span>
+                  </CardTitle>
                 </CardHeader>
                 <CardContent>
-                  <p className="text-slate-500 dark:text-slate-400">Ebook features coming soon...</p>
+                  {ebooks.length > 0 ? (
+                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                      {ebooks.map((ebook) => (
+                        <div key={ebook.id} className="p-4 bg-slate-50 dark:bg-slate-700/50 rounded-lg hover:shadow-md transition-shadow">
+                          <div className="flex items-start space-x-3">
+                            <div className="h-12 w-12 bg-gradient-to-r from-indigo-500 to-purple-500 rounded-lg flex items-center justify-center flex-shrink-0">
+                              <FileText className="h-6 w-6 text-white" />
+                            </div>
+                            <div className="flex-1 min-w-0">
+                              <h3 className="font-medium text-slate-900 dark:text-white truncate">{ebook.title}</h3>
+                              <p className="text-sm text-slate-600 dark:text-slate-300 truncate">{ebook.author}</p>
+                              <div className="mt-2 flex space-x-2">
+                                <Button 
+                                  size="sm" 
+                                  className="bg-gradient-to-r from-indigo-500 to-purple-500 hover:from-indigo-600 hover:to-purple-600 text-white"
+                                  onClick={() => window.open(ebook.downloadUrl, '_blank')}
+                                >
+                                  <Download className="h-3 w-3 mr-1" />
+                                  Download
+                                </Button>
+                                <Button 
+                                  size="sm" 
+                                  variant="outline"
+                                  onClick={() => window.open(ebook.downloadUrl, '_blank')}
+                                >
+                                  <Eye className="h-3 w-3 mr-1" />
+                                  View
+                                </Button>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  ) : (
+                    <div className="text-center py-8">
+                      <FileText className="h-12 w-12 text-slate-400 mx-auto mb-4" />
+                      <p className="text-slate-500 dark:text-slate-400">No ebooks available</p>
+                      <p className="text-sm text-slate-400 dark:text-slate-500 mt-1">
+                        Check back later for new digital content
+                      </p>
+                    </div>
+                  )}
                 </CardContent>
               </Card>
             </TabsContent>
