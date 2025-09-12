@@ -24,7 +24,7 @@ async function testMembershipEmail() {
       country: "South Africa",
       preferredGenres: ["Fiction", "Mystery"],
       readingFrequency: "weekly",
-      applicationFee: 80
+      applicationFee: 20
     };
 
     const applicationId = `APP-${Date.now()}-${Math.random().toString(36).substr(2, 9).toUpperCase()}`;

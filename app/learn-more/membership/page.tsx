@@ -32,7 +32,7 @@ export default function MembershipPage() {
     },
     {
       name: "Individual",
-      price: `$${getRandomMembershipFee()}/year`,
+      price: `R${getRandomMembershipFee()}/year`,
       duration: "12 Months",
       features: [
         "Borrow up to 20 books",
@@ -47,7 +47,7 @@ export default function MembershipPage() {
     },
     {
       name: "Family",
-      price: `$${getRandomMembershipFee()}/year`,
+      price: `R${getRandomMembershipFee()}/year`,
       duration: "12 Months",
       features: [
         "Borrow up to 40 books",
@@ -63,7 +63,7 @@ export default function MembershipPage() {
     },
     {
       name: "Premium",
-      price: `$${getRandomMembershipFee()}/year`,
+      price: `R${getRandomMembershipFee()}/year`,
       duration: "12 Months",
       features: [
         "Unlimited book borrowing",
