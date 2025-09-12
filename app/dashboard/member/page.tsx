@@ -1,7 +1,7 @@
 "use client"
 
 import { useSession } from "next-auth/react"
-import { EnhancedMemberDashboard } from "@/components/dashboard/enhanced-member-dashboard"
+import { ModernMemberDashboard } from "@/components/dashboard/modern-member-dashboard"
 import { Header } from "@/components/layout/header"
 import { Card, CardContent } from "@/components/ui/card"
 import { Loader2 } from "lucide-react"
@@ -39,7 +39,7 @@ export default function MemberDashboardPage() {
       <Header />
       <main className="pt-20 pb-12">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <EnhancedMemberDashboard />
+          <ModernMemberDashboard />
         </div>
       </main>
     </div>

@@ -19,7 +19,6 @@ import {
   Heart, Share, Bookmark, Clock, CheckCircle, Plus,
   DollarSign
 } from "lucide-react"
-import { Header } from "@/components/layout/header"
 import { QRCodeComponent } from "@/components/ui/qr-code"
 import { UserDocumentManagement } from "@/components/user/document-management"
 import { EbookViewer } from "@/components/ebook/ebook-viewer"
@@ -281,9 +280,7 @@ export function EnhancedMemberDashboard() {
 
   return (
     <div className="min-h-screen bg-gray-50 dark:bg-gray-900">
-      <Header />
-
-      <main className="pt-20 pb-12">
+      <main className="pt-8 pb-12">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="mb-8">
             <h1 className="text-3xl font-bold text-gradient">Member Dashboard</h1>
