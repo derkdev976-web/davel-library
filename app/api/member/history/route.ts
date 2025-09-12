@@ -91,7 +91,7 @@ export async function GET() {
       },
       currentPage: progress.currentPage,
       totalPages: progress.totalPages,
-      progressPercentage: progress.progressPercentage,
+      progressPercentage: progress.totalPages > 0 ? Math.round((progress.currentPage / progress.totalPages) * 100) : 0,
       lastReadAt: progress.lastReadAt?.toISOString(),
       updatedAt: progress.updatedAt.toISOString()
     }))
