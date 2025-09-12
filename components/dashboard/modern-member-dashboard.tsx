@@ -206,7 +206,7 @@ export function ModernMemberDashboard() {
                   Welcome back, {profile?.firstName || session?.user?.name}!
                 </h1>
                 <p className="text-slate-600 dark:text-slate-300 mt-2 text-lg">
-                  Here's what's happening with your library account
+                  Here&apos;s what&apos;s happening with your library account
                 </p>
               </div>
               <div className="flex items-center space-x-3">
@@ -234,7 +234,7 @@ export function ModernMemberDashboard() {
                   <div>
                     <h3 className="font-semibold text-amber-800 dark:text-amber-200">Security Reminder</h3>
                     <p className="text-amber-700 dark:text-amber-300 text-sm">
-                      If you're using a temporary password, please change it to something secure in your profile settings.
+                      If you&apos;re using a temporary password, please change it to something secure in your profile settings.
                     </p>
                   </div>
                 </div>
