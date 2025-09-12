@@ -18,7 +18,7 @@ import {
   Edit, Eye, Download, Upload, History, Star, Bell,
   Heart, Share, Bookmark, Clock, CheckCircle, Plus,
   DollarSign, Shield, TrendingUp, Activity, Users,
-  FileText, CreditCard, HelpCircle, Bell as BellIcon
+  FileText, CreditCard, HelpCircle, Bell as BellIcon, Phone
 } from "lucide-react"
 import { QRCodeComponent } from "@/components/ui/qr-code"
 import { UserDocumentManagement } from "@/components/user/document-management"
