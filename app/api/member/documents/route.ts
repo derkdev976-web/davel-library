@@ -66,7 +66,7 @@ export async function GET() {
     const formattedRequests = documentRequests.map(request => ({
       id: request.id,
       documentType: request.documentType,
-      reason: request.reason,
+      reason: request.requestReason,
       status: request.status,
       dueDate: request.dueDate?.toISOString(),
       createdAt: request.createdAt.toISOString(),
