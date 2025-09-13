@@ -1028,7 +1028,7 @@ export function DocumentManagement() {
                        <Button 
                          variant="outline" 
                          size="sm"
-                         onClick={() => viewDocument('userId' in selectedUser ? selectedUser.userId : selectedUser.id, "address", isApplication(selectedUser) ? "applicant" : "member")}
+                         onClick={() => viewDocument(isApplication(selectedUser) ? (selectedUser as Application).userId : (selectedUser as User).id, "address", isApplication(selectedUser) ? "applicant" : "member")}
                        >
                          <Eye className="h-4 w-4 mr-1" />
                          View
@@ -1066,7 +1066,7 @@ export function DocumentManagement() {
                        <Button 
                          variant="outline" 
                          size="sm"
-                         onClick={() => viewDocument('userId' in selectedUser ? selectedUser.userId : selectedUser.id, "additional", isApplication(selectedUser) ? "applicant" : "member")}
+                         onClick={() => viewDocument(isApplication(selectedUser) ? (selectedUser as Application).userId : (selectedUser as User).id, "additional", isApplication(selectedUser) ? "applicant" : "member")}
                        >
                          <Eye className="h-4 w-4 mr-1" />
                          View
@@ -1105,7 +1105,7 @@ export function DocumentManagement() {
                        <Button 
                          variant="outline" 
                          size="sm"
-                         onClick={() => viewDocument('userId' in selectedUser ? selectedUser.userId : selectedUser.id, "id", isApplication(selectedUser) ? "applicant" : "member")}
+                         onClick={() => viewDocument(isApplication(selectedUser) ? (selectedUser as Application).userId : (selectedUser as User).id, "id", isApplication(selectedUser) ? "applicant" : "member")}
                        >
                       <Download className="h-4 w-4 mr-1" />
                       View
@@ -1133,7 +1133,7 @@ export function DocumentManagement() {
                        <Button 
                          variant="outline" 
                          size="sm"
-                         onClick={() => viewDocument('userId' in selectedUser ? selectedUser.userId : selectedUser.id, "address", isApplication(selectedUser) ? "applicant" : "member")}
+                         onClick={() => viewDocument(isApplication(selectedUser) ? (selectedUser as Application).userId : (selectedUser as User).id, "address", isApplication(selectedUser) ? "applicant" : "member")}
                        >
                       <Download className="h-4 w-4 mr-1" />
                       View
@@ -1161,7 +1161,7 @@ export function DocumentManagement() {
                        <Button 
                          variant="outline" 
                          size="sm"
-                         onClick={() => viewDocument('userId' in selectedUser ? selectedUser.userId : selectedUser.id, "additional", isApplication(selectedUser) ? "applicant" : "member")}
+                         onClick={() => viewDocument(isApplication(selectedUser) ? (selectedUser as Application).userId : (selectedUser as User).id, "additional", isApplication(selectedUser) ? "applicant" : "member")}
                        >
                       <Download className="h-4 w-4 mr-1" />
                       View
