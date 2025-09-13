@@ -28,6 +28,7 @@ import { EventManager } from "@/components/admin/event-manager"
 import EmailBroadcaster from "@/components/admin/email-broadcaster"
 import { DocumentManagement } from "@/components/admin/document-management"
 import { MemberContactDirectory } from "@/components/admin/member-contact-directory"
+import { FeeManager } from "@/components/admin/fee-manager"
 import { ContactStatistics } from "@/components/admin/contact-statistics"
 import { FeeManagement } from "@/components/admin/fee-management"
 import { FeeHistory } from "@/components/admin/fee-history"
@@ -870,31 +871,7 @@ export function EnhancedAdminDashboard() {
           </TabsContent>
 
           <TabsContent value="fees" className="space-y-6">
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-              <Card className="bg-white dark:bg-gray-800 border-gray-200 dark:border-gray-700">
-                <CardHeader>
-                  <CardTitle className="text-xl font-semibold text-gray-900 dark:text-gray-100 flex items-center gap-2">
-                    <DollarSign className="h-5 w-5" />
-                    Fee Management
-                  </CardTitle>
-                </CardHeader>
-                <CardContent>
-                  <FeeManagement />
-                </CardContent>
-              </Card>
-              
-              <Card className="bg-white dark:bg-gray-800 border-gray-200 dark:border-gray-700">
-                <CardHeader>
-                  <CardTitle className="text-xl font-semibold text-gray-900 dark:text-gray-100 flex items-center gap-2">
-                    <CreditCard className="h-5 w-5" />
-                    Fee History & Reports
-                  </CardTitle>
-                </CardHeader>
-                <CardContent>
-                  <FeeHistory />
-                </CardContent>
-              </Card>
-            </div>
+            <FeeManager />
           </TabsContent>
 
           <TabsContent value="email-test" className="space-y-6">
