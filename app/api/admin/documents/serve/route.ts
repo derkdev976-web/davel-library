@@ -121,7 +121,7 @@ export async function GET(request: NextRequest) {
     }
 
     // Return file with appropriate headers
-    return new NextResponse(fileBuffer, {
+    return new NextResponse(fileBuffer as any, {
       headers: {
         'Content-Type': contentType,
         'Content-Disposition': `inline; filename="${documentUrl.split('/').pop()}"`,
