@@ -443,22 +443,26 @@ export function DocumentManagement() {
     }
   }
 
-  const viewDocument = (documentPath: string, documentType: string) => {
-    if (documentPath) {
-      // Construct full URL for the document
-      const fullPath = documentPath.startsWith('http') 
-        ? documentPath 
-        : `${window.location.origin}${documentPath}`
-      
-      console.log("Opening document:", fullPath)
-      // Open document in new tab
-      window.open(fullPath, '_blank')
-    } else {
-      toast({
-        title: "Error",
-        description: "Document not available",
-        variant: "destructive",
-      })
+  const viewDocument = async (userId: string, documentType: string, userType: string = "member") => {
+    try {
+      // First check if document exists
+      const checkResponse = await fetch(`/api/admin/documents/view?userId=${userId}&type=${documentType}&userType=${userType}`)
+      if (checkResponse.ok) {
+        const data = await checkResponse.json()
+        if (data.documentUrl) {
+          // Use the serve endpoint for better file handling
+          const serveUrl = `/api/admin/documents/serve?userId=${userId}&type=${documentType}&userType=${userType}`
+          window.open(serveUrl, '_blank')
+        } else {
+          toast({ title: "Document not found", variant: "destructive" })
+        }
+      } else {
+        const errorData = await checkResponse.json()
+        toast({ title: errorData.error || "Error viewing document", variant: "destructive" })
+      }
+    } catch (error) {
+      console.error('Error viewing document:', error)
+      toast({ title: "Error viewing document", variant: "destructive" })
     }
   }
 
@@ -785,7 +789,7 @@ export function DocumentManagement() {
                                     variant="outline" 
                                     size="sm" 
                                     className="h-6 px-2"
-                                    onClick={() => viewDocument(request.user!.profile!.idDocument!, "Government ID")}
+                                    onClick={() => viewDocument(request.userId, "id", "member")}
                                   >
                                       <Eye className="h-3 w-3 mr-1" />
                                     View
@@ -810,7 +814,7 @@ export function DocumentManagement() {
                                     variant="outline" 
                                     size="sm" 
                                     className="h-6 px-2"
-                                    onClick={() => viewDocument(request.user!.profile!.proofOfAddress!, "Proof of Address")}
+                                    onClick={() => viewDocument(request.userId, "address", "member")}
                                   >
                                       <Eye className="h-3 w-3 mr-1" />
                                     View
@@ -835,7 +839,7 @@ export function DocumentManagement() {
                                     variant="outline" 
                                     size="sm" 
                                     className="h-6 px-2"
-                                    onClick={() => viewDocument(request.user!.profile!.additionalDocuments!, "Additional Documents")}
+                                    onClick={() => viewDocument(request.userId, "additional", "member")}
                                   >
                                       <Eye className="h-3 w-3 mr-1" />
                                     View
@@ -986,7 +990,7 @@ export function DocumentManagement() {
                        <Button 
                          variant="outline" 
                          size="sm"
-                         onClick={() => viewDocument(getDocumentFields(selectedUser).idDocument!, "Government ID")}
+                         onClick={() => viewDocument('userId' in selectedUser ? selectedUser.userId : selectedUser.id, "id", isApplication(selectedUser) ? "applicant" : "member")}
                        >
                          <Eye className="h-4 w-4 mr-1" />
                          View
@@ -1024,7 +1028,7 @@ export function DocumentManagement() {
                        <Button 
                          variant="outline" 
                          size="sm"
-                         onClick={() => viewDocument(getDocumentFields(selectedUser).proofOfAddress!, "Proof of Address")}
+                         onClick={() => viewDocument('userId' in selectedUser ? selectedUser.userId : selectedUser.id, "address", isApplication(selectedUser) ? "applicant" : "member")}
                        >
                          <Eye className="h-4 w-4 mr-1" />
                          View
@@ -1062,7 +1066,7 @@ export function DocumentManagement() {
                        <Button 
                          variant="outline" 
                          size="sm"
-                         onClick={() => viewDocument(getDocumentFields(selectedUser).additionalDocuments!, "Additional Documents")}
+                         onClick={() => viewDocument('userId' in selectedUser ? selectedUser.userId : selectedUser.id, "additional", isApplication(selectedUser) ? "applicant" : "member")}
                        >
                          <Eye className="h-4 w-4 mr-1" />
                          View
@@ -1101,7 +1105,7 @@ export function DocumentManagement() {
                        <Button 
                          variant="outline" 
                          size="sm"
-                         onClick={() => viewDocument(getDocumentFields(selectedUser).idDocument!, "Government ID")}
+                         onClick={() => viewDocument('userId' in selectedUser ? selectedUser.userId : selectedUser.id, "id", isApplication(selectedUser) ? "applicant" : "member")}
                        >
                       <Download className="h-4 w-4 mr-1" />
                       View
@@ -1129,7 +1133,7 @@ export function DocumentManagement() {
                        <Button 
                          variant="outline" 
                          size="sm"
-                         onClick={() => viewDocument(getDocumentFields(selectedUser).proofOfAddress!, "Proof of Address")}
+                         onClick={() => viewDocument('userId' in selectedUser ? selectedUser.userId : selectedUser.id, "address", isApplication(selectedUser) ? "applicant" : "member")}
                        >
                       <Download className="h-4 w-4 mr-1" />
                       View
@@ -1157,7 +1161,7 @@ export function DocumentManagement() {
                        <Button 
                          variant="outline" 
                          size="sm"
-                         onClick={() => viewDocument(getDocumentFields(selectedUser).additionalDocuments!, "Additional Documents")}
+                         onClick={() => viewDocument('userId' in selectedUser ? selectedUser.userId : selectedUser.id, "additional", isApplication(selectedUser) ? "applicant" : "member")}
                        >
                       <Download className="h-4 w-4 mr-1" />
                       View

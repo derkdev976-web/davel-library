@@ -322,7 +322,7 @@ export function ApplicationsManager() {
                         <Button
                           size="sm"
                           variant="outline"
-                          onClick={() => selectedApplication.userId && viewDocument(selectedApplication.userId, "idDocument", selectedApplication.source === "database" ? "applicant" : "member")}
+                          onClick={() => selectedApplication.userId && viewDocument(selectedApplication.userId, "id", selectedApplication.source === "database" ? "applicant" : "member")}
                         >
                           <Eye className="h-4 w-4 mr-1" />
                           View
@@ -338,7 +338,7 @@ export function ApplicationsManager() {
                         <Button
                           size="sm"
                           variant="outline"
-                          onClick={() => selectedApplication.userId && viewDocument(selectedApplication.userId, "proofOfAddress", selectedApplication.source === "database" ? "applicant" : "member")}
+                          onClick={() => selectedApplication.userId && viewDocument(selectedApplication.userId, "address", selectedApplication.source === "database" ? "applicant" : "member")}
                         >
                           <Eye className="h-4 w-4 mr-1" />
                           View
@@ -354,7 +354,7 @@ export function ApplicationsManager() {
                         <Button
                           size="sm"
                           variant="outline"
-                          onClick={() => selectedApplication.userId && viewDocument(selectedApplication.userId, "additionalDocuments", selectedApplication.source === "database" ? "applicant" : "member")}
+                          onClick={() => selectedApplication.userId && viewDocument(selectedApplication.userId, "additional", selectedApplication.source === "database" ? "applicant" : "member")}
                         >
                           <Eye className="h-4 w-4 mr-1" />
                           View
