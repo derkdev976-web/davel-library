@@ -644,7 +644,13 @@ export function ModernMemberDashboard() {
                                 <Button 
                                   size="sm" 
                                   className="bg-gradient-to-r from-indigo-500 to-purple-500 hover:from-indigo-600 hover:to-purple-600 text-white"
-                                  onClick={() => window.open(ebook.downloadUrl, '_blank')}
+                                  onClick={() => {
+                                    if (ebook.downloadUrl) {
+                                      window.open(ebook.downloadUrl, '_blank')
+                                    } else {
+                                      toast({ title: "Download not available", variant: "destructive" })
+                                    }
+                                  }}
                                 >
                                   <Download className="h-3 w-3 mr-1" />
                                   Download
@@ -652,7 +658,11 @@ export function ModernMemberDashboard() {
                                 <Button 
                                   size="sm" 
                                   variant="outline"
-                                  onClick={() => window.open(ebook.downloadUrl, '_blank')}
+                                  onClick={() => {
+                                    // Open ebook in viewer
+                                    const viewerUrl = `/ebook-viewer?id=${ebook.id}`
+                                    window.open(viewerUrl, '_blank')
+                                  }}
                                 >
                                   <Eye className="h-3 w-3 mr-1" />
                                   View
@@ -840,107 +850,7 @@ export function ModernMemberDashboard() {
             </TabsContent>
 
             <TabsContent value="documents" className="space-y-6">
-              <Card className="bg-white/70 dark:bg-slate-800/70 backdrop-blur-sm border-0 shadow-lg">
-                <CardHeader>
-                  <CardTitle className="flex items-center space-x-2">
-                    <FileText className="h-5 w-5 text-blue-600" />
-                    <span>My Documents</span>
-                  </CardTitle>
-                </CardHeader>
-                <CardContent>
-                  <div className="space-y-6">
-                    <div>
-                      <h3 className="text-lg font-semibold text-slate-900 dark:text-white mb-4">Uploaded Documents</h3>
-                      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-                        <div className="p-4 bg-slate-50 dark:bg-slate-700/50 rounded-lg border border-slate-200 dark:border-slate-700">
-                          <div className="flex items-center space-x-3">
-                            <div className="h-10 w-10 bg-gradient-to-r from-blue-500 to-purple-500 rounded-lg flex items-center justify-center">
-                              <FileText className="h-5 w-5 text-white" />
-                            </div>
-                            <div>
-                              <h4 className="font-medium text-slate-900 dark:text-white">ID Document</h4>
-                              <p className="text-sm text-slate-600 dark:text-slate-300">Government issued ID</p>
-                            </div>
-                          </div>
-                        </div>
-                        <div className="p-4 bg-slate-50 dark:bg-slate-700/50 rounded-lg border border-slate-200 dark:border-slate-700">
-                          <div className="flex items-center space-x-3">
-                            <div className="h-10 w-10 bg-gradient-to-r from-green-500 to-emerald-500 rounded-lg flex items-center justify-center">
-                              <FileText className="h-5 w-5 text-white" />
-                            </div>
-                            <div>
-                              <h4 className="font-medium text-slate-900 dark:text-white">Proof of Address</h4>
-                              <p className="text-sm text-slate-600 dark:text-slate-300">Utility bill or bank statement</p>
-                            </div>
-                          </div>
-                        </div>
-                        <div className="p-4 bg-slate-50 dark:bg-slate-700/50 rounded-lg border border-slate-200 dark:border-slate-700">
-                          <div className="flex items-center space-x-3">
-                            <div className="h-10 w-10 bg-gradient-to-r from-orange-500 to-red-500 rounded-lg flex items-center justify-center">
-                              <FileText className="h-5 w-5 text-white" />
-                            </div>
-                            <div>
-                              <h4 className="font-medium text-slate-900 dark:text-white">Additional Documents</h4>
-                              <p className="text-sm text-slate-600 dark:text-slate-300">Any other required documents</p>
-                            </div>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                    
-                    <div>
-                      <h3 className="text-lg font-semibold text-slate-900 dark:text-white mb-4">Document Requests</h3>
-                      {documentRequests.length > 0 ? (
-                        <div className="space-y-3">
-                          {documentRequests.map((request) => (
-                            <div key={request.id} className="p-4 border border-slate-200 dark:border-slate-700 rounded-lg">
-                              <div className="flex items-center justify-between mb-2">
-                                <h4 className="font-medium text-slate-900 dark:text-white">
-                                  {request.documentType}
-                                </h4>
-                                <Badge 
-                                  className={
-                                    request.status === 'PENDING' 
-                                      ? 'bg-yellow-100 text-yellow-800 dark:bg-yellow-900/20 dark:text-yellow-300'
-                                      : request.status === 'COMPLETED'
-                                      ? 'bg-green-100 text-green-800 dark:bg-green-900/20 dark:text-green-300'
-                                      : 'bg-gray-100 text-gray-800 dark:bg-gray-900/20 dark:text-gray-300'
-                                  }
-                                >
-                                  {request.status}
-                                </Badge>
-                              </div>
-                              <p className="text-sm text-slate-600 dark:text-slate-400 mb-2">
-                                {request.reason}
-                              </p>
-                              <div className="flex items-center justify-between text-xs text-slate-500 dark:text-slate-500">
-                                <span>Requested: {new Date(request.createdAt).toLocaleDateString()}</span>
-                                {request.dueDate && (
-                                  <span>Due: {new Date(request.dueDate).toLocaleDateString()}</span>
-                                )}
-                              </div>
-                              {request.adminNotes && (
-                                <div className="mt-2 p-2 bg-slate-50 dark:bg-slate-800 rounded text-sm">
-                                  <p className="font-medium text-slate-700 dark:text-slate-300">Admin Notes:</p>
-                                  <p className="text-slate-600 dark:text-slate-400">{request.adminNotes}</p>
-                                </div>
-                              )}
-                            </div>
-                          ))}
-                        </div>
-                      ) : (
-                        <div className="text-center py-8">
-                          <FileText className="h-12 w-12 text-slate-400 mx-auto mb-4" />
-                          <p className="text-slate-500 dark:text-slate-400">No document requests at this time</p>
-                          <p className="text-sm text-slate-400 dark:text-slate-500 mt-1">
-                            All your documents are up to date
-                          </p>
-                        </div>
-                      )}
-                    </div>
-                  </div>
-                </CardContent>
-              </Card>
+              <UserDocumentManagement />
             </TabsContent>
 
             <TabsContent value="history" className="space-y-6">
