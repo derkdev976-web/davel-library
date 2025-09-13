@@ -30,12 +30,6 @@ export default function EbookViewerPage() {
   const [ebook, setEbook] = useState<Ebook | null>(null)
   const [loading, setLoading] = useState(true)
 
-  useEffect(() => {
-    if (ebookId) {
-      fetchEbook()
-    }
-  }, [ebookId, fetchEbook])
-
   const fetchEbook = useCallback(async () => {
     try {
       setLoading(true)
@@ -53,6 +47,12 @@ export default function EbookViewerPage() {
       setLoading(false)
     }
   }, [ebookId, toast])
+
+  useEffect(() => {
+    if (ebookId) {
+      fetchEbook()
+    }
+  }, [ebookId, fetchEbook])
 
   const handleDownload = () => {
     if (ebook?.digitalFile) {
