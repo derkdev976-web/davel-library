@@ -1,12 +1,13 @@
 "use client"
 
-import { useState, useEffect } from "react"
+import { useState, useEffect, useCallback } from "react"
 import { useSearchParams } from "next/navigation"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { useToast } from "@/hooks/use-toast"
 import { ArrowLeft, Download, BookOpen, FileText } from "lucide-react"
 import Link from "next/link"
+import Image from "next/image"
 
 interface Ebook {
   id: string
@@ -30,9 +31,9 @@ export default function EbookViewerPage() {
     if (ebookId) {
       fetchEbook()
     }
-  }, [ebookId])
+  }, [ebookId, fetchEbook])
 
-  const fetchEbook = async () => {
+  const fetchEbook = useCallback(async () => {
     try {
       setLoading(true)
       const response = await fetch(`/api/member/ebooks/${ebookId}`)
@@ -48,7 +49,7 @@ export default function EbookViewerPage() {
     } finally {
       setLoading(false)
     }
-  }
+  }, [ebookId, toast])
 
   const handleDownload = () => {
     if (ebook?.downloadUrl) {
@@ -77,7 +78,7 @@ export default function EbookViewerPage() {
             <FileText className="h-12 w-12 text-gray-400 mx-auto mb-4" />
             <h2 className="text-xl font-semibold text-gray-900 dark:text-white mb-2">Ebook Not Found</h2>
             <p className="text-gray-600 dark:text-gray-400 mb-4">
-              The requested ebook could not be found or you don't have access to it.
+              The requested ebook could not be found or you don&apos;t have access to it.
             </p>
             <Link href="/dashboard">
               <Button className="w-full">
@@ -116,11 +117,12 @@ export default function EbookViewerPage() {
               </CardHeader>
               <CardContent className="space-y-4">
                 {ebook.coverImage && (
-                  <div className="aspect-[3/4] bg-gray-100 dark:bg-gray-800 rounded-lg overflow-hidden">
-                    <img 
+                  <div className="aspect-[3/4] bg-gray-100 dark:bg-gray-800 rounded-lg overflow-hidden relative">
+                    <Image 
                       src={ebook.coverImage} 
                       alt={ebook.title}
-                      className="w-full h-full object-cover"
+                      fill
+                      className="object-cover"
                     />
                   </div>
                 )}
