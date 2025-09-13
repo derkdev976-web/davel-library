@@ -19,7 +19,8 @@ export async function GET() {
       select: {
         idDocument: true,
         proofOfAddress: true,
-        additionalDocuments: true
+        additionalDocuments: true,
+        profilePicture: true
       }
     })
 
@@ -73,9 +74,18 @@ export async function GET() {
       adminNotes: request.adminNotes
     }))
 
+    // Format uploaded documents for the component
+    const uploadedDocuments = {
+      idDocument: profile?.idDocument || null,
+      proofOfAddress: profile?.proofOfAddress || null,
+      additionalDocuments: profile?.additionalDocuments || null,
+      profilePicture: profile?.profilePicture || null
+    }
+
     return NextResponse.json({
       documents,
-      documentRequests: formattedRequests
+      documentRequests: formattedRequests,
+      uploadedDocuments
     })
 
   } catch (error) {

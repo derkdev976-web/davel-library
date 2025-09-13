@@ -446,7 +446,9 @@ export function UserDocumentManagement() {
               <div className="flex items-center justify-between p-3 bg-green-50 border border-green-200 rounded">
                 <div>
                   <p className="font-medium text-green-800">Government ID</p>
-                  <p className="text-sm text-green-600">Document uploaded</p>
+                  <p className="text-sm text-green-600">
+                    {uploadedDocuments.idDocument ? 'Document uploaded' : 'No document'}
+                  </p>
                 </div>
                 <div className="flex gap-2">
                                      <Button 
@@ -487,7 +489,9 @@ export function UserDocumentManagement() {
               <div className="flex items-center justify-between p-3 bg-green-50 border border-green-200 rounded">
                 <div>
                   <p className="font-medium text-green-800">Proof of Address</p>
-                  <p className="text-sm text-green-600">Document uploaded</p>
+                  <p className="text-sm text-green-600">
+                    {uploadedDocuments.proofOfAddress ? 'Document uploaded' : 'No document'}
+                  </p>
                 </div>
                 <div className="flex gap-2">
                                      <Button 
@@ -528,7 +532,9 @@ export function UserDocumentManagement() {
               <div className="flex items-center justify-between p-3 bg-blue-50 border border-blue-200 rounded">
                 <div>
                   <p className="font-medium text-blue-800">Additional Documents</p>
-                  <p className="text-sm text-blue-600">Documents uploaded</p>
+                  <p className="text-sm text-blue-600">
+                    {uploadedDocuments.additionalDocuments ? 'Documents uploaded' : 'No documents'}
+                  </p>
                 </div>
                 <div className="flex gap-2">
                                      <Button 
