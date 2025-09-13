@@ -85,7 +85,13 @@ export async function GET(request: NextRequest) {
       )
     }
 
-    // Check if file exists
+    // Check if it's an external URL (like Cloudinary)
+    if (documentUrl.startsWith('http://') || documentUrl.startsWith('https://')) {
+      // For external URLs, redirect to the URL
+      return NextResponse.redirect(documentUrl)
+    }
+
+    // For local files, check if file exists
     const filePath = join(process.cwd(), "public", documentUrl)
     if (!existsSync(filePath)) {
       return NextResponse.json(

@@ -1,6 +1,7 @@
 "use client"
 
 import { useState, useEffect, useCallback } from "react"
+import { useSession } from "next-auth/react"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
@@ -40,6 +41,7 @@ interface DocumentNotification {
 }
 
 export function UserDocumentManagement() {
+  const { data: session } = useSession()
   const [documentRequests, setDocumentRequests] = useState<DocumentRequest[]>([])
   const [uploadedDocuments, setUploadedDocuments] = useState<UploadedDocuments>({})
   const [notifications, setNotifications] = useState<DocumentNotification[]>([])
@@ -453,10 +455,14 @@ export function UserDocumentManagement() {
                      onClick={() => {
                        const docPath = uploadedDocuments.idDocument
                        if (docPath) {
-                         // Ensure the path is absolute
-                         const fullPath = docPath.startsWith('http') ? docPath : `${window.location.origin}${docPath}`
-                         console.log("Opening document:", fullPath)
-                         window.open(fullPath, '_blank')
+                         // For external URLs, open directly
+                         if (docPath.startsWith('http')) {
+                           window.open(docPath, '_blank')
+                         } else {
+                           // For local files, use the member serving API
+                           const serveUrl = `/api/member/documents/serve?type=id`
+                           window.open(serveUrl, '_blank')
+                         }
                        }
                      }}
                    >
@@ -490,10 +496,14 @@ export function UserDocumentManagement() {
                      onClick={() => {
                        const docPath = uploadedDocuments.proofOfAddress
                        if (docPath) {
-                         // Ensure the path is absolute
-                         const fullPath = docPath.startsWith('http') ? docPath : `${window.location.origin}${docPath}`
-                         console.log("Opening document:", fullPath)
-                         window.open(fullPath, '_blank')
+                         // For external URLs, open directly
+                         if (docPath.startsWith('http')) {
+                           window.open(docPath, '_blank')
+                         } else {
+                           // For local files, use the member serving API
+                           const serveUrl = `/api/member/documents/serve?type=address`
+                           window.open(serveUrl, '_blank')
+                         }
                        }
                      }}
                    >
@@ -527,10 +537,14 @@ export function UserDocumentManagement() {
                      onClick={() => {
                        const docPath = uploadedDocuments.additionalDocuments
                        if (docPath) {
-                         // Ensure the path is absolute
-                         const fullPath = docPath.startsWith('http') ? docPath : `${window.location.origin}${docPath}`
-                         console.log("Opening document:", fullPath)
-                         window.open(fullPath, '_blank')
+                         // For external URLs, open directly
+                         if (docPath.startsWith('http')) {
+                           window.open(docPath, '_blank')
+                         } else {
+                           // For local files, use the member serving API
+                           const serveUrl = `/api/member/documents/serve?type=additional`
+                           window.open(serveUrl, '_blank')
+                         }
                        }
                      }}
                    >
