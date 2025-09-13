@@ -14,9 +14,12 @@ interface Ebook {
   title: string
   author: string
   coverImage?: string
-  downloadUrl?: string
-  content?: string
-  description?: string
+  digitalFile?: string
+  summary?: string
+  publishedYear?: number
+  publisher?: string
+  language?: string
+  pages?: number
 }
 
 export default function EbookViewerPage() {
@@ -52,8 +55,8 @@ export default function EbookViewerPage() {
   }, [ebookId, toast])
 
   const handleDownload = () => {
-    if (ebook?.downloadUrl) {
-      window.open(ebook.downloadUrl, '_blank')
+    if (ebook?.digitalFile) {
+      window.open(ebook.digitalFile, '_blank')
     } else {
       toast({ title: "Download not available", variant: "destructive" })
     }
@@ -135,18 +138,33 @@ export default function EbookViewerPage() {
                     by {ebook.author}
                   </p>
                   
-                  {ebook.description && (
+                  {ebook.summary && (
                     <p className="text-sm text-gray-600 dark:text-gray-400 mb-4">
-                      {ebook.description}
+                      {ebook.summary}
                     </p>
                   )}
+
+                  <div className="space-y-2 text-sm text-gray-600 dark:text-gray-400">
+                    {ebook.publishedYear && (
+                      <p><span className="font-medium">Published:</span> {ebook.publishedYear}</p>
+                    )}
+                    {ebook.publisher && (
+                      <p><span className="font-medium">Publisher:</span> {ebook.publisher}</p>
+                    )}
+                    {ebook.language && (
+                      <p><span className="font-medium">Language:</span> {ebook.language}</p>
+                    )}
+                    {ebook.pages && (
+                      <p><span className="font-medium">Pages:</span> {ebook.pages}</p>
+                    )}
+                  </div>
                 </div>
 
                 <div className="space-y-2">
                   <Button 
                     onClick={handleDownload}
                     className="w-full"
-                    disabled={!ebook.downloadUrl}
+                    disabled={!ebook.digitalFile}
                   >
                     <Download className="h-4 w-4 mr-2" />
                     Download Ebook
@@ -163,25 +181,19 @@ export default function EbookViewerPage() {
                 <CardTitle>Ebook Content</CardTitle>
               </CardHeader>
               <CardContent>
-                {ebook.content ? (
-                  <div className="prose prose-slate dark:prose-invert max-w-none">
-                    <div dangerouslySetInnerHTML={{ __html: ebook.content }} />
-                  </div>
-                ) : (
-                  <div className="text-center py-12">
-                    <FileText className="h-12 w-12 text-gray-400 mx-auto mb-4" />
-                    <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-2">
-                      Content Not Available
-                    </h3>
-                    <p className="text-gray-600 dark:text-gray-400 mb-4">
-                      The ebook content is not available for online viewing.
-                    </p>
-                    <Button onClick={handleDownload} disabled={!ebook.downloadUrl}>
-                      <Download className="h-4 w-4 mr-2" />
-                      Download to Read
-                    </Button>
-                  </div>
-                )}
+                <div className="text-center py-12">
+                  <FileText className="h-12 w-12 text-gray-400 mx-auto mb-4" />
+                  <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-2">
+                    Ebook Content
+                  </h3>
+                  <p className="text-gray-600 dark:text-gray-400 mb-4">
+                    This ebook is available for download. Click the download button to access the full content.
+                  </p>
+                  <Button onClick={handleDownload} disabled={!ebook.digitalFile}>
+                    <Download className="h-4 w-4 mr-2" />
+                    Download to Read
+                  </Button>
+                </div>
               </CardContent>
             </Card>
           </div>

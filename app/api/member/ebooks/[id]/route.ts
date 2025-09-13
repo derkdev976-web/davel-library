@@ -28,9 +28,12 @@ export async function GET(
         title: true,
         author: true,
         coverImage: true,
-        description: true,
-        downloadUrl: true,
-        content: true
+        summary: true,
+        digitalFile: true,
+        publishedYear: true,
+        publisher: true,
+        language: true,
+        pages: true
       }
     })
 

@@ -69,7 +69,7 @@ interface Ebook {
   title: string
   author: string
   coverImage?: string
-  downloadUrl?: string
+  digitalFile?: string
   isDownloaded: boolean
 }
 
@@ -645,8 +645,8 @@ export function ModernMemberDashboard() {
                                   size="sm" 
                                   className="bg-gradient-to-r from-indigo-500 to-purple-500 hover:from-indigo-600 hover:to-purple-600 text-white"
                                   onClick={() => {
-                                    if (ebook.downloadUrl) {
-                                      window.open(ebook.downloadUrl, '_blank')
+                                    if (ebook.digitalFile) {
+                                      window.open(ebook.digitalFile, '_blank')
                                     } else {
                                       toast({ title: "Download not available", variant: "destructive" })
                                     }
