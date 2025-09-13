@@ -73,6 +73,16 @@ interface Ebook {
   isDownloaded: boolean
 }
 
+interface DocumentRequest {
+  id: string
+  documentType: string
+  reason: string
+  status: string
+  dueDate?: string
+  createdAt: string
+  adminNotes?: string
+}
+
 export function ModernMemberDashboard() {
   const { data: session } = useSession()
   const { toast } = useToast()
@@ -81,6 +91,7 @@ export function ModernMemberDashboard() {
   const [reservations, setReservations] = useState<BookReservation[]>([])
   const [chatMessages, setChatMessages] = useState<ChatMessage[]>([])
   const [ebooks, setEbooks] = useState<Ebook[]>([])
+  const [documentRequests, setDocumentRequests] = useState<DocumentRequest[]>([])
   const [loading, setLoading] = useState(true)
   const [activeTab, setActiveTab] = useState("overview")
   const [newMessage, setNewMessage] = useState("")
@@ -109,9 +120,22 @@ export function ModernMemberDashboard() {
     }
   }
 
+  const fetchDocumentRequests = async () => {
+    try {
+      const response = await fetch("/api/member/documents")
+      if (response.ok) {
+        const data = await response.json()
+        setDocumentRequests(data.documentRequests || [])
+      }
+    } catch (error) {
+      console.error("Error fetching document requests:", error)
+    }
+  }
+
   useEffect(() => {
     if (session?.user?.id) {
       fetchMemberData()
+      fetchDocumentRequests()
     }
   }, [session?.user?.id])
 
@@ -866,13 +890,53 @@ export function ModernMemberDashboard() {
                     
                     <div>
                       <h3 className="text-lg font-semibold text-slate-900 dark:text-white mb-4">Document Requests</h3>
-                      <div className="text-center py-8">
-                        <FileText className="h-12 w-12 text-slate-400 mx-auto mb-4" />
-                        <p className="text-slate-500 dark:text-slate-400">No document requests at this time</p>
-                        <p className="text-sm text-slate-400 dark:text-slate-500 mt-1">
-                          All your documents are up to date
-                        </p>
-                      </div>
+                      {documentRequests.length > 0 ? (
+                        <div className="space-y-3">
+                          {documentRequests.map((request) => (
+                            <div key={request.id} className="p-4 border border-slate-200 dark:border-slate-700 rounded-lg">
+                              <div className="flex items-center justify-between mb-2">
+                                <h4 className="font-medium text-slate-900 dark:text-white">
+                                  {request.documentType}
+                                </h4>
+                                <Badge 
+                                  className={
+                                    request.status === 'PENDING' 
+                                      ? 'bg-yellow-100 text-yellow-800 dark:bg-yellow-900/20 dark:text-yellow-300'
+                                      : request.status === 'COMPLETED'
+                                      ? 'bg-green-100 text-green-800 dark:bg-green-900/20 dark:text-green-300'
+                                      : 'bg-gray-100 text-gray-800 dark:bg-gray-900/20 dark:text-gray-300'
+                                  }
+                                >
+                                  {request.status}
+                                </Badge>
+                              </div>
+                              <p className="text-sm text-slate-600 dark:text-slate-400 mb-2">
+                                {request.reason}
+                              </p>
+                              <div className="flex items-center justify-between text-xs text-slate-500 dark:text-slate-500">
+                                <span>Requested: {new Date(request.createdAt).toLocaleDateString()}</span>
+                                {request.dueDate && (
+                                  <span>Due: {new Date(request.dueDate).toLocaleDateString()}</span>
+                                )}
+                              </div>
+                              {request.adminNotes && (
+                                <div className="mt-2 p-2 bg-slate-50 dark:bg-slate-800 rounded text-sm">
+                                  <p className="font-medium text-slate-700 dark:text-slate-300">Admin Notes:</p>
+                                  <p className="text-slate-600 dark:text-slate-400">{request.adminNotes}</p>
+                                </div>
+                              )}
+                            </div>
+                          ))}
+                        </div>
+                      ) : (
+                        <div className="text-center py-8">
+                          <FileText className="h-12 w-12 text-slate-400 mx-auto mb-4" />
+                          <p className="text-slate-500 dark:text-slate-400">No document requests at this time</p>
+                          <p className="text-sm text-slate-400 dark:text-slate-500 mt-1">
+                            All your documents are up to date
+                          </p>
+                        </div>
+                      )}
                     </div>
                   </div>
                 </CardContent>
