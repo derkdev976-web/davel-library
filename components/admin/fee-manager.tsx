@@ -1,6 +1,6 @@
 "use client"
 
-import { useState, useEffect } from "react"
+import { useState, useEffect, useCallback } from "react"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
@@ -72,7 +72,7 @@ export function FeeManager() {
     dueDate: ""
   })
 
-  const fetchFees = async () => {
+  const fetchFees = useCallback(async () => {
     try {
       setLoading(true)
       const response = await fetch("/api/admin/fees")
@@ -87,7 +87,7 @@ export function FeeManager() {
     } finally {
       setLoading(false)
     }
-  }
+  }, [toast])
 
   const handleAddFee = async () => {
     try {
@@ -162,7 +162,7 @@ export function FeeManager() {
 
   useEffect(() => {
     fetchFees()
-  }, [])
+  }, [fetchFees])
 
   if (loading) {
     return (

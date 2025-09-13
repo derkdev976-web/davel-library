@@ -24,11 +24,11 @@ export async function GET(
           select: {
             name: true,
             email: true,
+            phone: true,
             profile: {
               select: {
                 firstName: true,
-                lastName: true,
-                phone: true
+                lastName: true
               }
             }
           }
@@ -50,7 +50,7 @@ export async function GET(
     // Generate PDF content (simplified version - in production, use a proper PDF library)
     const userName = fee.user.name || `${fee.user.profile?.firstName || ''} ${fee.user.profile?.lastName || ''}`.trim() || 'Unknown'
     const userEmail = fee.user.email
-    const userPhone = fee.user.profile?.phone || 'N/A'
+    const userPhone = fee.user.phone || 'N/A'
     
     const pdfContent = `
 <!DOCTYPE html>
